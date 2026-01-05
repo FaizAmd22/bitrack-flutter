@@ -1,8 +1,9 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously
+// ignore_for_file: deprecated_member_use
 
 import 'dart:async';
 
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
 import 'package:bitrack_mobile_flutter/features/monitoring/providers/fleet_geofence_provider.dart';
 import 'package:bitrack_mobile_flutter/features/monitoring/providers/monitoring_providers.dart';
 import 'package:bitrack_mobile_flutter/screens/home/models/filter_model.dart';
@@ -227,18 +228,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: MonitoringMap(
-              vehicles: filteredVehicles,
-              showPlate: _showPlate,
+            child: RepaintBoundary(
+              child: MonitoringMap(
+                vehicles: filteredVehicles,
+                showPlate: _showPlate,
+              ),
             ),
           ),
 
           if (monitoringAsync.isLoading)
-            const Positioned(
-              top: 120,
-              left: 0,
-              right: 0,
-              child: Center(child: CircularProgressIndicator()),
+            const Positioned.fill(
+              child: IgnorePointer(ignoring: true, child: FullScreenLoading()),
             ),
 
           Positioned(

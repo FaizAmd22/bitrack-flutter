@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class VehicleDetailMap extends StatefulWidget {
   const VehicleDetailMap({super.key});
@@ -9,41 +10,29 @@ class VehicleDetailMap extends StatefulWidget {
 }
 
 class _VehicleDetailMapState extends State<VehicleDetailMap> {
-  GoogleMapController? _mapController;
+  late final MapController _mapController = MapController();
 
   static const LatLng _indonesiaCenter = LatLng(-2.5, 115.0);
-
-  @override
-  void dispose() {
-    _mapController?.dispose();
-    super.dispose();
-  }
+  static const InteractionOptions _interaction = InteractionOptions(
+    flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        target: _indonesiaCenter,
-        zoom: 5,
+    return FlutterMap(
+      mapController: _mapController,
+      options: const MapOptions(
+        initialCenter: _indonesiaCenter,
+        initialZoom: 5,
+        maxZoom: 18,
+        minZoom: 3,
+        interactionOptions: _interaction,
       ),
-
-      onMapCreated: (controller) {
-        _mapController = controller;
-      },
-
-      rotateGesturesEnabled: false,
-      compassEnabled: false,
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: true,
-      myLocationButtonEnabled: false,
-      minMaxZoomPreference: const MinMaxZoomPreference(3, 18),
-      mapType: MapType.normal,
-      markers: {
-        Marker(
-          markerId: const MarkerId('vehicle'),
-          position: LatLng(-6.2, 106.8),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         ),
-      },
+      ],
     );
   }
 }

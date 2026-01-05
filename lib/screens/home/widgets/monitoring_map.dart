@@ -1,15 +1,13 @@
-// ignore_for_file: unused_field, deprecated_member_use
+// ignore_for_file: deprecated_member_use
 
 import 'dart:math' as math;
-import 'dart:ui' as ui;
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:bitrack_mobile_flutter/base/res/media.dart';
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
 
 class MonitoringMap extends StatefulWidget {
@@ -27,13 +25,14 @@ class MonitoringMap extends StatefulWidget {
 }
 
 class _MonitoringMapState extends State<MonitoringMap> {
-  GoogleMapController? _controller;
+  late final MapController _mapController = MapController();
 
   static const LatLng _indonesiaCenter = LatLng(-2.5, 115.0);
+  static const InteractionOptions _interaction = InteractionOptions(
+    flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+  );
 
-  final Map<String, BitmapDescriptor> _iconCache = {};
-  Set<Marker> _markers = {};
-
+  List<Marker> _cachedMarkers = const [];
   int _cacheKey = 0;
 
   @override
@@ -48,9 +47,8 @@ class _MonitoringMapState extends State<MonitoringMap> {
     _rebuildMarkersIfNeeded();
   }
 
-  Future<void> _rebuildMarkersIfNeeded() async {
+  void _rebuildMarkersIfNeeded() {
     final vehicles = widget.vehicles;
-
     final key = Object.hash(
       widget.showPlate,
       vehicles.length,
@@ -75,40 +73,47 @@ class _MonitoringMapState extends State<MonitoringMap> {
 
     final now = DateTime.now();
 
-    final markers = <Marker>{};
+    _cachedMarkers = vehicles
+        .map((v) {
+          final asset = _resolveTruckAsset(v, now);
+          final angleRad = v.bearing * math.pi / 180;
 
-    for (final v in vehicles) {
-      final asset = _resolveTruckAsset(v, now);
-      final icon = await _getOrCreateVehicleIcon(
-        asset: asset,
-        showPlate: widget.showPlate,
-        plateText: v.licensePlate,
-      );
-
-      markers.add(
-        Marker(
-          markerId: MarkerId('vehicle_${v.id}'),
-          position: LatLng(v.latitude, v.longitude),
-          icon: icon,
-          rotation: v.bearing,
-          anchor: const Offset(0.5, 0.5),
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              AppRoutes.vehicleDetailScreen,
-              arguments: v.id,
-            );
-          },
-        ),
-      );
-    }
-
-    if (!mounted) return;
-    setState(() => _markers = markers);
+          return Marker(
+            point: LatLng(v.latitude, v.longitude),
+            width: 110,
+            height: widget.showPlate ? 85 : 65,
+            rotate: false,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.vehicleDetailScreen,
+                  arguments: v.id,
+                );
+              },
+              child: Transform.translate(
+                offset: widget.showPlate ? const Offset(0, -17) : Offset.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.showPlate) _PlateBubble(text: v.licensePlate),
+                    const SizedBox(height: 2),
+                    Transform.rotate(
+                      angle: angleRad,
+                      child: Image.asset(asset, width: 45, height: 45),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        })
+        .toList(growable: false);
   }
 
   String _resolveTruckAsset(Vehicle v, DateTime now) {
     final isSilence = _isSilence(v, now);
+
     if (isSilence) return AppMedia.truckSilence;
 
     switch (v.activity) {
@@ -135,132 +140,78 @@ class _MonitoringMapState extends State<MonitoringMap> {
     return diffHours >= 4;
   }
 
-  Future<BitmapDescriptor> _getOrCreateVehicleIcon({
-    required String asset,
-    required bool showPlate,
-    required String plateText,
-  }) async {
-    final key = '$asset|$showPlate|$plateText';
-    final cached = _iconCache[key];
-    if (cached != null) return cached;
+  @override
+  Widget build(BuildContext context) {
+    _rebuildMarkersIfNeeded();
 
-    final bytes = await _buildVehicleMarkerBytes(
-      asset: asset,
-      showPlate: showPlate,
-      plateText: plateText,
-    );
-
-    final icon = BitmapDescriptor.fromBytes(bytes);
-    _iconCache[key] = icon;
-    return icon;
-  }
-
-  Future<Uint8List> _buildVehicleMarkerBytes({
-    required String asset,
-    required bool showPlate,
-    required String plateText,
-  }) async {
-    final double truckSize = 90;
-    final double padding = 14;
-    final double bubbleHeight = showPlate ? 34 : 0;
-    final double bubbleWidth = showPlate ? 160 : 0;
-
-    final double width = math.max(truckSize, bubbleWidth) + padding * 2;
-    final double height = truckSize + bubbleHeight + padding * 2;
-
-    final recorder = ui.PictureRecorder();
-    final canvas = ui.Canvas(recorder);
-
-    final centerX = width / 2;
-
-    if (showPlate) {
-      final bubbleTop = padding;
-      final bubbleRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          (width - bubbleWidth) / 2,
-          bubbleTop,
-          bubbleWidth,
-          bubbleHeight,
+    return FlutterMap(
+      mapController: _mapController,
+      options: const MapOptions(
+        initialCenter: _indonesiaCenter,
+        initialZoom: 5,
+        maxZoom: 18,
+        minZoom: 3,
+        interactionOptions: _interaction,
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         ),
-        const Radius.circular(10),
-      );
-
-      final bubblePaint = Paint()
-        ..color = AppStyles.blackColor.withOpacity(0.55);
-
-      canvas.drawRRect(bubbleRect, bubblePaint);
-
-      final tp = TextPainter(
-        text: TextSpan(
-          text: plateText,
-          style: TextStyle(
-            color: AppStyles.whiteColor,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
+        MarkerClusterLayerWidget(
+          options: MarkerClusterLayerOptions(
+            maxClusterRadius: 100,
+            size: const Size(40, 40),
+            rotate: false,
+            polygonOptions: const PolygonOptions(
+              borderColor: Colors.transparent,
+              color: Colors.transparent,
+              borderStrokeWidth: 0,
+            ),
+            builder: (context, markers) {
+              return Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppStyles.blueColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  markers.length.toString(),
+                  style: AppStyles.textMd.copyWith(color: AppStyles.whiteColor),
+                ),
+              );
+            },
+            markers: _cachedMarkers,
           ),
         ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-        maxLines: 1,
-        ellipsis: '…',
-      )..layout(maxWidth: bubbleWidth - 16);
-
-      tp.paint(
-        canvas,
-        Offset(
-          (width - tp.width) / 2,
-          bubbleTop + (bubbleHeight - tp.height) / 2,
-        ),
-      );
-    }
-
-    final truckTop = padding + (showPlate ? (bubbleHeight + 6) : 0);
-
-    final byteData = await rootBundle.load(asset);
-    final codec = await ui.instantiateImageCodec(
-      byteData.buffer.asUint8List(),
-      targetWidth: truckSize.toInt(),
-      targetHeight: truckSize.toInt(),
+      ],
     );
-    final frame = await codec.getNextFrame();
-    final img = frame.image;
-
-    final dst = Rect.fromLTWH(
-      centerX - truckSize / 2,
-      truckTop,
-      truckSize,
-      truckSize,
-    );
-
-    canvas.drawImageRect(
-      img,
-      Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
-      dst,
-      Paint(),
-    );
-
-    final picture = recorder.endRecording();
-    final uiImage = await picture.toImage(width.toInt(), height.toInt());
-    final pngBytes = await uiImage.toByteData(format: ui.ImageByteFormat.png);
-
-    return pngBytes!.buffer.asUint8List();
   }
+}
+
+class _PlateBubble extends StatelessWidget {
+  final String text;
+  const _PlateBubble({required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        target: _indonesiaCenter,
-        zoom: 5,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppStyles.blackColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
-      onMapCreated: (c) => _controller = c,
-      markers: _markers,
-      rotateGesturesEnabled: false,
-      compassEnabled: false,
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: false,
-      myLocationButtonEnabled: false,
-      minMaxZoomPreference: const MinMaxZoomPreference(3, 18),
+      child: Text(
+        text,
+        style: AppStyles.textXsBold.copyWith(color: AppStyles.whiteColor),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
