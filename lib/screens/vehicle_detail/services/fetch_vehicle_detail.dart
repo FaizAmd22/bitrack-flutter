@@ -1,0 +1,37 @@
+import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
+import 'package:dio/dio.dart';
+
+class FetchVehicleDetail {
+  const FetchVehicleDetail();
+
+  Future<Map<String, dynamic>> getVehicleByVehicleId(String id) async {
+    try {
+      final res = await ApiClient.dio.get(
+        '/vehicle-monitoring/cluster/mw-mapping/$id/vehicle_id',
+      );
+
+      final body = res.data;
+      if (body is! Map) {
+        throw Exception('Response bukan JSON object');
+      }
+
+      final data = body['data'];
+      if (data is Map<String, dynamic>) return data;
+
+      throw Exception(
+        'Field "data" kosong / tidak valid: ${data.runtimeType} -> $data',
+      );
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      final data = e.response?.data;
+
+      if (data is Map && data['error_msg'] != null) {
+        throw Exception('Request failed ($status): ${data['error_msg']}');
+      }
+
+      throw Exception(
+        'Request failed ($status): ${data?.toString() ?? e.message}',
+      );
+    }
+  }
+}
