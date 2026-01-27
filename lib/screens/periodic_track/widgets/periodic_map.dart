@@ -99,9 +99,8 @@ class _PeriodicMapState extends State<PeriodicMap>
   void _updatePlaybackSpeedOnly() {
     if (widget.points.length < 2) return;
 
-    final pts = widget.points
-        .map((e) => LatLng(e.latitude, e.longitude))
-        .toList();
+    final pts =
+        widget.points.map((e) => LatLng(e.latitude, e.longitude)).toList();
 
     final si = widget.speedIndex.clamp(0, _speeds.length - 1);
     final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
@@ -201,9 +200,8 @@ class _PeriodicMapState extends State<PeriodicMap>
   void _setupPlaybackData({required bool resetPos}) {
     if (widget.points.length < 2) return;
 
-    final pts = widget.points
-        .map((e) => LatLng(e.latitude, e.longitude))
-        .toList();
+    final pts =
+        widget.points.map((e) => LatLng(e.latitude, e.longitude)).toList();
 
     final si = widget.speedIndex.clamp(0, _speeds.length - 1);
     final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
@@ -216,6 +214,19 @@ class _PeriodicMapState extends State<PeriodicMap>
     if (resetPos) {
       setState(() => _truckPos = pts[safeIndex]);
     }
+  }
+
+  double _bearingLatLng(LatLng a, LatLng b) {
+    final lat1 = a.latitude * math.pi / 180;
+    final lat2 = b.latitude * math.pi / 180;
+    final dLon = (b.longitude - a.longitude) * math.pi / 180;
+
+    final y = math.sin(dLon) * math.cos(lat2);
+    final x = math.cos(lat1) * math.sin(lat2) -
+        math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
+
+    final brng = math.atan2(y, x) * 180 / math.pi;
+    return (brng + 360) % 360;
   }
 
   @override
@@ -231,21 +242,22 @@ class _PeriodicMapState extends State<PeriodicMap>
     final truckPoint =
         _truckPos ?? LatLng(fallbackPoint.latitude, fallbackPoint.longitude);
 
-    final coords = widget.points
-        .map((p) => LatLng(p.latitude, p.longitude))
-        .toList();
+    final coords =
+        widget.points.map((p) => LatLng(p.latitude, p.longitude)).toList();
 
     final idxForInfo = widget.isPlaying
         ? _playbackIndex.clamp(0, widget.points.length - 1)
         : safeSelectedIndex;
 
     final curr = widget.points[idxForInfo];
-    final prev = idxForInfo <= 0 ? curr : widget.points[idxForInfo - 1];
-    final next = idxForInfo >= widget.points.length - 1
-        ? curr
-        : widget.points[idxForInfo + 1];
+    final nextPoint = idxForInfo < widget.points.length - 1
+        ? widget.points[idxForInfo + 1]
+        : curr;
 
-    final bearing = _bearingDeg(prev, next);
+    final LatLng targetLatLng = LatLng(nextPoint.latitude, nextPoint.longitude);
+    final LatLng currentLatLng = truckPoint;
+
+    final bearing = _bearingLatLng(currentLatLng, targetLatLng);
     final tooltip = getDisplayValue(curr, widget.metric);
 
     final initialCenter = LatLng(
@@ -258,16 +270,22 @@ class _PeriodicMapState extends State<PeriodicMap>
       options: MapOptions(
         initialCenter: initialCenter,
         initialZoom: 16,
-
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+        ),
+        initialRotation: 0,
         onPositionChanged: (pos, hasGesture) {
           if (!hasGesture) return;
 
           _userIsInteracting = true;
           _resumeAutoCenterTimer?.cancel();
-          _resumeAutoCenterTimer = Timer(const Duration(milliseconds: 900), () {
-            if (!mounted) return;
-            setState(() => _userIsInteracting = false);
-          });
+          _resumeAutoCenterTimer = Timer(
+            const Duration(milliseconds: 900),
+            () {
+              if (!mounted) return;
+              setState(() => _userIsInteracting = false);
+            },
+          );
         },
       ),
       children: [
@@ -277,7 +295,6 @@ class _PeriodicMapState extends State<PeriodicMap>
               : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.bitrack.mobile',
         ),
-
         PolylineLayer(
           polylines: [
             Polyline(
@@ -287,34 +304,30 @@ class _PeriodicMapState extends State<PeriodicMap>
             ),
           ],
         ),
-
         MarkerLayer(
           markers: widget.points
               .asMap()
               .entries
               .where((e) => (e.value.eventType) != 'SAMPLING')
               .map((e) {
-                final p = e.value;
-                return Marker(
-                  point: LatLng(p.latitude, p.longitude),
+            final p = e.value;
+            return Marker(
+              point: LatLng(p.latitude, p.longitude),
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () => widget.onPointSelected(e.key),
+                child: SvgPicture.asset(
+                  AppMedia.alertIcon,
                   width: 36,
                   height: 36,
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () => widget.onPointSelected(e.key),
-                    child: SvgPicture.asset(
-                      AppMedia.alertIcon,
-                      width: 36,
-                      height: 36,
-                    ),
-                  ),
-                );
-              })
-              .toList(),
+                ),
+              ),
+            );
+          }).toList(),
         ),
-
         MarkerLayer(markers: _buildStartEndMarkers()),
-
         MarkerLayer(
           markers: [
             Marker(
@@ -339,8 +352,7 @@ class _PeriodicMapState extends State<PeriodicMap>
     final dLon = (b.longitude - a.longitude) * math.pi / 180;
 
     final y = math.sin(dLon) * math.cos(lat2);
-    final x =
-        math.cos(lat1) * math.sin(lat2) -
+    final x = math.cos(lat1) * math.sin(lat2) -
         math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
 
     final brng = math.atan2(y, x) * 180 / math.pi;
