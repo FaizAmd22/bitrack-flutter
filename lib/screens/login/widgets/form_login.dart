@@ -2,6 +2,7 @@ import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/app_input_field.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/confirm_dialog.dart';
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:bitrack_mobile_flutter/screens/login/widgets/biometric_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,22 +51,27 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     super.dispose();
   }
 
-  String? _required(String name, String? v) =>
-      (v == null || v.trim().isEmpty) ? "$name tidak boleh kosong" : null;
+  String? _required(AppLocalizations translate, String name, String? v) =>
+      (v == null || v.trim().isEmpty) ? translate.fieldRequired(name) : null;
 
-  String? _emailValidator(String? v) {
+  String? _emailValidator(AppLocalizations translate, String? v) {
     final email = (v ?? '').trim();
-    if (email.isEmpty) return "Email tidak boleh kosong";
-    if (!_emailRegex.hasMatch(email)) return "Format email tidak valid";
+    if (email.isEmpty) return translate.emailRequired;
+    if (!_emailRegex.hasMatch(email)) return translate.emailInvalid;
     return null;
   }
 
   Future<void> _goHome() async {
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.homeScreen,
+      (_) => false,
+    );
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleLogin(AppLocalizations translate) async {
     final valid = _formKey.currentState?.validate() ?? false;
     if (!valid) return;
 
@@ -82,11 +88,10 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     await showDialog(
       context: context,
       builder: (_) => ConfirmDialog(
-        title: "Tambahkan Fingerprint",
-        desc:
-            "Apakah Anda ingin menambahkan fingerprint untuk login selanjutnya?",
-        textCancel: "Batalkan",
-        textSubmit: "Simpan",
+        title: translate.addFingerprint,
+        desc: translate.addFingerprintDesc,
+        textCancel: translate.cancel,
+        textSubmit: translate.save,
         funcCancel: () async {
           await controller.clearBiometricCredential();
           if (mounted) setState(() => _showBiometricButton = false);
@@ -106,6 +111,8 @@ class _FormLoginState extends ConsumerState<FormLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context);
+
     final isLoading = ref.watch(
       authControllerProvider.select((s) => s.isLoading),
     );
@@ -117,22 +124,22 @@ class _FormLoginState extends ConsumerState<FormLogin> {
       key: _formKey,
       child: Column(
         children: [
-          Center(child: Text("Login", style: AppStyles.textLBold)),
+          Center(child: Text(translate.login, style: AppStyles.textLBold)),
           const SizedBox(height: 24),
 
           AppInputField(
-            label: "Email",
-            placeholder: "Input your email ...",
+            label: translate.email,
+            placeholder: translate.emailPlaceholder,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             prefixIcon: Icons.email_outlined,
-            validator: _emailValidator,
+            validator: (v) => _emailValidator(translate, v),
             prefixIconColor: AppStyles.primaryColor,
           ),
           const SizedBox(height: 15),
           AppInputField(
-            label: "Password",
-            placeholder: "Input your password ...",
+            label: translate.password,
+            placeholder: translate.passwordPlaceholder,
             controller: _passwordController,
             prefixIcon: Icons.lock_outline,
             prefixIconColor: AppStyles.primaryColor,
@@ -144,7 +151,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
               onPressed: () => setState(() => _showPassword = !_showPassword),
               color: AppStyles.primaryColor,
             ),
-            validator: (v) => _required("Password", v),
+            validator: (v) => _required(translate, translate.password, v),
           ),
 
           if ((errorMessage ?? '').isNotEmpty) ...[
@@ -171,20 +178,19 @@ class _FormLoginState extends ConsumerState<FormLogin> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: isLoading ? null : _handleLogin,
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      await _handleLogin(translate);
+                    },
               child: isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppStyles.whiteColor,
-                        ),
-                      ),
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : Text(
-                      "Login",
+                      translate.login,
                       style: AppStyles.textSmBold.copyWith(
                         color: AppStyles.whiteColor,
                       ),

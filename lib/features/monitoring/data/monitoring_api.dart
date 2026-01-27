@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
 
 class MonitoringApi {
@@ -37,11 +36,6 @@ class MonitoringApi {
         '/vehicle-monitoring/cluster/fleet-group/$userId$statusParam',
       );
       return response.data as Map<String, dynamic>;
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw Exception('Sesi login berakhir, silakan login kembali.');
-      }
-      throw Exception(e.message ?? 'Gagal memuat data monitoring');
     } catch (_) {
       throw Exception('Terjadi kesalahan saat memuat monitoring');
     }
@@ -55,11 +49,6 @@ class MonitoringApi {
         '/vehicle-monitoring/child/fleet-group/$userId',
       );
       return response.data as Map<String, dynamic>;
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw Exception('Sesi login berakhir, silakan login kembali.');
-      }
-      throw Exception(e.message ?? 'Gagal memuat data geofence');
     } catch (_) {
       throw Exception('Terjadi kesalahan saat memuat geofence');
     }

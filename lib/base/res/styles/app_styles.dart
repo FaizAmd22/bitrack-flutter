@@ -11,6 +11,7 @@ class AppStyles {
   static const Color textLightGrayColor = Color(0xFFB0B0B0);
   static const Color textDarkGrayColor = Color(0xFF7B7B7B);
   static const Color borderLightGray = Color(0xFFDEDEDE);
+  static const Color inputDisableBg = Color(0xFFEEEEEE);
 
   static const Color redColor = Color(0xFFD84040);
   static const Color bgRedColor = Color.fromARGB(26, 216, 64, 64);
@@ -22,6 +23,7 @@ class AppStyles {
   static const Color yellowColor = Color(0xFFFDCC07);
 
   static const Color bottomNavbarColor = Color(0xFFFEF7FF);
+  static const Color plateNumberBg = Color(0xFFF4F4F4);
 
   static const TextStyle textLBold = TextStyle(
     fontSize: 22,

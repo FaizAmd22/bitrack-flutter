@@ -31,7 +31,6 @@ class _AuthGuardState extends State<AuthGuard> {
         _loading = false;
         _authed = false;
       });
-      // navigate sekali
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.loginScreen,

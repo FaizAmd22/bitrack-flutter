@@ -271,6 +271,14 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
     // final showFilterButton = widget.onTapFilter != null;
     final showFilterButton = false;
 
+    final normalBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: const BorderSide(
+        color: AppStyles.borderLightGray,
+        width: 1.2,
+      ),
+    );
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: Row(
@@ -309,10 +317,12 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
                       ),
                       filled: true,
                       fillColor: AppStyles.whiteColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide.none,
-                      ),
+                      border: normalBorder,
+                      enabledBorder: normalBorder,
+                      focusedBorder: normalBorder,
+                      disabledBorder: normalBorder,
+                      errorBorder: normalBorder,
+                      focusedErrorBorder: normalBorder,
                     ),
                   ),
                 );

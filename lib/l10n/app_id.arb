@@ -1,0 +1,195 @@
+{
+  "@@locale": "id",
+  "appTitle": "Bitrack",
+  "language": "Bahasa",
+  "english": "Inggris",
+  "indonesian": "Bahasa Indonesia",
+
+  "navTracker": "Tracker",
+  "navVehicle": "Kendaraan",
+  "navProfile": "Profil",
+
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "emailPlaceholder": "Masukkan email ...",
+  "passwordPlaceholder": "Masukkan password ...",
+
+  "emailRequired": "Email tidak boleh kosong",
+  "emailInvalid": "Format email tidak valid",
+  "fieldRequired": "{name} tidak boleh kosong",
+
+  "addFingerprint": "Tambahkan Fingerprint",
+  "addFingerprintDesc": "Apakah Anda ingin menambahkan fingerprint untuk login selanjutnya?",
+  "cancel": "Batalkan",
+  "save": "Simpan",
+
+  "biometricLoginLabel": "Login menggunakan metode biometrik",
+  "biometricNotSupported": "Perangkat tidak mendukung login biometrik",
+  "biometricReason": "Gunakan biometrik untuk login",
+  "biometricCredNotFound": "Data login biometrik tidak ditemukan",
+  "loginFailedTryAgain": "Login gagal, coba lagi",
+  "errorPrefix": "Terjadi error: {message}",
+
+  "notificationSettings": "Pengaturan Notifikasi",
+  "alert": "Peringatan",
+  "softwareUpdate": "Pembaruan Perangkat Lunak",
+
+  "profileChangePassword": "Ubah Password",
+  "profileNotificationSetting": "Pengaturan Notifikasi",
+  "profileLanguage": "Bahasa",
+
+  "signOut": "Keluar",
+  "signOutTitle": "Keluar Akun",
+  "signOutDesc": "Apakah Anda yakin ingin keluar dari akun?",
+  "cancel": "Batal",
+  "logout": "Keluar",
+
+  "searchLicensePlate": "Cari Plat Nomor Kendaraan ...",
+  "noVehicleYet": "Belum ada data kendaraan",
+  "dataNotFound": "Data tidak ditemukan",
+
+  "showPlate": "Tampilkan Plat",
+  "hidePlate": "Sembunyikan Plat",
+
+  "vehicleDataCantLoaded": "Data kendaraan tidak bisa dimuat.",
+  "pleaseTryAgain": "Silakan coba lagi.",
+  "tryAgain": "Coba lagi.",
+
+  "vehicleInformation": "Informasi Kendaraan",
+  "deviceInformation": "Informasi Perangkat",
+  "review": "Tinjau",
+
+  "tabInformation": "Informasi",
+  "tabStatus": "Status",
+  "tabSensor": "Sensor",
+
+  "vehicleIdNotAvailableDesc": "vehicle_id belum tersedia.\nTutup modal lalu buka lagi dari Vehicle Detail.",
+
+  "failedLoadData": "Gagal memuat data",
+  "retry": "Coba lagi",
+
+  "vehicleInfoGpsDate": "Tanggal GPS",
+  "vehicleInfoFleetGroup": "Grup Armada",
+  "vehicleInfoLicensePlate": "Plat Nomor",
+  "vehicleInfoImei": "IMEI",
+  "vehicleInfoLatitude": "Latitude",
+  "vehicleInfoLongitude": "Longitude",
+  "vehicleInfoGoogleMap": "Google Map",
+  "vehicleInfoStreetView": "Street View",
+
+  "showGoogleMap": "Tampilkan Google Map",
+  "showStreetView": "Tampilkan Street View",
+
+  "vehicleStatusSpeed": "Kecepatan",
+  "vehicleStatusTotalOdometer": "Total Odometer",
+  "vehicleStatusInternalBattery": "Baterai Internal",
+  "vehicleStatusExternalBattery": "Baterai Eksternal",
+
+  "vehicleSensorFuel": "Bahan Bakar",
+  "vehicleSensorDirection": "Arah",
+  "vehicleSensorHumidity": "Kelembapan",
+  "vehicleSensorLeftDoor": "Pintu Kiri",
+  "vehicleSensorRightDoor": "Pintu Kanan",
+  "vehicleSensorBackDoor": "Pintu Belakang",
+
+  "active": "Aktif",
+  "inactive": "Nonaktif",
+  "createdAt": "Dibuat pada",
+
+  "addNewVehicleTitle": "Tambah Kendaraan Baru",
+  "updateVehicleTitle": "Ubah Kendaraan",
+
+
+  "addVehicleCta": "Tambah Kendaraan",
+  "updateVehicleCta": "Ubah Kendaraan",
+
+  "confirm": "Konfirmasi",
+
+  "addVehicleConfirmAddTitle": "Yakin tambah kendaraan ini?",
+  "addVehicleConfirmAddDesc": "Luangkan waktu untuk memastikan detailnya. Setelah dikirim, kendaraan ini akan ditambahkan ke daftar Fleet Group Anda.",
+
+  "addVehicleConfirmUpdateTitle": "Yakin ubah kendaraan ini?",
+  "addVehicleConfirmUpdateDesc": "Luangkan waktu untuk memeriksa perubahan ini. Mengirim akan memperbarui informasi kendaraan ini di daftar Fleet Group Anda.",
+
+  "createTodo": "Tambah (TODO)",
+  "updateTodo": "Ubah (TODO)",
+
+  "plateNumber": "Plat Nomor",
+  "plateNumberHint": "Masukkan plat nomor kendaraan ...",
+
+  "fieldCantEmpty": "Field tidak boleh kosong",
+  "brand": "Merek",
+  "model": "Model",
+
+  "selectBrandHint": "Pilih merek ...",
+  "selectModelHint": "Pilih model ...",
+  "selectBrandFirst": "Pilih merek terlebih dahulu",
+
+  "vehicleType": "Tipe",
+  "vehicleTypeHint": "Masukkan tipe kendaraan ...",
+
+  "vehicleYear": "Tahun",
+  "vehicleYearHint": "Masukkan tahun kendaraan ...",
+
+  "vehicleColor": "Warna",
+  "vehicleColorHint": "Masukkan warna kendaraan ...",
+
+  "vehicleCategory": "Kategori Kendaraan",
+  "selectVehicleCategoryHint": "Pilih kategori kendaraan ...",
+
+  "odometerKm": "Odometer (KM)",
+  "odometerHint": "Masukkan odometer kendaraan ...",
+
+  "vin": "VIN",
+  "vinHint": "Masukkan VIN kendaraan ...",
+
+  "engineNumber": "Nomor Mesin",
+  "engineNumberHint": "Masukkan nomor mesin kendaraan ...",
+
+  "next": "Selanjutnya",
+  "previous": "Sebelumnya",
+
+  "installationDate": "Tanggal Instalasi",
+  "installationDateHint": "Pilih tanggal instalasi ...",
+
+  "deviceType": "Tipe Perangkat",
+  "deviceTypeHint": "Pilih tipe perangkat",
+
+  "deviceModel": "Model Perangkat",
+  "deviceModelHint": "Pilih model perangkat ...",
+
+  "simCardNumber": "Nomor SIM Card",
+  "simCardNumberHint": "Masukkan Nomor SIM Card...",
+
+  "imeiObdNumber": "Nomor IMEI OBD",
+  "imeiObdNumberHint": "Masukkan Nomor IMEI OBD...",
+
+  "otpEnterVerificationCodeTitle": "Masukkan Kode Verifikasi",
+  "otpSentToEmail": "Kode verifikasi telah dikirim ke\n{email}",
+  "otpEnter5Digits": "Silakan masukkan kode 5 digit.",
+  "otpInvalidTryAgain": "Kode verifikasi tidak valid. Silakan coba lagi.",
+
+  "otpNotReceivedEmailPrefix": "Belum menerima email? ",
+  "otpTryAgain": "Kirim Ulang.",
+  "otpTryAgainCountdown": "Kirim Ulang. ({seconds}d)",
+  "otpCodeResentDummy": "Kode dikirim ulang.",
+  "otpVerifyCodeBtn": "Verifikasi Kode",
+
+  "passwordNewTitle": "Password Baru",
+  "passwordNewHint": "Masukkan password baru ...",
+  "passwordReEnterTitle": "Ulangi Password Baru",
+  "passwordReEnterHint": "Masukkan ulang password baru ...",
+
+  "passwordRuleMin8": "Minimal 8 karakter",
+  "passwordRuleUpper": "Harus ada minimal 1 huruf besar (A-Z)",
+  "passwordRuleNumber": "Harus ada minimal 1 angka (0-9)",
+  "passwordRuleSymbol": "Harus ada minimal 1 simbol (!, @, #, dll.)",
+
+  "passwordFillAllFields": "Silakan isi semua field.",
+  "passwordNotMeetRequirements": "Password belum memenuhi ketentuan.",
+  "passwordNotMatch": "Password tidak sama.",
+  "passwordUpdatedDummy": "Password berhasil diperbarui.",
+
+  "passwordChangeSaveBtn": "Ubah & Simpan Password Baru"
+}

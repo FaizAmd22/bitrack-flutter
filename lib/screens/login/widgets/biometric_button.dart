@@ -1,6 +1,9 @@
+// ignore_for_file: unused_element, deprecated_member_use
+
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
 import 'package:bitrack_mobile_flutter/features/auth/providers/auth_providers.dart';
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,22 +43,22 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
   Future<void> _handleBiometricLogin() async {
     if (_isLoading) return;
 
+    final t = AppLocalizations.of(context);
+
     try {
       final canCheck = await _localAuth.canCheckBiometrics;
       final supported = await _localAuth.isDeviceSupported();
 
       if (!canCheck || !supported) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Perangkat tidak mendukung biometric login'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.biometricNotSupported)));
         return;
       }
 
       final ok = await _localAuth.authenticate(
-        localizedReason: 'Gunakan biometrik untuk login',
+        localizedReason: t.biometricReason, // ✅
         options: const AuthenticationOptions(
           biometricOnly: true,
           stickyAuth: true,
@@ -68,7 +71,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Data login biometric tidak ditemukan'),
+            content: Text(t.biometricCredNotFound), // ✅
             backgroundColor: AppStyles.redColor,
           ),
         );
@@ -88,7 +91,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       if (result == null) {
         final err =
             ref.read(authControllerProvider).errorMessage ??
-            'Login gagal, coba lagi';
+            t.loginFailedTryAgain; // ✅
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(err), backgroundColor: AppStyles.redColor),
         );
@@ -98,11 +101,10 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
     } catch (e) {
       if (!mounted) return;
+      final msg = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            e.toString().replaceFirst('Exception: ', 'Terjadi error: '),
-          ),
+          content: Text(t.errorPrefix(msg)), // ✅ param
           backgroundColor: AppStyles.redColor,
         ),
       );
@@ -113,6 +115,8 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context); // ✅
+
     return InkWell(
       onTap: _isLoading ? null : _handleBiometricLogin,
       borderRadius: BorderRadius.circular(12),
@@ -129,7 +133,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
             )
           else
             Text(
-              "Login Using Biometric Method",
+              t.biometricLoginLabel, // ✅
               style: AppStyles.textMdBold.copyWith(
                 color: AppStyles.primaryColor,
               ),

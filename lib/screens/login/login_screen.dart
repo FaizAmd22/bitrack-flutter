@@ -26,10 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           child: Column(
-            spacing: 20,
             children: [
               const Expanded(child: SizedBox()),
               Image.asset(AppMedia.logo, scale: 2.5),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 width: size.width * 0.9,
                 padding: const EdgeInsets.symmetric(

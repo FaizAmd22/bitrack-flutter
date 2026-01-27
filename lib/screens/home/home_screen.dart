@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'dart:async';
 
@@ -6,6 +6,7 @@ import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
 import 'package:bitrack_mobile_flutter/features/monitoring/providers/fleet_geofence_provider.dart';
 import 'package:bitrack_mobile_flutter/features/monitoring/providers/monitoring_providers.dart';
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:bitrack_mobile_flutter/screens/home/models/filter_model.dart';
 import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
 import 'package:bitrack_mobile_flutter/screens/home/widgets/filter_tracker_bottom_sheet.dart';
@@ -15,7 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final bool isActive;
+  const HomeScreen({super.key, required this.isActive});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -27,13 +29,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? _searchQuery;
   String? _debouncedQuery;
   Timer? _debounce;
+  Timer? _polling;
 
   bool _showPlate = false;
+
+  final MonitoringMapController _mapController = MonitoringMapController();
 
   List<String> _cachedSuggestionPlates = const [];
   int _lastVehiclesHash = 0;
 
-  // ===== tempat tampung hasil selection =====
+  List<Vehicle> _filteredVehiclesCache = const [];
+
   FilterOption _selectedFilterType = const FilterOption(
     value: null,
     label: 'Pilih jenis filter',
@@ -49,12 +55,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     label: 'Semua Geofence',
   );
 
-  // FINAL id yang dipakai nanti untuk filter map/request
   String? selectedFleetgroupId;
   String? selectedGeofenceId;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.isActive) _startPolling();
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.isActive != widget.isActive) {
+      if (widget.isActive) {
+        _startPolling();
+        ref.invalidate(monitoringProvider(_selectedActivity));
+      } else {
+        _stopPolling();
+      }
+    }
+  }
+
+  void _startPolling() {
+    _polling?.cancel();
+    _polling = Timer.periodic(const Duration(seconds: 20), (_) {
+      if (!mounted) return;
+      ref.invalidate(monitoringProvider(_selectedActivity));
+    });
+  }
+
+  void _stopPolling() {
+    _polling?.cancel();
+    _polling = null;
+  }
+
+  @override
   void dispose() {
+    _stopPolling();
     _debounce?.cancel();
     super.dispose();
   }
@@ -66,6 +105,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _debounce = Timer(const Duration(milliseconds: 200), () {
       if (!mounted) return;
       setState(() => _debouncedQuery = val);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _mapController.fitToVehicles(_filteredVehiclesCache);
+      });
     });
   }
 
@@ -80,7 +124,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (name.isEmpty) continue;
 
       if (seen.add(name)) {
-        // ✅ sama seperti React: value = fleet_group_name
         out.add(FilterOption(value: name, label: name));
       }
     }
@@ -128,10 +171,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _openFilterSheet(List<Vehicle> currentVehicles) async {
-    // ✅ Fleet Group dari Monitoring (Framework7 style)
     final fleetGroups = _buildFleetGroupOptionsFromMonitoring(currentVehicles);
 
-    // ✅ Geofence tetap dari API child/fleet-group
     Map<String, dynamic> dataAsync;
     try {
       dataAsync = await ref.read(fleetGeofenceProvider.future);
@@ -162,10 +203,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _selectedFleetGroup = result.selectedFleetGroup;
       _selectedGeofence = result.selectedGeofence;
 
-      // ✅ karena value fleetgroup = NAME, bukan id
       selectedFleetgroupId = _selectedFleetGroup.value;
       selectedGeofenceId = _selectedGeofence.value;
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _mapController.fitToVehicles(_filteredVehiclesCache);
+    });
+  }
+
+  List<Vehicle> _filterVehicles(
+    List<Vehicle> source, {
+    String? search,
+    String? fleetGroupName,
+    String? geofenceId,
+  }) {
+    Iterable<Vehicle> out = source;
+
+    final q = (search ?? '').trim();
+    if (q.isNotEmpty) {
+      final needle = q.toLowerCase();
+      out = out.where((v) => v.licensePlate.toLowerCase().startsWith(needle));
+    }
+
+    if (fleetGroupName != null && fleetGroupName.trim().isNotEmpty) {
+      final fg = fleetGroupName.trim();
+      out = out.where((v) => v.fleetGroupName.trim() == fg);
+    }
+
+    // if (geofenceId != null && geofenceId.trim().isNotEmpty) {
+    //   out = out.where((v) => v.geofenceId == geofenceId);
+    // }
+
+    return out.toList(growable: false);
   }
 
   @override
@@ -173,7 +244,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final monitoringAsync = ref.watch(monitoringProvider(_selectedActivity));
     final rawVehicles = monitoringAsync.asData?.value ?? const <Vehicle>[];
 
-    // cache suggestion plates
     final currentHash = Object.hashAll(rawVehicles.map((e) => e.licensePlate));
     if (currentHash != _lastVehiclesHash) {
       _lastVehiclesHash = currentHash;
@@ -183,45 +253,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .toList(growable: false);
     }
 
-    List<Vehicle> _filterVehicles(
-      List<Vehicle> source, {
-      String? search,
-      String? fleetGroupName,
-      String? geofenceId,
-    }) {
-      Iterable<Vehicle> out = source;
-
-      // search by plate
-      final q = (search ?? '').trim();
-      if (q.isNotEmpty) {
-        final needle = q.toLowerCase();
-        out = out.where((v) => v.licensePlate.toLowerCase().startsWith(needle));
-      }
-
-      // ✅ Fleet group filter (by name)
-      if (fleetGroupName != null && fleetGroupName.trim().isNotEmpty) {
-        final fg = fleetGroupName.trim();
-        out = out.where((v) => v.fleetGroupName.trim() == fg);
-      }
-
-      // ⚠️ Geofence filter:
-      // kendaraan dari monitoring endpoint biasanya tidak punya geofence_id langsung.
-      // jadi kalau monitoring data kamu tidak punya geofence_id, filter ini tidak bisa dilakukan dari list vehicles saja.
-      // Kalau ada field geofence_id di JSON monitoring, baru bisa:
-      //
-      // if (geofenceId != null && geofenceId.trim().isNotEmpty) {
-      //   out = out.where((v) => v.geofenceId == geofenceId);
-      // }
-
-      return out.toList(growable: false);
-    }
-
     final filteredVehicles = _filterVehicles(
       rawVehicles,
       search: _debouncedQuery,
       fleetGroupName: selectedFleetgroupId,
       geofenceId: selectedGeofenceId,
     );
+
+    _filteredVehiclesCache = filteredVehicles;
 
     return Scaffold(
       backgroundColor: AppStyles.bgColor,
@@ -232,6 +271,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: MonitoringMap(
                 vehicles: filteredVehicles,
                 showPlate: _showPlate,
+                controller: _mapController,
               ),
             ),
           ),
@@ -254,6 +294,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   _selectedActivity = value;
                   _searchQuery = '';
                   _debouncedQuery = '';
+                });
+
+                ref.invalidate(monitoringProvider(value));
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  _mapController.fitToVehicles(_filteredVehiclesCache);
                 });
               },
               totalVehicle: rawVehicles.length,
@@ -299,6 +346,8 @@ class _TogglePlateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context);
+
     final borderColor = showPlate
         ? AppStyles.primaryColor
         : AppStyles.whiteColor.withOpacity(0.5);
@@ -330,7 +379,7 @@ class _TogglePlateButton extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              showPlate ? 'Hide Plate' : 'Show Plate',
+              showPlate ? translate.hidePlate : translate.showPlate,
               style: AppStyles.textMd.copyWith(color: fgColor),
             ),
           ],

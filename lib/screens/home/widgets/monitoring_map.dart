@@ -10,14 +10,22 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
 
+class MonitoringMapController {
+  void Function(List<Vehicle> vehicles)? _fit;
+
+  void fitToVehicles(List<Vehicle> vehicles) => _fit?.call(vehicles);
+}
+
 class MonitoringMap extends StatefulWidget {
   final List<Vehicle> vehicles;
   final bool showPlate;
+  final MonitoringMapController? controller;
 
   const MonitoringMap({
     super.key,
     required this.vehicles,
     required this.showPlate,
+    this.controller,
   });
 
   @override
@@ -35,15 +43,49 @@ class _MonitoringMapState extends State<MonitoringMap> {
   List<Marker> _cachedMarkers = const [];
   int _cacheKey = 0;
 
+  void fitToVehicles(List<Vehicle> vehicles) {
+    if (vehicles.isEmpty) return;
+
+    if (vehicles.length == 1) {
+      final v = vehicles.first;
+      _mapController.move(LatLng(v.latitude, v.longitude), 16);
+      return;
+    }
+
+    final lats = vehicles.map((e) => e.latitude);
+    final lngs = vehicles.map((e) => e.longitude);
+
+    final minLat = lats.reduce((a, b) => a < b ? a : b);
+    final maxLat = lats.reduce((a, b) => a > b ? a : b);
+    final minLng = lngs.reduce((a, b) => a < b ? a : b);
+    final maxLng = lngs.reduce((a, b) => a > b ? a : b);
+
+    final bounds = LatLngBounds(LatLng(minLat, minLng), LatLng(maxLat, maxLng));
+
+    _mapController.fitCamera(
+      CameraFit.bounds(
+        bounds: bounds,
+        padding: const EdgeInsets.fromLTRB(60, 160, 60, 120),
+      ),
+    );
+  }
+
   @override
   void didUpdateWidget(covariant MonitoringMap oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?._fit = null;
+      widget.controller?._fit = fitToVehicles;
+    }
+
     _rebuildMarkersIfNeeded();
   }
 
   @override
   void initState() {
     super.initState();
+    widget.controller?._fit = fitToVehicles;
     _rebuildMarkersIfNeeded();
   }
 
@@ -109,6 +151,12 @@ class _MonitoringMapState extends State<MonitoringMap> {
           );
         })
         .toList(growable: false);
+  }
+
+  @override
+  void dispose() {
+    widget.controller?._fit = null;
+    super.dispose();
   }
 
   String _resolveTruckAsset(Vehicle v, DateTime now) {

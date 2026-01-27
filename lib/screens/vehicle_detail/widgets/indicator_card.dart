@@ -5,10 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 
 class IndicatorItemData {
-  final String icon; // "engine.svg"
-  final String label; // "Engine ON"
-  final Color background; // bg color
-  final Color color; // text & icon color
+  final String icon;
+  final String label;
+  final Color background;
+  final Color color;
 
   const IndicatorItemData({
     required this.icon,

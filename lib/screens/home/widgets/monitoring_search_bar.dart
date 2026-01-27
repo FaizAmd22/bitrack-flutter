@@ -1,4 +1,5 @@
 // ignore_for_file: deprecated_member_use
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/plate_search_bar.dart';
@@ -37,6 +38,8 @@ class MonitoringSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Column(
@@ -47,7 +50,7 @@ class MonitoringSearchBar extends StatelessWidget {
             onChanged: onSearchChanged,
             suggestionPlates: suggestionPlates,
             onTapFilter: onTapFilter,
-            hintText: 'Cari Plat Nomor Kendaraan ...',
+            hintText: t.searchLicensePlate,
           ),
           const SizedBox(height: 14),
           SingleChildScrollView(

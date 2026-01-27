@@ -3,6 +3,7 @@
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/app_draggable_sheet.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/tab_container.dart';
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:bitrack_mobile_flutter/screens/vehicle_detail/providers/vehicle_information_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bitrack_mobile_flutter/base/widgets/app_tab_bar.dart';
@@ -11,10 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 enum VehicleInfoTab { information, status, sensor }
 
-class VehicleInformationBottomSheet extends ConsumerStatefulWidget {
-  final String vehicleId;
+enum RowTextType { text, url }
 
-  const VehicleInformationBottomSheet({super.key, required this.vehicleId});
+class VehicleInformationBottomSheet extends ConsumerStatefulWidget {
+  const VehicleInformationBottomSheet({super.key});
 
   @override
   ConsumerState<VehicleInformationBottomSheet> createState() =>
@@ -27,43 +28,48 @@ class _VehicleInformationBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    final asyncState = ref.watch(vehicleInformationProvider(widget.vehicleId));
-    final h = MediaQuery.sizeOf(context).height;
+    final vehicleId = ref.watch(vehicleIdProvider);
+    final t = AppLocalizations.of(context);
+
+    if (vehicleId == null || vehicleId.trim().isEmpty) {
+      return AppDraggableSheet(
+        title: t.vehicleInformation,
+        sliverBuilder: (context, sc) => ListView(
+          controller: sc,
+          padding: const EdgeInsets.all(16),
+          children: [Text(t.vehicleIdNotAvailableDesc)],
+        ),
+      );
+    }
+
+    final async = ref.watch(vehicleDetailByVehicleIdProvider(vehicleId));
 
     return AppDraggableSheet(
-      title: 'Vehicle Information',
+      title: t.vehicleInformation,
       sliverBuilder: (context, scrollController) {
         return ListView(
           controller: scrollController,
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           children: [
-            const SizedBox(height: 8),
-            const Text(
-              "Vehicle Information",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
+            Text(t.vehicleInformation, style: AppStyles.textMdBold),
             const SizedBox(height: 20),
-
             AppTabBar<VehicleInfoTab>(
-              tabs: const [
+              tabs: [
                 AppTabItem(
                   value: VehicleInfoTab.information,
-                  label: 'Information',
+                  label: t.tabInformation,
                 ),
-                AppTabItem(value: VehicleInfoTab.status, label: 'Status'),
-                AppTabItem(value: VehicleInfoTab.sensor, label: 'Sensor'),
+                AppTabItem(value: VehicleInfoTab.status, label: t.tabStatus),
+                AppTabItem(value: VehicleInfoTab.sensor, label: t.tabSensor),
               ],
               activeValue: _activeTab,
               onChanged: (tab) => setState(() => _activeTab = tab),
               padding: const EdgeInsets.all(4),
             ),
-
             const SizedBox(height: 12),
-
             SizedBox(
-              height: h * 0.35,
               width: double.infinity,
-              child: asyncState.when(
+              child: async.when(
                 loading: () => const TabContainer(
                   child: Center(child: CircularProgressIndicator()),
                 ),
@@ -71,26 +77,21 @@ class _VehicleInformationBottomSheetState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Gagal load data", style: AppStyles.textMd),
-                      const SizedBox(height: 8),
+                      Text(t.failedLoadData, style: AppStyles.textSm),
                       Text(e.toString(), style: AppStyles.textSm),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () {
-                          ref
-                              .read(
-                                vehicleInformationProvider(
-                                  widget.vehicleId,
-                                ).notifier,
-                              )
-                              .load(widget.vehicleId);
+                          ref.invalidate(
+                            vehicleDetailByVehicleIdProvider(vehicleId),
+                          );
                         },
-                        child: const Text("Retry"),
+                        child: Text(t.retry),
                       ),
                     ],
                   ),
                 ),
-                data: (state) => _buildTabContent(context, state.detailVehicle),
+                data: (dataVehicle) => _buildTabContent(context, dataVehicle),
               ),
             ),
           ],
@@ -103,6 +104,8 @@ class _VehicleInformationBottomSheetState
     BuildContext context,
     Map<String, dynamic> dataVehicle,
   ) {
+    final t = AppLocalizations.of(context);
+
     switch (_activeTab) {
       case VehicleInfoTab.information:
         return TabContainer(
@@ -110,43 +113,62 @@ class _VehicleInformationBottomSheetState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RowText(
-                text1: "GPS Date",
+                text1: t.vehicleInfoGpsDate,
                 text2: "${dataVehicle['device_time'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Fleet Group",
+                text1: 'Fleet Group',
                 text2: "${dataVehicle['fleet_group_name'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "License Plate",
+                text1: t.vehicleInfoLicensePlate,
                 text2: "${dataVehicle['license_plate'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
-              RowText(text1: "IMEI", text2: "${dataVehicle['imei'] ?? '-'}"),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Latitude",
+                text1: t.vehicleInfoImei,
+                text2: "${dataVehicle['imei'] ?? '-'}",
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              RowText(
+                text1: t.vehicleInfoLatitude,
                 text2: "${dataVehicle['latitude'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Longitude",
+                text1: t.vehicleInfoLongitude,
                 text2: "${dataVehicle['longitude'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Google Map",
+                text1: t.vehicleInfoGoogleMap,
                 text2:
                     "http://www.google.com/maps/place/${dataVehicle['latitude']},${dataVehicle['longitude']}",
+                textUri: t.showGoogleMap,
                 type: RowTextType.url,
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Street View",
+                text1: t.vehicleInfoStreetView,
                 text2:
                     "https://www.google.com/maps?q&layer=c&cbll=${dataVehicle['latitude']},${dataVehicle['longitude']}",
+                textUri: t.showStreetView,
                 type: RowTextType.url,
               ),
             ],
@@ -159,23 +181,29 @@ class _VehicleInformationBottomSheetState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RowText(
-                text1: "Speed",
-                text2: "${dataVehicle['speed'] ?? '-'} KM/Jam",
+                text1: t.vehicleStatusSpeed,
+                text2: "${dataVehicle['speed'] ?? '-'} KM/H",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Total Odometer",
+                text1: t.vehicleStatusTotalOdometer,
                 text2: "${dataVehicle['total_odometer'] ?? '-'} KM",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Internal Battery",
+                text1: t.vehicleStatusInternalBattery,
                 text2: "${dataVehicle['internal_battery_voltage'] ?? '-'} V",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "External Battery",
-                text2: "${dataVehicle['external_power_voltage'] ?? '-'} V",
+                text1: t.vehicleStatusExternalBattery,
+                text2: "${dataVehicle['external_power_voltage'] ?? '-'} %",
               ),
             ],
           ),
@@ -187,32 +215,45 @@ class _VehicleInformationBottomSheetState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RowText(
-                text1: "Fuel",
+                text1: t.vehicleSensorFuel,
                 text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Direction",
+                text1: t.vehicleSensorDirection,
                 text2: "${dataVehicle['direction'] ?? '-'}°",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Humidity",
+                text1: t.vehicleSensorHumidity,
                 text2: "${dataVehicle['humidity'] ?? 'NaN'} %",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Left Door",
+                text1: t.vehicleSensorLeftDoor,
                 text2: "${dataVehicle['dleft'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Right Door",
+                text1: t.vehicleSensorRightDoor,
                 text2: "${dataVehicle['dright'] ?? '-'}",
               ),
-              const SizedBox(height: 8),
+              SizedBox(
+                height: 20,
+              ),
               RowText(
-                text1: "Back Door",
+                text1: t.vehicleSensorBackDoor,
                 text2: "${dataVehicle['drear'] ?? '-'}",
               ),
             ],
@@ -222,33 +263,51 @@ class _VehicleInformationBottomSheetState
   }
 }
 
-enum RowTextType { text, url }
-
 class RowText extends StatelessWidget {
   final String text1;
   final String text2;
+  final String textUri;
   final RowTextType type;
 
   const RowText({
     super.key,
     required this.text1,
     required this.text2,
+    this.textUri = "-",
     this.type = RowTextType.text,
   });
 
   @override
   Widget build(BuildContext context) {
+    final displayText = type == RowTextType.text ? text2 : textUri;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 110, // biar kolom kiri rapih
-          child: Text(text1, style: AppStyles.textMd),
-        ),
-        const SizedBox(width: 8),
+        /// LEFT LABEL
         Expanded(
+          flex: 4, // ~40%
+          child: Text(
+            text1,
+            style: AppStyles.textSm.copyWith(color: AppStyles.blackColor),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        /// RIGHT VALUE
+        Expanded(
+          flex: 6, // ~60%
           child: type == RowTextType.text
-              ? Text(text2, style: AppStyles.textMd)
+              ? Text(
+                  text2,
+                  style: AppStyles.textSmBold.copyWith(
+                    color: AppStyles.blackColor,
+                  ),
+                  textAlign: TextAlign.right,
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                )
               : GestureDetector(
                   onTap: () async {
                     final uri = Uri.tryParse(text2);
@@ -260,11 +319,14 @@ class RowText extends StatelessWidget {
                     }
                   },
                   child: Text(
-                    text2,
-                    style: AppStyles.textMd.copyWith(
+                    displayText,
+                    style: AppStyles.textSmBold.copyWith(
                       color: AppStyles.primaryColor,
                       decoration: TextDecoration.underline,
+                      decorationColor: AppStyles.primaryColor,
                     ),
+                    textAlign: TextAlign.right,
+                    softWrap: true,
                   ),
                 ),
         ),

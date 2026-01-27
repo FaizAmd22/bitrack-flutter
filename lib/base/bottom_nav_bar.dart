@@ -2,7 +2,10 @@
 
 import 'package:bitrack_mobile_flutter/base/res/media.dart';
 import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
 import 'package:bitrack_mobile_flutter/screens/home/home_screen.dart';
+import 'package:bitrack_mobile_flutter/screens/profile/profile.dart';
+import 'package:bitrack_mobile_flutter/screens/vehicle/vehicle.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,29 +20,36 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
-  final int alertCount = 3;
-
-  late final List<Widget> _screens = const [
-    HomeScreen(),
-    // Center(child: Text("Notification")),
-    Center(child: Text("Vehicle")),
-    Center(child: Text("Profile")),
-  ];
-
-  void _onItemTapped(int index) {
-    if (index == _selectedIndex) return;
-    setState(() => _selectedIndex = index);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context);
+
+    final screens = [
+      HomeScreen(isActive: _selectedIndex == 0),
+      const VehicleScreen(),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _screens),
-      bottomNavigationBar: SizedBox(
+      body: IndexedStack(index: _selectedIndex, children: screens),
+      bottomNavigationBar: Container(
         height: 82,
+        decoration: BoxDecoration(
+          color: AppStyles.bottomNavbarColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.12),
+              blurRadius: 7,
+              offset: const Offset(0, -1),
+            ),
+          ],
+        ),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+          onTap: (i) {
+            if (i == _selectedIndex) return;
+            setState(() => _selectedIndex = i);
+          },
           selectedItemColor: AppStyles.primaryColor,
           unselectedItemColor: const Color.fromARGB(255, 189, 189, 189),
           showSelectedLabels: true,
@@ -56,7 +66,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 23,
                 height: 23,
               ),
-              label: "Tracker",
+              label: translate.navTracker,
             ),
             // BottomNavigationBarItem(
             //   icon: _BadgeIcon(
@@ -80,12 +90,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 width: 24,
                 height: 24,
               ),
-              label: "Vehicle",
+              label: translate.navVehicle,
             ),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(FluentSystemIcons.ic_fluent_person_regular),
               activeIcon: Icon(FluentSystemIcons.ic_fluent_person_filled),
-              label: "Profile",
+              label: translate.navProfile,
             ),
           ],
         ),

@@ -18,9 +18,7 @@ class FetchVehicleDetailNull {
       final data = body['data'];
       if (data is Map<String, dynamic>) return data;
 
-      throw Exception(
-        'Field "data" kosong / tidak valid: ${data.runtimeType} -> $data',
-      );
+      return <String, dynamic>{};
     } on DioException catch (e) {
       final status = e.response?.statusCode;
       final data = e.response?.data;

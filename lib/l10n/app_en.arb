@@ -1,0 +1,194 @@
+{
+  "@@locale": "en",
+  "appTitle": "Bitrack",
+  "language": "Language",
+  "english": "English",
+  "indonesian": "Bahasa Indonesia",
+
+  "navTracker": "Tracker",
+  "navVehicle": "Vehicle",
+  "navProfile": "Profile",
+
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "emailPlaceholder": "Input your email ...",
+  "passwordPlaceholder": "Input your password ...",
+
+  "emailRequired": "Email cannot be empty",
+  "emailInvalid": "Invalid email format",
+  "fieldRequired": "{name} cannot be empty",
+
+  "addFingerprint": "Add Fingerprint",
+  "addFingerprintDesc": "Do you want to add fingerprint for future login?",
+  "cancel": "Cancel",
+  "save": "Save",
+
+  "biometricLoginLabel": "Login using biometric method",
+  "biometricNotSupported": "This device does not support biometric login",
+  "biometricReason": "Use biometrics to login",
+  "biometricCredNotFound": "Biometric login data was not found",
+  "loginFailedTryAgain": "Login failed, please try again",
+  "errorPrefix": "An error occurred: {message}",
+
+  "notificationSettings": "Notification Settings",
+  "alert": "Alert",
+  "softwareUpdate": "Software Update",
+
+  "profileChangePassword": "Change Password",
+  "profileNotificationSetting": "Notification Settings",
+  "profileLanguage": "Language",
+
+  "signOut": "Sign Out",
+  "signOutTitle": "Sign Out Account",
+  "signOutDesc": "Are you sure you want to log out of the account?",
+  "cancel": "Cancel",
+  "logout": "Logout",
+
+  "searchLicensePlate": "Search Vehicle License Plate ...",
+  "noVehicleYet": "No vehicle data yet",
+  "dataNotFound": "Data not found",
+  
+  "showPlate": "Show Plate",
+  "hidePlate": "Hide Plate",
+
+  "vehicleDataCantLoaded": "Vehicle data could not be loaded.",
+  "pleaseTryAgain": "Please try again.",
+  "tryAgain": "Try again.",
+
+  "vehicleInformation": "Vehicle Information",
+  "deviceInformation": "Device Information",
+  "review": "Review",
+
+  "tabInformation": "Information",
+  "tabStatus": "Status",
+  "tabSensor": "Sensor",
+
+  "vehicleIdNotAvailableDesc": "vehicle_id is not available.\nClose this modal and open again from Vehicle Detail.",
+
+  "failedLoadData": "Failed to load data",
+  "retry": "Retry",
+
+  "vehicleInfoGpsDate": "GPS Date",
+  "vehicleInfoFleetGroup": "Fleet Group",
+  "vehicleInfoLicensePlate": "License Plate",
+  "vehicleInfoImei": "IMEI",
+  "vehicleInfoLatitude": "Latitude",
+  "vehicleInfoLongitude": "Longitude",
+  "vehicleInfoGoogleMap": "Google Map",
+  "vehicleInfoStreetView": "Street View",
+
+  "showGoogleMap": "Show Google Map",
+  "showStreetView": "Show Street View",
+
+  "vehicleStatusSpeed": "Speed",
+  "vehicleStatusTotalOdometer": "Total Odometer",
+  "vehicleStatusInternalBattery": "Internal Battery",
+  "vehicleStatusExternalBattery": "External Battery",
+
+  "vehicleSensorFuel": "Fuel",
+  "vehicleSensorDirection": "Direction",
+  "vehicleSensorHumidity": "Humidity",
+  "vehicleSensorLeftDoor": "Left Door",
+  "vehicleSensorRightDoor": "Right Door",
+  "vehicleSensorBackDoor": "Back Door",
+
+  "active": "Active",
+  "inactive": "Inactive",
+  "createdAt": "Created At",
+
+  "addNewVehicleTitle": "Add New Vehicle",
+  "updateVehicleTitle": "Update Vehicle",
+
+  "addVehicleCta": "Add Vehicle",
+  "updateVehicleCta": "Update Vehicle",
+
+  "confirm": "Confirm",
+
+  "addVehicleConfirmAddTitle": "Ready to Add This Vehicle?",
+  "addVehicleConfirmAddDesc": "Take a moment to confirm the details. Once submitted, this vehicle will be added to your fleet list.",
+
+  "addVehicleConfirmUpdateTitle": "Ready to Update This Vehicle?",
+  "addVehicleConfirmUpdateDesc": "Take a moment to verify these changes. Submitting will update this vehicle's information in your fleet list.",
+
+  "createTodo": "Create (TODO)",
+  "updateTodo": "Update (TODO)",
+
+  "plateNumber": "Plate Number",
+  "plateNumberHint": "Enter vehicle plate number ...",
+
+  "fieldCantEmpty": "Field cannot be empty",
+  "brand": "Brand",
+  "model": "Model",
+
+  "selectBrandHint": "Select brand ...",
+  "selectModelHint": "Select model ...",
+  "selectBrandFirst": "Select brand first",
+
+  "vehicleType": "Type",
+  "vehicleTypeHint": "Enter vehicle type ...",
+
+  "vehicleYear": "Year",
+  "vehicleYearHint": "Enter vehicle year ...",
+
+  "vehicleColor": "Color",
+  "vehicleColorHint": "Enter vehicle color ...",
+
+  "vehicleCategory": "Vehicle Category",
+  "selectVehicleCategoryHint": "Select vehicle category ...",
+
+  "odometerKm": "Odometer (KM)",
+  "odometerHint": "Enter vehicle odometer ...",
+
+  "vin": "VIN",
+  "vinHint": "Enter vehicle VIN ...",
+
+  "engineNumber": "Engine Number",
+  "engineNumberHint": "Enter vehicle engine number ...",
+
+  "next": "Next",
+  "previous": "Previous",
+
+  "installationDate": "Installation Date",
+  "installationDateHint": "Select installation date ...",
+
+  "deviceType": "Device Type",
+  "deviceTypeHint": "Select device type",
+
+  "deviceModel": "Device Model",
+  "deviceModelHint": "Select device model ...",
+
+  "simCardNumber": "SIM Card Number",
+  "simCardNumberHint": "Enter SIM Card Number ...",
+
+  "imeiObdNumber": "IMEI OBD Number",
+  "imeiObdNumberHint": "Enter IMEI OBD Number ...",
+
+  "otpEnterVerificationCodeTitle": "Enter the Verification Code",
+  "otpSentToEmail": "The verification code has been sent to\n{email}",
+  "otpEnter5Digits": "Please enter the 5-digit code.",
+  "otpInvalidTryAgain": "Invalid verification code. Please try again.",
+
+  "otpNotReceivedEmailPrefix": "Haven't received the email? ",
+  "otpTryAgain": "Re-send Code.",
+  "otpTryAgainCountdown": "Re-send Code. ({seconds}s)",
+  "otpCodeResentDummy": "Code resent.",
+  "otpVerifyCodeBtn": "Verify Code",
+
+  "passwordNewTitle": "New Password",
+  "passwordNewHint": "Enter your new password ...",
+  "passwordReEnterTitle": "Re-Enter New Password",
+  "passwordReEnterHint": "Re-enter your new password ...",
+
+  "passwordRuleMin8": "Must have at least 8 characters",
+  "passwordRuleUpper": "Must include at least 1 uppercase letter (A-Z)",
+  "passwordRuleNumber": "Must include at least 1 number (0-9)",
+  "passwordRuleSymbol": "Must include at least 1 punctuation mark (!, @, #, etc.)",
+
+  "passwordFillAllFields": "Please fill all fields.",
+  "passwordNotMeetRequirements": "Password does not meet the requirements.",
+  "passwordNotMatch": "Passwords do not match.",
+  "passwordUpdatedDummy": "Password updated successfully.",
+
+  "passwordChangeSaveBtn": "Change & Save New Password"
+}

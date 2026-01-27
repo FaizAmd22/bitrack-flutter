@@ -9,7 +9,7 @@ class FilterTrackerBottomSheet extends StatefulWidget {
   final List<FilterOption> fleetGroups;
   final List<FilterOption> geofences;
 
-  final FilterOption initialType; // value: 'fleetgroup' / 'geofence' / null
+  final FilterOption initialType;
   final FilterOption initialFleetGroup;
   final FilterOption initialGeofence;
 

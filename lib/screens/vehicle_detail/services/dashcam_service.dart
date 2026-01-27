@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bitrack_mobile_flutter/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
@@ -80,6 +81,11 @@ class DashcamService {
     final raw = res.data;
     final vehicle = _unwrapVehicle(raw);
 
+    debugPrint('METTAXIOT_VIDEO = ${dotenv.env['METTAXIOT_VIDEO']}');
+    debugPrint(
+      'METTAXIOT_CREATE_TOKEN = ${dotenv.env['METTAXIOT_CREATE_TOKEN']}',
+    );
+
     debugPrint('fetchVehicle vehicle keys: ${vehicle.keys}');
     debugPrint(
       'fetchVehicle dashcam runtimeType: ${vehicle['dashcam']?.runtimeType}',
@@ -126,6 +132,7 @@ class DashcamService {
 
       final dashcam = vehicle['dashcam'];
       final dashcamMap = _asMap(dashcam);
+      final mettax = MettaxiotStreamService.I;
 
       hasDashcam = dashcam != null && (dashcam is Map || dashcamMap.isNotEmpty);
       deviceId = _getDeviceIdFromDashcam(dashcam);
@@ -181,6 +188,9 @@ class DashcamService {
         data: payload,
         options: Options(
           headers: {'Content-Type': 'application/json', 'Authorization': token},
+          followRedirects: true,
+          maxRedirects: 5,
+          validateStatus: (code) => code != null && code >= 200 && code < 400,
         ),
       );
 
@@ -191,21 +201,17 @@ class DashcamService {
         } catch (_) {}
       }
 
-      final map = _asMap(body);
-      final stream = (map['data'] ?? '').toString().trim();
-
-      final ok =
-          (res.statusCode ?? 0) >= 200 &&
-          (res.statusCode ?? 0) < 300 &&
-          stream.isNotEmpty;
+      final stream = await mettax.getLiveStreamUrl(
+        deviceId: deviceId,
+        channelId: 0,
+      );
 
       return DashcamStatusResult(
         hasDashcam: true,
-        isStreamAvailable: ok,
+        isStreamAvailable: stream.trim().isNotEmpty,
         isChiller: isChiller,
         deviceId: deviceId,
-        streamUrl: stream.isNotEmpty ? stream : null,
-        errorMessage: ok ? null : (map['msg']?.toString()),
+        streamUrl: stream,
       );
     } on DioException catch (e) {
       debugPrint('checkDashcamStream DioException: ${e.message}');
