@@ -1,7 +1,8 @@
+import 'package:ams/base/network/api_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:bitrack_mobile_flutter/features/auth/data/auth_api.dart';
+import 'package:ams/features/auth/data/auth_api.dart';
 
 class AuthState {
   final bool isLoading;
@@ -59,25 +60,31 @@ class AuthController extends StateNotifier<AuthState> {
 
       if (token != null && token.isNotEmpty) {
         await _secureStorage.write(key: 'auth_token', value: token);
+        ApiClient.setToken(token);
       }
 
       if (dataUser != null) {
-        await _secureStorage.write(key: 'user_id', value: dataUser['id'] ?? '');
+        await _secureStorage.write(
+          key: 'user_id',
+          value: dataUser['id']?.toString() ?? '',
+        );
         await _secureStorage.write(
           key: 'user_name',
-          value: dataUser['name'] ?? '',
+          value: dataUser['name']?.toString() ?? '',
         );
         await _secureStorage.write(
           key: 'user_email',
-          value: dataUser['email'] ?? '',
+          value: dataUser['email']?.toString() ?? '',
         );
         await _secureStorage.write(
           key: 'user_role',
-          value: dataUser['role']?['role_name'] ?? '',
+          value: dataUser['role']?['role_name']?.toString() ?? '',
         );
         await _secureStorage.write(
           key: 'user_role_permission',
-          value: dataUser['role']?['role_permession']?['permession'] ?? '',
+          value:
+              dataUser['role']?['role_permession']?['permession']?.toString() ??
+              '',
         );
       }
 

@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/widgets/dashcam_bottom_sheet.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/widgets/vehicle_information_bottom_sheet.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/vehicle_detail/models/dashcam_models.dart';
+import 'package:ams/screens/vehicle_detail/widgets/dashcam_bottom_sheet.dart';
+import 'package:ams/screens/vehicle_detail/widgets/vehicle_information_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -12,11 +13,13 @@ class ButtonCard extends StatelessWidget {
     super.key,
     required this.hasDashcam,
     required this.vehicleId,
+    this.vehicleData,
     this.onPeriodicTrack,
   });
 
   final bool hasDashcam;
   final String vehicleId;
+  final Map<String, dynamic>? vehicleData;
   final VoidCallback? onPeriodicTrack;
 
   Future<void> _showSheet(BuildContext context, Widget sheet) {
@@ -33,17 +36,23 @@ class ButtonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final id = vehicleId.trim();
+    final translate = AppLocalizations.of(context);
+
+    final dashcamConfig = (hasDashcam && id.isNotEmpty && vehicleData != null)
+        ? DashcamConfig.fromVehicleDetail(vehicleData!)
+        : null;
+
+    final dashcamEnabled = dashcamConfig != null;
 
     return LayoutBuilder(
       builder: (context, c) {
-        final spacing = 10.0;
+        const spacing = 10.0;
         final itemWidth = (c.maxWidth - spacing) / 2;
-        final translate = AppLocalizations.of(context);
 
         return Column(
           children: [
             _MenuCard(
-              icon: "truck-regular.svg",
+              icon: 'truck-regular.svg',
               label: translate.vehicleInformation,
               onTap: () =>
                   _showSheet(context, const VehicleInformationBottomSheet()),
@@ -54,8 +63,8 @@ class ButtonCard extends StatelessWidget {
                 SizedBox(
                   width: itemWidth,
                   child: _MenuCard(
-                    icon: "route-regular.svg",
-                    label: "Periodic Track",
+                    icon: 'route-regular.svg',
+                    label: 'Periodic Track',
                     onTap: onPeriodicTrack,
                   ),
                 ),
@@ -63,12 +72,15 @@ class ButtonCard extends StatelessWidget {
                 SizedBox(
                   width: itemWidth,
                   child: _MenuCard(
-                    icon: "webcam.svg",
-                    label: "Dashcam",
-                    enabled: hasDashcam && id.isNotEmpty,
-                    onTap: (!hasDashcam || id.isEmpty)
-                        ? null
-                        : () => _showSheet(context, DashcamBottomSheet()),
+                    icon: 'webcam.svg',
+                    label: 'Dashcam',
+                    enabled: dashcamEnabled,
+                    onTap: dashcamEnabled
+                        ? () => _showSheet(
+                            context,
+                            DashcamBottomSheet(dashcamConfig: dashcamConfig),
+                          )
+                        : null,
                   ),
                 ),
               ],

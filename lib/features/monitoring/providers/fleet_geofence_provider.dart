@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:bitrack_mobile_flutter/features/auth/providers/auth_providers.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/data/monitoring_api.dart';
+import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/monitoring/data/monitoring_api.dart';
 
 final fleetGeofenceProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final FlutterSecureStorage storage = ref.read(secureStorageProvider);

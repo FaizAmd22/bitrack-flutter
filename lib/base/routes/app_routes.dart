@@ -8,4 +8,6 @@ class AppRoutes {
   static const languageScreen = '/language';
   static const addVehicleScreen = '/add-vehicle';
   static const periodicTrackScreen = '/periodic-track';
+  static const notesScreen = '/notes';
+  static const mapCoordinateScreen = '/map-coordinate';
 }

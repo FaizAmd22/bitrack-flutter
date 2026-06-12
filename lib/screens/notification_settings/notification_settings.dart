@@ -1,6 +1,6 @@
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/tx_toggle_tile.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/tx_toggle_tile.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {

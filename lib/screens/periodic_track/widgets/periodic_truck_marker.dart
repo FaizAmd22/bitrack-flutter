@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math' as math;
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class PeriodicTruckMarker extends StatelessWidget {

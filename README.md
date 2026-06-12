@@ -1,4 +1,4 @@
-# bitrack_mobile_flutter
+# AMS
 
 A new Flutter project.
 

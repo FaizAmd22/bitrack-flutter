@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
+import 'package:ams/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
+import 'package:ams/base/network/api_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashcamStatusResult {

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/providers/monitoring_providers.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
+import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
+import 'package:ams/screens/home/models/vehicle.dart';
 
 final plateSuggestionProvider = Provider.family<List<String>, String>((
   ref,

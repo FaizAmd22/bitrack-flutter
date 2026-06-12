@@ -1,4 +1,4 @@
-package com.example.bitrack_mobile_flutter
+package com.treffix.ams
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

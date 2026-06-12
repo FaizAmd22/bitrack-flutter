@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 
 class AppDraggableSheet extends StatelessWidget {
   final String title;

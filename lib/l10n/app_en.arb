@@ -1,13 +1,18 @@
 {
   "@@locale": "en",
-  "appTitle": "Bitrack",
+  "appTitle": "AMS",
   "language": "Language",
   "english": "English",
   "indonesian": "Bahasa Indonesia",
 
   "navTracker": "Tracker",
   "navVehicle": "Vehicle",
+  "navNotification": "Notification",
   "navProfile": "Profile",
+
+  "notifUrgent": "Urgent",
+  "notifSummary": "Summary",
+  "notifNoData": "No alert data",
 
   "login": "Login",
   "email": "Email",
@@ -137,7 +142,7 @@
   "vehicleCategory": "Vehicle Category",
   "selectVehicleCategoryHint": "Select vehicle category ...",
 
-  "odometerKm": "Odometer (KM)",
+  "odometer": "Odometer (M)",
   "odometerHint": "Enter vehicle odometer ...",
 
   "vin": "VIN",
@@ -190,5 +195,62 @@
   "passwordNotMatch": "Passwords do not match.",
   "passwordUpdatedDummy": "Password updated successfully.",
 
-  "passwordChangeSaveBtn": "Change & Save New Password"
+  "passwordChangeSaveBtn": "Change & Save New Password",
+
+  "filterTitle": "Filter",
+  "filterStartDate": "Start Date",
+  "filterEndDate": "End Date",
+  "filterFleetGroup": "Fleet Group",
+  "filterVerifStatus": "Verification Status",
+  "filterAlertType": "Alert Type",
+  "filterApply": "Apply Filter",
+  "filterClear": "Clear Filter",
+  "filterChooseStartDate": "Choose start date",
+  "filterChooseEndDate": "Choose end date",
+  "filterChooseFleetGroup": "Choose fleet group",
+  "filterChooseVerifStatus": "Choose verification status",
+  "filterChooseAlertType": "Choose alert type",
+  "filterVerified": "Verified",
+  "filterNotYetVerified": "Not Yet Verified",
+  "filterUnverified": "Not Verified",
+  "filterSearch": "Search",
+  "filterNoOptions": "No options found",
+  "filterAllFleetGroup": "All Fleet Group",
+  "filterAllAlertType": "All Alert Type",
+
+  "gpsDate": "GPS Date",
+  "alertType": "Alert Type",
+  "speed": "Speed",
+
+  "addVehicleTitle": "Add Vehicle",
+  "addVehicleIdentifierTitle": "License Plate",
+  "addVehicleIdentifierPlaceholder": "Enter license plate",
+  "addVehicleRequiredError": "License plate is required",
+  "addVehiclePlateExistsError": "License plate is already registered",
+  "addVehicleCheckFailedError": "Failed to check license plate. Please try again",
+  "addVehicleContinue": "Continue",
+  "addVehicleChecking": "Checking...",
+
+  "addVehicleConfirmAddTitle": "Add Vehicle",
+  "addVehicleConfirmAddDesc": "Are you sure you want to add this vehicle?",
+  "addVehicleConfirmUpdateTitle": "Update Vehicle",
+  "addVehicleConfirmUpdateDesc": "Are you sure you want to update this vehicle?",
+  "confirm": "Confirm",
+  "successAddVehicle": "Vehicle added successfully",
+  "successUpdateVehicle": "Vehicle updated successfully",
+  "errFailedAdd": "Failed to add vehicle. Please try again",
+  "errFailedUpdate": "Failed to update vehicle. Please try again",
+  "errVinUnique": "VIN already exists. Please enter a different one",
+  "selectFleetGroupHint": "Select Fleet Group",
+  "loading": "Loading...",
+
+  "seeNotes": "See Notes",
+  "showMapCoordinate": "Show Map Coordinate",
+  "alertNotes": "Alert Notes",
+  "notes": "Notes",
+  "noNotes": "No notes available",
+  "noMedia": "No media available",
+  "mapCoordinate": "Map Coordinate",
+  "copyCoordinate": "Coordinate copied",
+  "filterAllStatus": "All Status"
 }

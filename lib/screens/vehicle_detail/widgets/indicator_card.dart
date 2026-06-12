@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 
 class IndicatorItemData {
   final String icon;

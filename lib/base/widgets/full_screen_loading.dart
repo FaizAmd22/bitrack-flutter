@@ -29,7 +29,7 @@ class FullScreenLoading extends StatelessWidget {
 
         Center(
           child: Lottie.asset(
-            'assets/images/loading-red.json',
+            'assets/images/loading-blue.json',
             width: 160,
             height: 160,
             fit: BoxFit.contain,

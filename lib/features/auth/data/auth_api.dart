@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
+import 'package:ams/base/network/api_client.dart';
 
 class AuthApi {
   static Future<Map<String, dynamic>> login({

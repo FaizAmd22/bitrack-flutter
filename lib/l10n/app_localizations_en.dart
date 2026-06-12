@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Bitrack';
+  String get appTitle => 'AMS';
 
   @override
   String get language => 'Language';
@@ -27,7 +27,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navVehicle => 'Vehicle';
 
   @override
+  String get navNotification => 'Notification';
+
+  @override
   String get navProfile => 'Profile';
+
+  @override
+  String get notifUrgent => 'Urgent';
+
+  @override
+  String get notifSummary => 'Summary';
+
+  @override
+  String get notifNoData => 'No alert data';
 
   @override
   String get login => 'Login';
@@ -256,18 +268,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
-  String get addVehicleConfirmAddTitle => 'Ready to Add This Vehicle?';
+  String get addVehicleConfirmAddTitle => 'Add Vehicle';
 
   @override
   String get addVehicleConfirmAddDesc =>
-      'Take a moment to confirm the details. Once submitted, this vehicle will be added to your fleet list.';
+      'Are you sure you want to add this vehicle?';
 
   @override
-  String get addVehicleConfirmUpdateTitle => 'Ready to Update This Vehicle?';
+  String get addVehicleConfirmUpdateTitle => 'Update Vehicle';
 
   @override
   String get addVehicleConfirmUpdateDesc =>
-      'Take a moment to verify these changes. Submitting will update this vehicle\'s information in your fleet list.';
+      'Are you sure you want to update this vehicle?';
 
   @override
   String get createTodo => 'Create (TODO)';
@@ -324,7 +336,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectVehicleCategoryHint => 'Select vehicle category ...';
 
   @override
-  String get odometerKm => 'Odometer (KM)';
+  String get odometer => 'Odometer (M)';
 
   @override
   String get odometerHint => 'Enter vehicle odometer ...';
@@ -450,4 +462,147 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passwordChangeSaveBtn => 'Change & Save New Password';
+
+  @override
+  String get filterTitle => 'Filter';
+
+  @override
+  String get filterStartDate => 'Start Date';
+
+  @override
+  String get filterEndDate => 'End Date';
+
+  @override
+  String get filterFleetGroup => 'Fleet Group';
+
+  @override
+  String get filterVerifStatus => 'Verification Status';
+
+  @override
+  String get filterAlertType => 'Alert Type';
+
+  @override
+  String get filterApply => 'Apply Filter';
+
+  @override
+  String get filterClear => 'Clear Filter';
+
+  @override
+  String get filterChooseStartDate => 'Choose start date';
+
+  @override
+  String get filterChooseEndDate => 'Choose end date';
+
+  @override
+  String get filterChooseFleetGroup => 'Choose fleet group';
+
+  @override
+  String get filterChooseVerifStatus => 'Choose verification status';
+
+  @override
+  String get filterChooseAlertType => 'Choose alert type';
+
+  @override
+  String get filterVerified => 'Verified';
+
+  @override
+  String get filterNotYetVerified => 'Not Yet Verified';
+
+  @override
+  String get filterUnverified => 'Not Verified';
+
+  @override
+  String get filterSearch => 'Search';
+
+  @override
+  String get filterNoOptions => 'No options found';
+
+  @override
+  String get filterAllFleetGroup => 'All Fleet Group';
+
+  @override
+  String get filterAllAlertType => 'All Alert Type';
+
+  @override
+  String get gpsDate => 'GPS Date';
+
+  @override
+  String get alertType => 'Alert Type';
+
+  @override
+  String get speed => 'Speed';
+
+  @override
+  String get addVehicleTitle => 'Add Vehicle';
+
+  @override
+  String get addVehicleIdentifierTitle => 'License Plate';
+
+  @override
+  String get addVehicleIdentifierPlaceholder => 'Enter license plate';
+
+  @override
+  String get addVehicleRequiredError => 'License plate is required';
+
+  @override
+  String get addVehiclePlateExistsError =>
+      'License plate is already registered';
+
+  @override
+  String get addVehicleCheckFailedError =>
+      'Failed to check license plate. Please try again';
+
+  @override
+  String get addVehicleContinue => 'Continue';
+
+  @override
+  String get addVehicleChecking => 'Checking...';
+
+  @override
+  String get successAddVehicle => 'Vehicle added successfully';
+
+  @override
+  String get successUpdateVehicle => 'Vehicle updated successfully';
+
+  @override
+  String get errFailedAdd => 'Failed to add vehicle. Please try again';
+
+  @override
+  String get errFailedUpdate => 'Failed to update vehicle. Please try again';
+
+  @override
+  String get errVinUnique => 'VIN already exists. Please enter a different one';
+
+  @override
+  String get selectFleetGroupHint => 'Select Fleet Group';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get seeNotes => 'See Notes';
+
+  @override
+  String get showMapCoordinate => 'Show Map Coordinate';
+
+  @override
+  String get alertNotes => 'Alert Notes';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get noNotes => 'No notes available';
+
+  @override
+  String get noMedia => 'No media available';
+
+  @override
+  String get mapCoordinate => 'Map Coordinate';
+
+  @override
+  String get copyCoordinate => 'Coordinate copied';
+
+  @override
+  String get filterAllStatus => 'All Status';
 }

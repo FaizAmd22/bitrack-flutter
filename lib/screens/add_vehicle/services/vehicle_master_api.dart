@@ -1,4 +1,4 @@
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
+import 'package:ams/base/network/api_client.dart';
 import 'package:dio/dio.dart';
 
 class VehicleMasterApi {

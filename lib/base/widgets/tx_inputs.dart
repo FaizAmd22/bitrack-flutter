@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 

@@ -1,16 +1,20 @@
 // ignore_for_file: control_flow_in_finally, unrelated_type_equality_checks
 
-import 'package:bitrack_mobile_flutter/base/constants/select_options.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/services/plate_number_formatter.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/tx_inputs.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/models/add_vehicle_form_data.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/services/vehicle_master_api.dart';
+import 'package:ams/base/constants/select_options.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/services/plate_number_formatter.dart';
+import 'package:ams/base/widgets/option_picker_sheet.dart';
+import 'package:ams/base/widgets/picker_field.dart';
+import 'package:ams/base/widgets/tx_inputs.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/add_vehicle/models/add_vehicle_form_data.dart';
+import 'package:ams/screens/add_vehicle/services/vehicle_master_api.dart';
+import 'package:ams/screens/vehicle/providers/fleet_group_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VehicleInfoStep extends StatefulWidget {
+class VehicleInfoStep extends ConsumerStatefulWidget {
   const VehicleInfoStep({
     super.key,
     required this.data,
@@ -25,17 +29,14 @@ class VehicleInfoStep extends StatefulWidget {
   final bool status;
 
   @override
-  State<VehicleInfoStep> createState() => _VehicleInfoStepState();
+  ConsumerState<VehicleInfoStep> createState() => _VehicleInfoStepState();
 }
 
-class _VehicleInfoStepState extends State<VehicleInfoStep> {
+class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
   final _api = const VehicleMasterApi();
 
   late final TextEditingController _plateCtrl;
-  late final TextEditingController _typeCtrl;
-  late final TextEditingController _colorCtrl;
   late final TextEditingController _vinCtrl;
-  late final TextEditingController _engineCtrl;
   late final TextEditingController _yearCtrl;
   late final TextEditingController _odoCtrl;
 
@@ -44,7 +45,9 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
   String? _brandId;
   String? _modelId;
   String? _vehicleCategory;
+  String? _fleetGroupId;
 
+  List<Map<String, dynamic>> _fleetGroups = [];
   List<Map<String, dynamic>> _brands = [];
   List<Map<String, dynamic>> _models = [];
 
@@ -55,14 +58,12 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
     super.initState();
 
     _plateCtrl = TextEditingController(text: widget.data.plateNumber);
-    _typeCtrl = TextEditingController(text: widget.data.type);
-    _colorCtrl = TextEditingController(text: widget.data.color);
     _vinCtrl = TextEditingController(text: widget.data.vin);
-    _engineCtrl = TextEditingController(text: widget.data.engineNumber);
     _yearCtrl = TextEditingController(text: widget.data.year);
-    _odoCtrl = TextEditingController(text: widget.data.odometerKm);
+    _odoCtrl = TextEditingController(text: widget.data.odometer);
 
     _vehicleCategory = widget.data.vehicleCategory;
+    _fleetGroupId = widget.data.fleetGroupId;
 
     _cancelToken = CancelToken();
     _loadMasters();
@@ -71,10 +72,7 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
   @override
   void dispose() {
     _plateCtrl.dispose();
-    _typeCtrl.dispose();
-    _colorCtrl.dispose();
     _vinCtrl.dispose();
-    _engineCtrl.dispose();
     _yearCtrl.dispose();
     _odoCtrl.dispose();
     _cancelToken.cancel("disposed");
@@ -104,6 +102,7 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
     try {
       final brandsRaw = await _api.fetchBrandsRaw(cancelToken: _cancelToken);
       final modelsRaw = await _api.fetchModelsRaw(cancelToken: _cancelToken);
+      final fleetRaw = await ref.read(fleetGroupProvider.future);
 
       if (!mounted) return;
 
@@ -130,28 +129,51 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
       final brands = brandMap.values.toList()
         ..sort(
           (a, b) => (a['brand_name'] ?? '').toString().compareTo(
-                (b['brand_name'] ?? '').toString(),
-              ),
+            (b['brand_name'] ?? '').toString(),
+          ),
         );
 
       final models = modelMap.values.toList()
         ..sort(
           (a, b) => (a['model_name'] ?? '').toString().compareTo(
-                (b['model_name'] ?? '').toString(),
-              ),
+            (b['model_name'] ?? '').toString(),
+          ),
         );
 
-      final brandExists = _brandId != null &&
+      final brandExists =
+          _brandId != null &&
           brands.any((b) => (b['id'] ?? '').toString() == _brandId);
-      final modelExists = _modelId != null &&
+      final modelExists =
+          _modelId != null &&
           models.any((m) => (m['id'] ?? '').toString() == _modelId);
+
+      final fleetGroups = <Map<String, dynamic>>[];
+      final seenFleet = <String>{};
+      for (final f in fleetRaw) {
+        final m = Map<String, dynamic>.from(f as Map);
+        final id = (m['id'] ?? '').toString().trim();
+        final name = (m['fleet_group_name'] ?? '').toString().trim();
+        if (id.isEmpty || name.isEmpty) continue;
+        if (seenFleet.add(id)) fleetGroups.add(m);
+      }
+      fleetGroups.sort(
+        (a, b) => (a['fleet_group_name'] ?? '').toString().compareTo(
+          (b['fleet_group_name'] ?? '').toString(),
+        ),
+      );
+
+      final fleetExists =
+          _fleetGroupId != null &&
+          fleetGroups.any((f) => (f['id'] ?? '').toString() == _fleetGroupId);
 
       if (!mounted) return;
       setState(() {
         _brands = brands;
         _models = models;
+        _fleetGroups = fleetGroups;
         if (!brandExists) _brandId = null;
         if (!modelExists) _modelId = null;
+        if (!fleetExists) _fleetGroupId = null;
       });
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) {
@@ -215,36 +237,34 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (!widget.status)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppStyles.plateNumberBg,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            t.plateNumber,
-                            textAlign: TextAlign.center,
-                            style: AppStyles.textSm,
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            _plateCtrl.text,
-                            textAlign: TextAlign.center,
-                            style: AppStyles.textLBold,
-                          ),
-                        ],
-                      ),
-                    ),
-                  const SizedBox(height: 25),
+                  // if (!widget.status)
+                  //   Container(
+                  //     width: double.infinity,
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 16,
+                  //       vertical: 16,
+                  //     ),
+                  //     decoration: BoxDecoration(
+                  //       color: AppStyles.plateNumberBg,
+                  //       borderRadius: BorderRadius.circular(12),
+                  //     ),
+                  //     child: Column(
+                  //       children: [
+                  //         Text(
+                  //           t.plateNumber,
+                  //           textAlign: TextAlign.center,
+                  //           style: AppStyles.textSm,
+                  //         ),
+                  //         SizedBox(height: 5),
+                  //         Text(
+                  //           _plateCtrl.text,
+                  //           textAlign: TextAlign.center,
+                  //           style: AppStyles.textLBold,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // const SizedBox(height: 25),
                   TxInputText(
                     label: t.plateNumber,
                     hintText: t.plateNumberHint,
@@ -253,69 +273,53 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
                     validator: (v) => _requiredText(context, v, t.plateNumber),
                     onChanged: (v) => widget.data.plateNumber = v,
                     inputFormatters: const [PlateNumberFormatter()],
-                    visible: widget.status,
+                    // visible: widget.status,
                   ),
-                  TxInputDropdown<String>(
+                  PickerField(
                     label: t.brand,
                     hintText: t.selectBrandHint,
                     value: _brandId,
-                    items: _brands.map((b) {
-                      return DropdownMenuItem<String>(
-                        value: b['id'].toString(),
-                        child: Text(b['brand_name'].toString()),
-                      );
-                    }).toList(),
-                    validator: (v) => _requiredDropdown(context, v, t.brand),
+                    searchable: true,
                     enabled: !_loading,
-                    onChanged: (id) {
+                    options: _brands
+                        .map(
+                          (b) => PickerOption(
+                            value: b['id'].toString(),
+                            label: b['brand_name'].toString(),
+                          ),
+                        )
+                        .toList(),
+                    validator: (v) => _requiredDropdown(context, v, t.brand),
+                    onSelected: (opt) {
                       setState(() {
-                        _brandId = id;
+                        _brandId = opt.value;
                         _modelId = null;
                       });
-
-                      final name = _brands
-                          .firstWhere(
-                            (b) => b['id'].toString() == id,
-                          )['brand_name']
-                          .toString();
-
-                      widget.data.brand = name;
+                      widget.data.brand = opt.label;
                       widget.data.model = null;
                     },
                   ),
-                  TxInputDropdown<String>(
+                  PickerField(
                     label: t.model,
                     hintText: _brandId == null
                         ? t.selectBrandFirst
                         : t.selectModelHint,
                     value: _modelId,
-                    items: _filteredModels.map((m) {
-                      return DropdownMenuItem<String>(
-                        value: m['id'].toString(),
-                        child: Text(m['model_name'].toString()),
-                      );
-                    }).toList(),
-                    validator: (v) => _requiredDropdown(context, v, t.model),
+                    searchable: true,
                     enabled: !_loading && _brandId != null,
-                    onChanged: (id) {
-                      setState(() => _modelId = id);
-
-                      final name = _models
-                          .firstWhere(
-                            (m) => m['id'].toString() == id,
-                          )['model_name']
-                          .toString();
-
-                      widget.data.model = name;
+                    options: _filteredModels
+                        .map(
+                          (m) => PickerOption(
+                            value: m['id'].toString(),
+                            label: m['model_name'].toString(),
+                          ),
+                        )
+                        .toList(),
+                    validator: (v) => _requiredDropdown(context, v, t.model),
+                    onSelected: (opt) {
+                      setState(() => _modelId = opt.value);
+                      widget.data.model = opt.label;
                     },
-                  ),
-                  TxInputText(
-                    label: t.vehicleType,
-                    hintText: t.vehicleTypeHint,
-                    controller: _typeCtrl,
-                    textInputAction: TextInputAction.next,
-                    validator: (v) => _requiredText(context, v, t.vehicleType),
-                    onChanged: (v) => widget.data.type = v,
                   ),
                   TxInputNumber(
                     label: t.vehicleYear,
@@ -325,40 +329,30 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
                     validator: (v) => _requiredText(context, v, t.vehicleYear),
                     onChanged: (v) => widget.data.year = v,
                   ),
-                  TxInputText(
-                    label: t.vehicleColor,
-                    hintText: t.vehicleColorHint,
-                    controller: _colorCtrl,
-                    textInputAction: TextInputAction.next,
-                    validator: (v) => _requiredText(context, v, t.vehicleColor),
-                    onChanged: (v) => widget.data.color = v,
-                  ),
-                  TxInputDropdown<String>(
+                  PickerField(
                     label: t.vehicleCategory,
                     hintText: t.selectVehicleCategoryHint,
                     value: _vehicleCategory,
-                    items: vehicleCategoryOptions
+                    searchable: false, // ← tanpa search, opsi sedikit
+                    options: vehicleCategoryOptions
                         .map(
-                          (e) => DropdownMenuItem(
-                            value: e.value,
-                            child: Text(e.label),
-                          ),
+                          (e) => PickerOption(value: e.value, label: e.label),
                         )
                         .toList(),
                     validator: (v) =>
                         _requiredDropdown(context, v, t.vehicleCategory),
-                    onChanged: (v) {
-                      setState(() => _vehicleCategory = v);
-                      widget.data.vehicleCategory = v;
+                    onSelected: (opt) {
+                      setState(() => _vehicleCategory = opt.value);
+                      widget.data.vehicleCategory = opt.value;
                     },
                   ),
                   TxInputNumber(
-                    label: t.odometerKm,
+                    label: t.odometer,
                     hintText: t.odometerHint,
                     controller: _odoCtrl,
                     textInputAction: TextInputAction.next,
-                    validator: (v) => _requiredText(context, v, t.odometerKm),
-                    onChanged: (v) => widget.data.odometerKm = v,
+                    validator: (v) => _requiredText(context, v, t.odometer),
+                    onChanged: (v) => widget.data.odometer = v,
                   ),
                   TxInputText(
                     label: t.vin,
@@ -368,13 +362,26 @@ class _VehicleInfoStepState extends State<VehicleInfoStep> {
                     validator: (v) => _requiredText(context, v, t.vin),
                     onChanged: (v) => widget.data.vin = v,
                   ),
-                  TxInputText(
-                    label: t.engineNumber,
-                    hintText: t.engineNumberHint,
-                    controller: _engineCtrl,
-                    textInputAction: TextInputAction.done,
-                    validator: (v) => _requiredText(context, v, t.engineNumber),
-                    onChanged: (v) => widget.data.engineNumber = v,
+                  PickerField(
+                    label: 'Fleet Group',
+                    hintText: _loading ? t.loading : t.selectFleetGroupHint,
+                    value: _fleetGroupId,
+                    searchable: true,
+                    enabled: !_loading,
+                    options: _fleetGroups
+                        .map(
+                          (f) => PickerOption(
+                            value: f['id'].toString(),
+                            label: f['fleet_group_name'].toString(),
+                          ),
+                        )
+                        .toList(),
+                    validator: (v) =>
+                        _requiredDropdown(context, v, 'Fleet Group'),
+                    onSelected: (opt) {
+                      setState(() => _fleetGroupId = opt.value);
+                      widget.data.fleetGroupId = opt.value;
+                    },
                   ),
                 ],
               ),

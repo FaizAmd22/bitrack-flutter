@@ -1,5 +1,5 @@
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/models/vehicle_page.dart';
+import 'package:ams/base/network/api_client.dart';
+import 'package:ams/screens/vehicle/models/vehicle_page.dart';
 
 class FetchVehicle {
   Future<VehiclePage> fetch({required int page, String? licensePlate}) async {

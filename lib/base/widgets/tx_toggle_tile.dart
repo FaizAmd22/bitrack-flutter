@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 
 class TxToggleTile extends StatelessWidget {
   const TxToggleTile({
@@ -37,7 +37,7 @@ class TxToggleTile extends StatelessWidget {
             value: value,
             onChanged: enabled ? onChanged : null,
             activeColor: AppStyles.whiteColor,
-            activeTrackColor: AppStyles.redColor,
+            activeTrackColor: AppStyles.primaryColor,
             inactiveThumbColor: AppStyles.whiteColor,
             inactiveTrackColor: AppStyles.borderLightGray,
           ),

@@ -1,27 +1,32 @@
-import 'package:bitrack_mobile_flutter/base/bottom_nav_bar.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
-import 'package:bitrack_mobile_flutter/base/routes/navigation_service.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/guest_guard.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/add_vehicle.dart';
-import 'package:bitrack_mobile_flutter/screens/change_password/change_password.dart';
-import 'package:bitrack_mobile_flutter/screens/language/language.dart';
-import 'package:bitrack_mobile_flutter/screens/login/login_screen.dart';
-import 'package:bitrack_mobile_flutter/screens/notification_settings/notification_settings.dart';
-import 'package:bitrack_mobile_flutter/screens/periodic_track/periodic_track.dart';
-import 'package:bitrack_mobile_flutter/screens/splash_screen/splash_screen.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/vehicle_detail.dart';
+import 'package:ams/base/bottom_nav_bar.dart';
+import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/routes/navigation_service.dart';
+import 'package:ams/base/widgets/guest_guard.dart';
+import 'package:ams/screens/add_vehicle/add_vehicle.dart';
+import 'package:ams/screens/change_password/change_password.dart';
+import 'package:ams/screens/language/language.dart';
+import 'package:ams/screens/login/login_screen.dart';
+import 'package:ams/screens/notification/pages/map_coordinate_screen.dart';
+import 'package:ams/screens/notification/pages/notes_screen.dart';
+import 'package:ams/screens/notification_settings/notification_settings.dart';
+import 'package:ams/screens/periodic_track/periodic_track.dart';
+import 'package:ams/screens/splash_screen/splash_screen.dart';
+import 'package:ams/screens/vehicle_detail/vehicle_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:media_kit/media_kit.dart';
 import 'base/widgets/auth_guard.dart';
 import 'base/localization/locale_controller.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   await dotenv.load(fileName: ".env");
-
+  await ApiClient.loadTokenFromStorage();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -34,7 +39,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Bitrack',
+      title: 'AMS',
       navigatorKey: NavigationService.navigatorKey,
       locale: locale,
       supportedLocales: LocaleNotifier.supportedLocales,
@@ -62,6 +67,9 @@ class MyApp extends ConsumerWidget {
             const AuthGuard(child: AddVehicleScreen()),
         AppRoutes.periodicTrackScreen: (_) =>
             const AuthGuard(child: PeriodicTrackScreen()),
+        AppRoutes.notesScreen: (_) => const AuthGuard(child: NotesScreen()),
+        AppRoutes.mapCoordinateScreen: (_) =>
+            const AuthGuard(child: MapCoordinateScreen()),
       },
     );
   }

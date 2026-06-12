@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/confirm_dialog.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'dart:math';
+
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/widgets/confirm_dialog.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -20,6 +22,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _loadingUser = true;
   String _name = '-';
   String _role = '-';
+
+  int _stableHash(String value) {
+    var hash = 0;
+    for (final unit in value.codeUnits) {
+      hash = (hash * 31 + unit) & 0x7fffffff;
+    }
+    return hash;
+  }
+
+  Color get _avatarColor {
+    final random = Random(_stableHash(_name));
+    return Color.fromARGB(
+      255,
+      random.nextInt(200),
+      random.nextInt(200),
+      random.nextInt(200),
+    );
+  }
+
+  String get _initials {
+    final parts = _name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
+    if (parts.isEmpty || parts.first == '-') return '-';
+    final first = parts.first[0];
+    final last = parts.length > 1 ? parts.last[0] : '';
+    return (first + last).toUpperCase();
+  }
 
   @override
   void initState() {
@@ -100,9 +132,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 60.0,
-              backgroundImage: AssetImage("assets/images/default_user.png"),
+              backgroundColor: _avatarColor,
+              child: Text(
+                _initials,
+                style: AppStyles.textMdBold.copyWith(
+                  color: AppStyles.whiteColor,
+                  fontSize: 32,
+                ),
+              ),
             ),
 
             const SizedBox(height: 15),

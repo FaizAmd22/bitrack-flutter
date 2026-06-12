@@ -9,7 +9,7 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get appTitle => 'Bitrack';
+  String get appTitle => 'AMS';
 
   @override
   String get language => 'Bahasa';
@@ -27,7 +27,19 @@ class AppLocalizationsId extends AppLocalizations {
   String get navVehicle => 'Kendaraan';
 
   @override
+  String get navNotification => 'Notifikasi';
+
+  @override
   String get navProfile => 'Profil';
+
+  @override
+  String get notifUrgent => 'Urgen';
+
+  @override
+  String get notifSummary => 'Ringkasan';
+
+  @override
+  String get notifNoData => 'Tidak ada data peringatan';
 
   @override
   String get login => 'Login';
@@ -256,18 +268,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get confirm => 'Konfirmasi';
 
   @override
-  String get addVehicleConfirmAddTitle => 'Yakin tambah kendaraan ini?';
+  String get addVehicleConfirmAddTitle => 'Tambah Kendaraan';
 
   @override
   String get addVehicleConfirmAddDesc =>
-      'Luangkan waktu untuk memastikan detailnya. Setelah dikirim, kendaraan ini akan ditambahkan ke daftar Fleet Group Anda.';
+      'Apakah Anda yakin ingin menambahkan kendaraan ini?';
 
   @override
-  String get addVehicleConfirmUpdateTitle => 'Yakin ubah kendaraan ini?';
+  String get addVehicleConfirmUpdateTitle => 'Perbarui Kendaraan';
 
   @override
   String get addVehicleConfirmUpdateDesc =>
-      'Luangkan waktu untuk memeriksa perubahan ini. Mengirim akan memperbarui informasi kendaraan ini di daftar Fleet Group Anda.';
+      'Apakah Anda yakin ingin memperbarui kendaraan ini?';
 
   @override
   String get createTodo => 'Tambah (TODO)';
@@ -324,7 +336,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get selectVehicleCategoryHint => 'Pilih kategori kendaraan ...';
 
   @override
-  String get odometerKm => 'Odometer (KM)';
+  String get odometer => 'Odometer (M)';
 
   @override
   String get odometerHint => 'Masukkan odometer kendaraan ...';
@@ -448,4 +460,147 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get passwordChangeSaveBtn => 'Ubah & Simpan Password Baru';
+
+  @override
+  String get filterTitle => 'Filter';
+
+  @override
+  String get filterStartDate => 'Tanggal Mulai';
+
+  @override
+  String get filterEndDate => 'Tanggal Akhir';
+
+  @override
+  String get filterFleetGroup => 'Fleet Group';
+
+  @override
+  String get filterVerifStatus => 'Status Verifikasi';
+
+  @override
+  String get filterAlertType => 'Tipe Peringatan';
+
+  @override
+  String get filterApply => 'Terapkan Filter';
+
+  @override
+  String get filterClear => 'Hapus Filter';
+
+  @override
+  String get filterChooseStartDate => 'Pilih tanggal mulai';
+
+  @override
+  String get filterChooseEndDate => 'Pilih tanggal akhir';
+
+  @override
+  String get filterChooseFleetGroup => 'Pilih fleet group';
+
+  @override
+  String get filterChooseVerifStatus => 'Pilih status verifikasi';
+
+  @override
+  String get filterChooseAlertType => 'Pilih tipe peringatan';
+
+  @override
+  String get filterVerified => 'Terverifikasi';
+
+  @override
+  String get filterNotYetVerified => 'Belum Terverifikasi';
+
+  @override
+  String get filterUnverified => 'Tidak Terverifikasi';
+
+  @override
+  String get filterSearch => 'Cari';
+
+  @override
+  String get filterNoOptions => 'Tidak ada pilihan';
+
+  @override
+  String get filterAllFleetGroup => 'Semua Fleet Group';
+
+  @override
+  String get filterAllAlertType => 'Semua Tipe Peringatan';
+
+  @override
+  String get gpsDate => 'Tanggal GPS';
+
+  @override
+  String get alertType => 'Jenis Peringatan';
+
+  @override
+  String get speed => 'Kecepatan';
+
+  @override
+  String get addVehicleTitle => 'Tambah Kendaraan';
+
+  @override
+  String get addVehicleIdentifierTitle => 'Plat Nomor';
+
+  @override
+  String get addVehicleIdentifierPlaceholder => 'Masukkan plat nomor';
+
+  @override
+  String get addVehicleRequiredError => 'Plat nomor wajib diisi';
+
+  @override
+  String get addVehiclePlateExistsError => 'Plat nomor sudah terdaftar';
+
+  @override
+  String get addVehicleCheckFailedError =>
+      'Gagal memeriksa plat nomor. Silakan coba lagi';
+
+  @override
+  String get addVehicleContinue => 'Lanjutkan';
+
+  @override
+  String get addVehicleChecking => 'Memeriksa...';
+
+  @override
+  String get successAddVehicle => 'Kendaraan berhasil ditambahkan';
+
+  @override
+  String get successUpdateVehicle => 'Kendaraan berhasil diperbarui';
+
+  @override
+  String get errFailedAdd => 'Gagal menambahkan kendaraan. Silakan coba lagi';
+
+  @override
+  String get errFailedUpdate =>
+      'Gagal memperbarui kendaraan. Silakan coba lagi';
+
+  @override
+  String get errVinUnique => 'VIN sudah terdaftar. Silakan masukkan yang lain';
+
+  @override
+  String get selectFleetGroupHint => 'Pilih Fleet Group';
+
+  @override
+  String get loading => 'Memuat...';
+
+  @override
+  String get seeNotes => 'Lihat Catatan';
+
+  @override
+  String get showMapCoordinate => 'Lihat Koordinat Peta';
+
+  @override
+  String get alertNotes => 'Catatan Peringatan';
+
+  @override
+  String get notes => 'Catatan';
+
+  @override
+  String get noNotes => 'Tidak ada catatan';
+
+  @override
+  String get noMedia => 'Tidak ada media';
+
+  @override
+  String get mapCoordinate => 'Koordinat Peta';
+
+  @override
+  String get copyCoordinate => 'Koordinat disalin';
+
+  @override
+  String get filterAllStatus => 'Semua Status';
 }

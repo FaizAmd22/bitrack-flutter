@@ -1,4 +1,4 @@
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class AppInputField extends StatelessWidget {
@@ -12,6 +12,8 @@ class AppInputField extends StatelessWidget {
   final bool obscureText;
   final Color? prefixIconColor;
   final Color? suffixIconColor;
+  final ValueChanged<String>? onChanged; // ← tambah
+  final bool enabled; // ← tambah
 
   const AppInputField({
     super.key,
@@ -25,6 +27,8 @@ class AppInputField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIconColor,
     this.suffixIconColor,
+    this.onChanged, // ← tambah
+    this.enabled = true, // ← tambah
   });
 
   OutlineInputBorder _inputBorder(Color color) {
@@ -54,6 +58,8 @@ class AppInputField extends StatelessWidget {
               validator: validator,
               keyboardType: keyboardType,
               obscureText: obscureText,
+              onChanged: onChanged,
+              enabled: enabled,
               decoration: InputDecoration(
                 hintText: placeholder,
                 prefixIcon: prefixIcon != null
@@ -74,8 +80,8 @@ class AppInputField extends StatelessWidget {
                 fillColor: AppStyles.whiteColor,
                 enabledBorder: _inputBorder(baseColor),
                 focusedBorder: _inputBorder(baseColor),
-                errorBorder: _inputBorder(AppStyles.redColor),
-                focusedErrorBorder: _inputBorder(AppStyles.redColor),
+                errorBorder: _inputBorder(AppStyles.primaryColor),
+                focusedErrorBorder: _inputBorder(AppStyles.primaryColor),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 14,

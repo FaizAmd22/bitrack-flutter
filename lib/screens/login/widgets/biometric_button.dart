@@ -1,9 +1,10 @@
 // ignore_for_file: unused_element, deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
-import 'package:bitrack_mobile_flutter/features/auth/providers/auth_providers.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -58,7 +59,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       }
 
       final ok = await _localAuth.authenticate(
-        localizedReason: t.biometricReason, // ✅
+        localizedReason: t.biometricReason,
         options: const AuthenticationOptions(
           biometricOnly: true,
           stickyAuth: true,
@@ -71,7 +72,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(t.biometricCredNotFound), // ✅
+            content: Text(t.biometricCredNotFound),
             backgroundColor: AppStyles.redColor,
           ),
         );
@@ -91,12 +92,15 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       if (result == null) {
         final err =
             ref.read(authControllerProvider).errorMessage ??
-            t.loginFailedTryAgain; // ✅
+            t.loginFailedTryAgain;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(err), backgroundColor: AppStyles.redColor),
         );
         return;
       }
+
+      ref.invalidate(notificationProvider);
+      ref.invalidate(notificationServiceProvider);
 
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
     } catch (e) {
@@ -104,7 +108,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       final msg = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(t.errorPrefix(msg)), // ✅ param
+          content: Text(t.errorPrefix(msg)),
           backgroundColor: AppStyles.redColor,
         ),
       );
@@ -115,7 +119,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context); // ✅
+    final t = AppLocalizations.of(context);
 
     return InkWell(
       onTap: _isLoading ? null : _handleBiometricLogin,
@@ -133,7 +137,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
             )
           else
             Text(
-              t.biometricLoginLabel, // ✅
+              t.biometricLoginLabel,
               style: AppStyles.textMdBold.copyWith(
                 color: AppStyles.primaryColor,
               ),

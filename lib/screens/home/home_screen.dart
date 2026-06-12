@@ -2,16 +2,17 @@
 
 import 'dart:async';
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/providers/fleet_geofence_provider.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/providers/monitoring_providers.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/filter_model.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
-import 'package:bitrack_mobile_flutter/screens/home/widgets/filter_tracker_bottom_sheet.dart';
-import 'package:bitrack_mobile_flutter/screens/home/widgets/monitoring_map.dart';
-import 'package:bitrack_mobile_flutter/screens/home/widgets/monitoring_search_bar.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/full_screen_loading.dart';
+import 'package:ams/base/widgets/search_bar_base.dart';
+import 'package:ams/features/monitoring/providers/fleet_geofence_provider.dart';
+import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/home/models/filter_model.dart';
+import 'package:ams/screens/home/models/vehicle.dart';
+import 'package:ams/screens/home/widgets/activity_chips.dart';
+import 'package:ams/screens/home/widgets/filter_tracker_bottom_sheet.dart';
+import 'package:ams/screens/home/widgets/monitoring_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,9 +59,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? selectedFleetgroupId;
   String? selectedGeofenceId;
 
+  bool _showLoading = false;
+
   @override
   void initState() {
     super.initState();
+    _showLoading = widget.isActive;
     if (widget.isActive) _startPolling();
   }
 
@@ -70,6 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (oldWidget.isActive != widget.isActive) {
       if (widget.isActive) {
+        setState(() => _showLoading = true);
         _startPolling();
         ref.invalidate(monitoringProvider(_selectedActivity));
       } else {
@@ -219,30 +224,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     String? fleetGroupName,
     String? geofenceId,
   }) {
-    Iterable<Vehicle> out = source;
+    final q = (search ?? '').trim().toLowerCase();
+    final fg = fleetGroupName?.trim();
 
-    final q = (search ?? '').trim();
-    if (q.isNotEmpty) {
-      final needle = q.toLowerCase();
-      out = out.where((v) => v.licensePlate.toLowerCase().startsWith(needle));
+    final seen = <String>{};
+    final out = <Vehicle>[];
+
+    for (final v in source) {
+      // dedup by id
+      if (v.id.isEmpty || !seen.add(v.id)) continue;
+
+      // skip koordinat invalid / 0,0 (sama seperti Cordova)
+      if (v.latitude.isNaN || v.longitude.isNaN) continue;
+      if (v.latitude == 0 || v.longitude == 0) continue;
+
+      // skip plat kosong
+      if (v.licensePlate.trim().isEmpty) continue;
+
+      // search startsWith
+      if (q.isNotEmpty && !v.licensePlate.toLowerCase().startsWith(q)) continue;
+
+      // fleet group
+      if (fg != null && fg.isNotEmpty && v.fleetGroupName.trim() != fg) {
+        continue;
+      }
+
+      out.add(v);
     }
 
-    if (fleetGroupName != null && fleetGroupName.trim().isNotEmpty) {
-      final fg = fleetGroupName.trim();
-      out = out.where((v) => v.fleetGroupName.trim() == fg);
-    }
-
-    // if (geofenceId != null && geofenceId.trim().isNotEmpty) {
-    //   out = out.where((v) => v.geofenceId == geofenceId);
-    // }
-
-    return out.toList(growable: false);
+    return out;
   }
+
+  List<Vehicle> _lastVehicles = const [];
 
   @override
   Widget build(BuildContext context) {
     final monitoringAsync = ref.watch(monitoringProvider(_selectedActivity));
-    final rawVehicles = monitoringAsync.asData?.value ?? const <Vehicle>[];
+    final rawVehicles = monitoringAsync.asData?.value ?? _lastVehicles;
+
+    // Simpan data valid terbaru
+    if (monitoringAsync.asData != null) {
+      _lastVehicles = monitoringAsync.asData!.value;
+    }
+
+    // Matikan loading begitu request selesai (data ATAU error)
+    if (_showLoading && !monitoringAsync.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _showLoading) setState(() => _showLoading = false);
+      });
+    }
 
     final currentHash = Object.hashAll(rawVehicles.map((e) => e.licensePlate));
     if (currentHash != _lastVehiclesHash) {
@@ -276,7 +306,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          if (monitoringAsync.isLoading)
+          if (_showLoading)
             const Positioned.fill(
               child: IgnorePointer(ignoring: true, child: FullScreenLoading()),
             ),
@@ -285,27 +315,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             top: 45,
             left: 0,
             right: 0,
-            child: MonitoringSearchBar(
-              searchQuery: _searchQuery,
-              onSearchChanged: _onSearchChanged,
-              selectedActivity: _selectedActivity,
-              onActivityChanged: (value) {
-                setState(() {
-                  _selectedActivity = value;
-                  _searchQuery = '';
-                  _debouncedQuery = '';
-                });
-
-                ref.invalidate(monitoringProvider(value));
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (!mounted) return;
-                  _mapController.fitToVehicles(_filteredVehiclesCache);
-                });
-              },
-              totalVehicle: rawVehicles.length,
+            child: SearchBarBase(
+              value: _searchQuery,
+              onChanged: _onSearchChanged,
+              hintText: 'Search Vehicle License Plate ...',
               suggestionPlates: _cachedSuggestionPlates,
-              onTapFilter: () => _openFilterSheet(rawVehicles),
+              onOpenFilter: (_) => _openFilterSheet(rawVehicles),
+              below: ActivityChips(
+                selectedActivity: _selectedActivity,
+                totalVehicle: rawVehicles.length,
+                onActivityChanged: (value) {
+                  setState(() {
+                    _selectedActivity = value;
+                    _searchQuery = '';
+                    _debouncedQuery = '';
+                    _showLoading = true;
+                  });
+                  ref.invalidate(monitoringProvider(value));
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) return;
+                    _mapController.fitToVehicles(_filteredVehiclesCache);
+                  });
+                },
+              ),
             ),
           ),
 

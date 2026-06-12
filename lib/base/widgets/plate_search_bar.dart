@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/plate_input_formatter.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/plate_input_formatter.dart';
 
 class PlateSearchBar extends StatefulWidget {
   final String? value;
@@ -302,7 +302,13 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
                     decoration: InputDecoration(
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: SvgPicture.asset(AppMedia.searchIcon),
+                        child: SvgPicture.asset(
+                          AppMedia.searchIcon,
+                          colorFilter: ColorFilter.mode(
+                            AppStyles.primaryColor,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       ),
                       suffixIcon: hasText
                           ? IconButton(

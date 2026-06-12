@@ -1,12 +1,13 @@
 // ignore_for_file: sort_child_properties_last
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/app_draggable_sheet.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/tab_container.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/providers/vehicle_information_provider.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/app_draggable_sheet.dart';
+import 'package:ams/base/widgets/segmented_tab_bar.dart';
+import 'package:ams/base/widgets/tab_container.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/vehicle_detail/providers/vehicle_information_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/app_tab_bar.dart';
+// import 'package:ams/base/widgets/app_tab_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,6 +26,28 @@ class VehicleInformationBottomSheet extends ConsumerStatefulWidget {
 class _VehicleInformationBottomSheetState
     extends ConsumerState<VehicleInformationBottomSheet> {
   VehicleInfoTab _activeTab = VehicleInfoTab.information;
+  final _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onTabChanged(int i) {
+    setState(() => _activeTab = VehicleInfoTab.values[i]);
+    _pageController.animateToPage(
+      i,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onPageChanged(int i) {
+    if (_activeTab != VehicleInfoTab.values[i]) {
+      setState(() => _activeTab = VehicleInfoTab.values[i]);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +76,10 @@ class _VehicleInformationBottomSheetState
           children: [
             Text(t.vehicleInformation, style: AppStyles.textMdBold),
             const SizedBox(height: 20),
-            AppTabBar<VehicleInfoTab>(
-              tabs: [
-                AppTabItem(
-                  value: VehicleInfoTab.information,
-                  label: t.tabInformation,
-                ),
-                AppTabItem(value: VehicleInfoTab.status, label: t.tabStatus),
-                AppTabItem(value: VehicleInfoTab.sensor, label: t.tabSensor),
-              ],
-              activeValue: _activeTab,
-              onChanged: (tab) => setState(() => _activeTab = tab),
-              padding: const EdgeInsets.all(4),
+            SegmentedTabBar(
+              labels: [t.tabInformation, t.tabStatus, t.tabSensor],
+              activeIndex: VehicleInfoTab.values.indexOf(_activeTab),
+              onChanged: _onTabChanged,
             ),
             const SizedBox(height: 12),
             SizedBox(
@@ -91,7 +106,18 @@ class _VehicleInformationBottomSheetState
                     ],
                   ),
                 ),
-                data: (dataVehicle) => _buildTabContent(context, dataVehicle),
+                data: (dataVehicle) => SizedBox(
+                  height: 340,
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: _onPageChanged,
+                    children: [
+                      _buildInformationTab(context, dataVehicle),
+                      _buildStatusTab(context, dataVehicle),
+                      _buildSensorTab(context, dataVehicle),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -100,166 +126,140 @@ class _VehicleInformationBottomSheetState
     );
   }
 
-  Widget _buildTabContent(
+  Widget _buildInformationTab(
     BuildContext context,
     Map<String, dynamic> dataVehicle,
   ) {
     final t = AppLocalizations.of(context);
-
-    switch (_activeTab) {
-      case VehicleInfoTab.information:
-        return TabContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RowText(
-                text1: t.vehicleInfoGpsDate,
-                text2: "${dataVehicle['device_time'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: 'Fleet Group',
-                text2: "${dataVehicle['fleet_group_name'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoLicensePlate,
-                text2: "${dataVehicle['license_plate'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoImei,
-                text2: "${dataVehicle['imei'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoLatitude,
-                text2: "${dataVehicle['latitude'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoLongitude,
-                text2: "${dataVehicle['longitude'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoGoogleMap,
-                text2:
-                    "http://www.google.com/maps/place/${dataVehicle['latitude']},${dataVehicle['longitude']}",
-                textUri: t.showGoogleMap,
-                type: RowTextType.url,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleInfoStreetView,
-                text2:
-                    "https://www.google.com/maps?q&layer=c&cbll=${dataVehicle['latitude']},${dataVehicle['longitude']}",
-                textUri: t.showStreetView,
-                type: RowTextType.url,
-              ),
-            ],
+    return TabContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RowText(
+            text1: t.vehicleInfoGpsDate,
+            text2: "${dataVehicle['device_time'] ?? '-'}",
           ),
-        );
-
-      case VehicleInfoTab.status:
-        return TabContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RowText(
-                text1: t.vehicleStatusSpeed,
-                text2: "${dataVehicle['speed'] ?? '-'} KM/H",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleStatusTotalOdometer,
-                text2: "${dataVehicle['total_odometer'] ?? '-'} KM",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleStatusInternalBattery,
-                text2: "${dataVehicle['internal_battery_voltage'] ?? '-'} V",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleStatusExternalBattery,
-                text2: "${dataVehicle['external_power_voltage'] ?? '-'} %",
-              ),
-            ],
+          SizedBox(height: 20),
+          RowText(
+            text1: 'Fleet Group',
+            text2: "${dataVehicle['fleet_group_name'] ?? '-'}",
           ),
-        );
-
-      case VehicleInfoTab.sensor:
-        return TabContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RowText(
-                text1: t.vehicleSensorFuel,
-                text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleSensorDirection,
-                text2: "${dataVehicle['direction'] ?? '-'}°",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleSensorHumidity,
-                text2: "${dataVehicle['humidity'] ?? 'NaN'} %",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleSensorLeftDoor,
-                text2: "${dataVehicle['dleft'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleSensorRightDoor,
-                text2: "${dataVehicle['dright'] ?? '-'}",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              RowText(
-                text1: t.vehicleSensorBackDoor,
-                text2: "${dataVehicle['drear'] ?? '-'}",
-              ),
-            ],
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoLicensePlate,
+            text2: "${dataVehicle['license_plate'] ?? '-'}",
           ),
-        );
-    }
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoImei,
+            text2: "${dataVehicle['imei'] ?? '-'}",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoLatitude,
+            text2: "${dataVehicle['latitude'] ?? '-'}",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoLongitude,
+            text2: "${dataVehicle['longitude'] ?? '-'}",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoGoogleMap,
+            text2:
+                "http://www.google.com/maps/place/${dataVehicle['latitude']},${dataVehicle['longitude']}",
+            textUri: t.showGoogleMap,
+            type: RowTextType.url,
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleInfoStreetView,
+            text2:
+                "https://www.google.com/maps?q&layer=c&cbll=${dataVehicle['latitude']},${dataVehicle['longitude']}",
+            textUri: t.showStreetView,
+            type: RowTextType.url,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusTab(
+    BuildContext context,
+    Map<String, dynamic> dataVehicle,
+  ) {
+    final t = AppLocalizations.of(context);
+    return TabContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RowText(
+            text1: t.vehicleStatusSpeed,
+            text2: "${dataVehicle['speed'] ?? '-'} KM/H",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleStatusTotalOdometer,
+            text2: "${dataVehicle['total_odometer'] ?? '-'} KM",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleStatusInternalBattery,
+            text2: "${dataVehicle['internal_battery_voltage'] ?? '-'} V",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleStatusExternalBattery,
+            text2: "${dataVehicle['external_power_voltage'] ?? '-'} %",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSensorTab(
+    BuildContext context,
+    Map<String, dynamic> dataVehicle,
+  ) {
+    final t = AppLocalizations.of(context);
+    return TabContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RowText(
+            text1: t.vehicleSensorFuel,
+            text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleSensorDirection,
+            text2: "${dataVehicle['direction'] ?? '-'}°",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleSensorHumidity,
+            text2: "${dataVehicle['humidity'] ?? 'NaN'} %",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleSensorLeftDoor,
+            text2: "${dataVehicle['dleft'] ?? '-'}",
+          ),
+          SizedBox(height: 20),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleSensorRightDoor,
+            text2: "${dataVehicle['dright'] ?? '-'}",
+          ),
+          SizedBox(height: 20),
+          RowText(
+            text1: t.vehicleSensorBackDoor,
+            text2: "${dataVehicle['drear'] ?? '-'}",
+          ),
+        ],
+      ),
+    );
   }
 }
 

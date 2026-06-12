@@ -3,9 +3,10 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/screens/periodic_track/services/periodic_playback_controller.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/screens/periodic_track/services/periodic_playback_controller.dart';
+import 'package:ams/screens/periodic_track/widgets/periodic_alert_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -99,8 +100,9 @@ class _PeriodicMapState extends State<PeriodicMap>
   void _updatePlaybackSpeedOnly() {
     if (widget.points.length < 2) return;
 
-    final pts =
-        widget.points.map((e) => LatLng(e.latitude, e.longitude)).toList();
+    final pts = widget.points
+        .map((e) => LatLng(e.latitude, e.longitude))
+        .toList();
 
     final si = widget.speedIndex.clamp(0, _speeds.length - 1);
     final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
@@ -168,40 +170,71 @@ class _PeriodicMapState extends State<PeriodicMap>
     super.dispose();
   }
 
-  List<Marker> _buildStartEndMarkers() {
-    if (widget.points.isEmpty) return [];
+  // List<Marker> _buildStartEndMarkers() {
+  //   if (widget.points.isEmpty) return [];
 
-    final lastIndex = widget.points.length - 1;
+  //   final lastIndex = widget.points.length - 1;
 
-    Marker buildCircle(int index) {
-      final p = widget.points[index];
-      return Marker(
-        point: LatLng(p.latitude, p.longitude),
-        width: 18,
-        height: 18,
-        alignment: Alignment.center,
-        child: GestureDetector(
-          onTap: () => widget.onPointSelected(index),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppStyles.primaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppStyles.whiteColor, width: 2),
+  //   Marker buildCircle(int index) {
+  //     final p = widget.points[index];
+  //     return Marker(
+  //       point: LatLng(p.latitude, p.longitude),
+  //       width: 18,
+  //       height: 18,
+  //       alignment: Alignment.center,
+  //       child: GestureDetector(
+  //         onTap: () => widget.onPointSelected(index),
+  //         child: Container(
+  //           decoration: BoxDecoration(
+  //             color: AppStyles.primaryColor,
+  //             shape: BoxShape.circle,
+  //             border: Border.all(color: AppStyles.whiteColor, width: 2),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+
+  //   if (lastIndex == 0) return [buildCircle(0)];
+  //   return [buildCircle(0), buildCircle(lastIndex)];
+  // }
+
+  List<Marker> _buildPointCircles(Set<int> alertIdx) {
+    final markers = <Marker>[];
+
+    for (int i = 0; i < widget.points.length; i++) {
+      if (alertIdx.contains(i)) continue; // skip, sudah ada alert marker
+
+      final p = widget.points[i];
+      markers.add(
+        Marker(
+          point: LatLng(p.latitude, p.longitude),
+          width: 16,
+          height: 16,
+          alignment: Alignment.center,
+          child: GestureDetector(
+            onTap: () => _handlePointTap(i),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppStyles.blueColor, // #007BFF di Cordova
+                shape: BoxShape.circle,
+                border: Border.all(color: AppStyles.whiteColor, width: 2),
+              ),
             ),
           ),
         ),
       );
     }
 
-    if (lastIndex == 0) return [buildCircle(0)];
-    return [buildCircle(0), buildCircle(lastIndex)];
+    return markers;
   }
 
   void _setupPlaybackData({required bool resetPos}) {
     if (widget.points.length < 2) return;
 
-    final pts =
-        widget.points.map((e) => LatLng(e.latitude, e.longitude)).toList();
+    final pts = widget.points
+        .map((e) => LatLng(e.latitude, e.longitude))
+        .toList();
 
     final si = widget.speedIndex.clamp(0, _speeds.length - 1);
     final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
@@ -222,16 +255,36 @@ class _PeriodicMapState extends State<PeriodicMap>
     final dLon = (b.longitude - a.longitude) * math.pi / 180;
 
     final y = math.sin(dLon) * math.cos(lat2);
-    final x = math.cos(lat1) * math.sin(lat2) -
+    final x =
+        math.cos(lat1) * math.sin(lat2) -
         math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
 
     final brng = math.atan2(y, x) * 180 / math.pi;
     return (brng + 360) % 360;
   }
 
+  void _handlePointTap(int index) {
+    if (index < 0 || index >= widget.points.length) return;
+
+    widget.onPointSelected(index);
+
+    final point = widget.points[index];
+    PeriodicAlertSheet.open(context, point);
+  }
+
+  Set<int> _alertIndices() {
+    final out = <int>{};
+    for (int i = 0; i < widget.points.length; i++) {
+      if (widget.points[i].eventType != 'SAMPLING') out.add(i);
+    }
+    return out;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.points.isEmpty) return const SizedBox.shrink();
+
+    final alertIdx = _alertIndices();
 
     final safeSelectedIndex = widget.currentIndex.clamp(
       0,
@@ -242,8 +295,9 @@ class _PeriodicMapState extends State<PeriodicMap>
     final truckPoint =
         _truckPos ?? LatLng(fallbackPoint.latitude, fallbackPoint.longitude);
 
-    final coords =
-        widget.points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+    final coords = widget.points
+        .map((p) => LatLng(p.latitude, p.longitude))
+        .toList();
 
     final idxForInfo = widget.isPlaying
         ? _playbackIndex.clamp(0, widget.points.length - 1)
@@ -279,13 +333,10 @@ class _PeriodicMapState extends State<PeriodicMap>
 
           _userIsInteracting = true;
           _resumeAutoCenterTimer?.cancel();
-          _resumeAutoCenterTimer = Timer(
-            const Duration(milliseconds: 900),
-            () {
-              if (!mounted) return;
-              setState(() => _userIsInteracting = false);
-            },
-          );
+          _resumeAutoCenterTimer = Timer(const Duration(milliseconds: 900), () {
+            if (!mounted) return;
+            setState(() => _userIsInteracting = false);
+          });
         },
       ),
       children: [
@@ -293,7 +344,7 @@ class _PeriodicMapState extends State<PeriodicMap>
           urlTemplate: widget.isSatellite
               ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
               : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.bitrack.mobile',
+          userAgentPackageName: 'com.treffix.ams',
         ),
         PolylineLayer(
           polylines: [
@@ -308,26 +359,27 @@ class _PeriodicMapState extends State<PeriodicMap>
           markers: widget.points
               .asMap()
               .entries
-              .where((e) => (e.value.eventType) != 'SAMPLING')
+              .where((e) => e.value.eventType != 'SAMPLING')
               .map((e) {
-            final p = e.value;
-            return Marker(
-              point: LatLng(p.latitude, p.longitude),
-              width: 36,
-              height: 36,
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () => widget.onPointSelected(e.key),
-                child: SvgPicture.asset(
-                  AppMedia.alertIcon,
+                final p = e.value;
+                return Marker(
+                  point: LatLng(p.latitude, p.longitude),
                   width: 36,
                   height: 36,
-                ),
-              ),
-            );
-          }).toList(),
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () => _handlePointTap(e.key), // ← pindah + popup
+                    child: SvgPicture.asset(
+                      AppMedia.alertIcon,
+                      width: 36,
+                      height: 36,
+                    ),
+                  ),
+                );
+              })
+              .toList(),
         ),
-        MarkerLayer(markers: _buildStartEndMarkers()),
+        MarkerLayer(markers: _buildPointCircles(alertIdx)),
         MarkerLayer(
           markers: [
             Marker(
@@ -344,18 +396,5 @@ class _PeriodicMapState extends State<PeriodicMap>
         ),
       ],
     );
-  }
-
-  double _bearingDeg(PeriodicPoint a, PeriodicPoint b) {
-    final lat1 = a.latitude * math.pi / 180;
-    final lat2 = b.latitude * math.pi / 180;
-    final dLon = (b.longitude - a.longitude) * math.pi / 180;
-
-    final y = math.sin(dLon) * math.cos(lat2);
-    final x = math.cos(lat1) * math.sin(lat2) -
-        math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
-
-    final brng = math.atan2(y, x) * 180 / math.pi;
-    return (brng + 360) % 360;
   }
 }

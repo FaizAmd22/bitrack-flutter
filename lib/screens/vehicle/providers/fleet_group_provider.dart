@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/service/fetch_fleet_group.dart';
+import 'package:ams/screens/vehicle/services/fetch_fleet_group.dart';
 
 final fleetGroupApiProvider = Provider<FetchFleetGroup>(
   (ref) => FetchFleetGroup(),

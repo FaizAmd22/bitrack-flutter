@@ -1,11 +1,12 @@
 // ignore_for_file: unused_element, deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/home/home_screen.dart';
-import 'package:bitrack_mobile_flutter/screens/profile/profile.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/vehicle.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/home/home_screen.dart';
+import 'package:ams/screens/notification/notification_screen.dart';
+import 'package:ams/screens/profile/profile.dart';
+import 'package:ams/screens/vehicle/vehicle.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,12 +21,16 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
+  final GlobalKey<NotificationScreenState> _notifKey =
+      GlobalKey<NotificationScreenState>();
+
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context);
 
     final screens = [
       HomeScreen(isActive: _selectedIndex == 0),
+      NotificationScreen(key: _notifKey),
       const VehicleScreen(),
       const ProfileScreen(),
     ];
@@ -49,6 +54,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           onTap: (i) {
             if (i == _selectedIndex) return;
             setState(() => _selectedIndex = i);
+
+            // Saat user pindah KE tab notifikasi (index 1), refresh datanya.
+            if (i == 1) {
+              _notifKey.currentState?.refreshFromOutside();
+            }
           },
           selectedItemColor: AppStyles.primaryColor,
           unselectedItemColor: const Color.fromARGB(255, 189, 189, 189),
@@ -65,20 +75,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 AppMedia.routeFilledIcon,
                 width: 23,
                 height: 23,
+                colorFilter: ColorFilter.mode(
+                  AppStyles.primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: translate.navTracker,
             ),
-            // BottomNavigationBarItem(
-            //   icon: _BadgeIcon(
-            //     icon: FluentSystemIcons.ic_fluent_alert_regular,
-            //     count: alertCount,
-            //   ),
-            //   activeIcon: _BadgeIcon(
-            //     icon: FluentSystemIcons.ic_fluent_alert_filled,
-            //     count: alertCount,
-            //   ),
-            //   label: "Alert",
-            // ),
+            BottomNavigationBarItem(
+              icon: const Icon(FluentSystemIcons.ic_fluent_alert_regular),
+              activeIcon: const Icon(FluentSystemIcons.ic_fluent_alert_filled),
+              label: translate.navNotification,
+            ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 AppMedia.truckRegulerIcon,
@@ -89,57 +97,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 AppMedia.truckFilledIcon,
                 width: 24,
                 height: 24,
+                colorFilter: ColorFilter.mode(
+                  AppStyles.primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               label: translate.navVehicle,
             ),
             BottomNavigationBarItem(
-              icon: Icon(FluentSystemIcons.ic_fluent_person_regular),
-              activeIcon: Icon(FluentSystemIcons.ic_fluent_person_filled),
+              icon: const Icon(FluentSystemIcons.ic_fluent_person_regular),
+              activeIcon: const Icon(FluentSystemIcons.ic_fluent_person_filled),
               label: translate.navProfile,
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _BadgeIcon extends StatelessWidget {
-  final IconData icon;
-  final int count;
-  const _BadgeIcon({required this.icon, required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Icon(icon),
-        if (count > 0)
-          Positioned(
-            top: -10,
-            right: -6,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: AppStyles.primaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppStyles.bottomNavbarColor,
-                  width: 2,
-                ),
-              ),
-              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-              child: Text(
-                count > 99 ? '99+' : '$count',
-                style: AppStyles.textXsBold.copyWith(
-                  color: AppStyles.whiteColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

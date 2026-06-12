@@ -1,8 +1,8 @@
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/base/localization/locale_controller.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/base/localization/locale_controller.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 class LanguageScreen extends ConsumerWidget {
   const LanguageScreen({super.key});

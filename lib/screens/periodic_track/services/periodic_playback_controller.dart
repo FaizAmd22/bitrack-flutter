@@ -31,7 +31,6 @@ class PeriodicPlaybackController {
 
   bool get isPlaying => _isPlaying;
 
-  // Set data rute + durasi per segmen
   void setData({
     required List<LatLng> points,
     required List<int> segmentDurationsMs,
@@ -40,7 +39,6 @@ class PeriodicPlaybackController {
     _segmentDurationsMs = segmentDurationsMs;
   }
 
-  // Play dari index tertentu
   void play({required int startIndex}) {
     if (_points.length < 2) return;
 
@@ -54,7 +52,6 @@ class PeriodicPlaybackController {
     if (!_ticker.isActive) _ticker.start();
   }
 
-  // Pause
   void pause() {
     _isPlaying = false;
     if (_ticker.isActive) _ticker.stop();

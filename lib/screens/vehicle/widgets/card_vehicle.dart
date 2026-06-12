@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 
 class CardVehicle extends StatelessWidget {
   final Map<String, dynamic> vehicle;
@@ -78,9 +78,9 @@ class CardVehicle extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
+                  color: Colors.black.withOpacity(0.10),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),

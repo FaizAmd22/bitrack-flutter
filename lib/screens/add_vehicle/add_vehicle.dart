@@ -1,17 +1,21 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously, control_flow_in_finally
 
-import 'package:bitrack_mobile_flutter/base/widgets/confirm_dialog.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/services/fetch_vehicle_by_license.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/models/add_vehicle_args.dart';
+import 'package:ams/base/widgets/app_toast.dart';
+import 'package:ams/base/widgets/confirm_dialog.dart';
+import 'package:ams/base/widgets/full_screen_loading.dart';
+import 'package:ams/screens/add_vehicle/services/fetch_vehicle_by_license.dart';
+import 'package:ams/screens/add_vehicle/services/submit_vehicle.dart';
+import 'package:ams/screens/vehicle_detail/models/add_vehicle_args.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/app_stepper.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/models/add_vehicle_form_data.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/widgets/device_info_step.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/widgets/review_step.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/widgets/vehicle_info_step.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/app_stepper.dart';
+import 'package:ams/screens/add_vehicle/models/add_vehicle_form_data.dart';
+import 'package:ams/screens/add_vehicle/widgets/device_info_step.dart';
+import 'package:ams/screens/add_vehicle/widgets/review_step.dart';
+import 'package:ams/screens/add_vehicle/widgets/vehicle_info_step.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -23,15 +27,19 @@ class AddVehicleScreen extends StatefulWidget {
 class _AddVehicleScreenState extends State<AddVehicleScreen> {
   AddVehicleFormData data = AddVehicleFormData();
 
+  String? _vehicleId;
+  String? fleetGroupId;
+  bool _submitting = false;
   final _vehicleFormKey = GlobalKey<FormState>();
   final _deviceFormKey = GlobalKey<FormState>();
+  final _submitService = const SubmitVehicleService();
 
   AddVehicleArgs? _args;
 
   bool _loadingVehicle = false;
   String _initKey = 'create';
   bool _vehicleStepReady = false;
-  bool get _pageLoading => _loadingVehicle || !_vehicleStepReady;
+  bool get _pageLoading => _loadingVehicle || !_vehicleStepReady || _submitting;
 
   final VehicleApi _vehicleApi = const VehicleApi();
 
@@ -59,7 +67,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     final a = _args!;
     if (a.status != AddVehicleStatus.update) {
       setState(() {
-        data = AddVehicleFormData();
+        data = AddVehicleFormData()..plateNumber = (a.license ?? '').trim();
         _initKey = 'create';
         _loadingVehicle = false;
       });
@@ -78,11 +86,13 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     setState(() => _loadingVehicle = true);
     try {
       final v = await _vehicleApi.fetchVehicleByLicense(plate);
+      debugPrint('>>> fetchVehicleByLicense result: $v');
 
       final next = AddVehicleFormData();
       if (v != null) {
         next.applyFromVehicleApi(v, forcedPlate: plate);
         _initKey = (v['id'] ?? 'update').toString();
+        _vehicleId = (v['id'] ?? '').toString();
       } else {
         next.plateNumber = plate;
         _initKey = 'update-no-data';
@@ -104,7 +114,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     final t = AppLocalizations.of(context);
     final isUpdate = _args?.status == AddVehicleStatus.update;
 
-    final ok = await showDialog(
+    await showDialog(
       context: context,
       builder: (ctx) => ConfirmDialog(
         title: isUpdate
@@ -116,19 +126,100 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
         textCancel: t.cancel,
         textSubmit: t.confirm,
         funcCancel: () async {
-          Navigator.pop(ctx, false);
+          // tidak melakukan apa-apa; ConfirmDialog menutup dirinya sendiri
         },
         funcSubmit: () async {
-          Navigator.pop(ctx, true);
+          // ConfirmDialog menutup dirinya sendiri; kita langsung submit
+          await _doSubmit(isUpdate);
         },
       ),
     );
+  }
 
-    if (ok == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(isUpdate ? t.updateTodo : t.createTodo)),
+  Future<void> _doSubmit(bool isUpdate) async {
+    final t = AppLocalizations.of(context);
+
+    setState(() => _submitting = true);
+
+    const storage = FlutterSecureStorage();
+    final createdBy = await storage.read(key: 'user_name') ?? '';
+
+    try {
+      final result = isUpdate
+          ? await _submitService.update(
+              data,
+              id: _vehicleId ?? '',
+              createdBy: createdBy,
+            )
+          : await _submitService.create(data, createdBy: createdBy);
+
+      if (!mounted) return;
+
+      // Jalur 1: HTTP 200 + status:"false" (mis. SIM card)
+      if (!result.success) {
+        setState(() => _submitting = false);
+        AppToast.showFailed(
+          context,
+          result.errorMsg ?? (isUpdate ? t.errFailedUpdate : t.errFailedAdd),
+        );
+        return; // jangan navigate
+      }
+
+      // SUKSES
+      setState(() => _submitting = false);
+      AppToast.show(
+        context,
+        isUpdate ? t.successUpdateVehicle : t.successAddVehicle,
+      );
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted) return;
+      Navigator.pop(context, true); // ← kirim sinyal sukses (create & update)
+    } on DioException catch (e) {
+      // Jalur 2: HTTP 422 (mis. VIN validation.unique)
+      if (!mounted) return;
+      setState(() => _submitting = false);
+
+      debugPrint('>>> submit 422 body: ${e.response?.data}');
+
+      final uniqueMsg = _pickUniqueMessage(e);
+      AppToast.showFailed(
+        context,
+        uniqueMsg ?? (isUpdate ? t.errFailedUpdate : t.errFailedAdd),
+      );
+      return; // jangan navigate
+    } catch (e) {
+      // Error lain (jaringan, timeout)
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      AppToast.showFailed(
+        context,
+        isUpdate ? t.errFailedUpdate : t.errFailedAdd,
       );
     }
+  }
+
+  String? _pickUniqueMessage(DioException e) {
+    final t = AppLocalizations.of(context);
+    final data = e.response?.data;
+    if (data is! Map) return null;
+
+    final errors = data['errors'] is Map ? data['errors'] as Map : data;
+
+    bool hasUnique(String field) {
+      final v = errors[field];
+      if (v == null) return false;
+      if (v is String) return v == 'validation.unique';
+      if (v is List) return v.contains('validation.unique');
+      if (v is Map) {
+        return v['code'] == 'validation.unique' ||
+            v['message'] == 'validation.unique' ||
+            v.values.contains('validation.unique');
+      }
+      return false;
+    }
+
+    if (hasUnique('vin')) return t.errVinUnique;
+    return null;
   }
 
   @override

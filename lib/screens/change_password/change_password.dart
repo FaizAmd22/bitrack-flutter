@@ -2,9 +2,9 @@
 
 import 'dart:async';
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/features/auth/providers/user_storage_provider.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/features/auth/providers/user_storage_provider.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'widgets/otp_box.dart';

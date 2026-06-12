@@ -1,4 +1,4 @@
-name: bitrack_mobile_flutter
+name: ams
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -39,7 +39,7 @@ dependencies:
   fluentui_icons: ^1.0.0
   flutter_riverpod: ^3.0.3
   dio: ^5.7.0
-  flutter_svg: ^2.0.9
+  flutter_svg: ^2.3.0
   flutter_secure_storage: ^9.2.2
   local_auth: ^2.1.7
   flutter_map: ^6.1.0
@@ -53,6 +53,14 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   shared_preferences: ^2.2.3
   syncfusion_flutter_charts: 31.1.19
+  web_socket_channel: ^3.0.3
+  http: ^1.6.0
+  media_kit: ^1.2.6
+  media_kit_video: ^2.0.1
+  media_kit_libs_video: ^1.0.7
+  media_kit_libs_android_video: ^1.3.8
+  media_kit_libs_ios_video: ^1.1.4
+  audioplayers: ^6.7.1
   # flutter_vlc_player: 6.0.3
   # media_kit: ^1.2.6
   # media_kit_video: ^2.0.1
@@ -73,17 +81,17 @@ dev_dependencies:
 flutter_native_splash:
   android: true
   ios: true
-  color: "#D84040"
+  color: "#386AD8"
 
   android_12:
     image: assets/images/transparent.png
-    icon_background_color: "#D84040"
+    icon_background_color: "#386AD8"
 
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/logos/logo.png"
-  adaptive_icon_background: "#D84040"
+  adaptive_icon_background: "#386AD8"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,11 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'dart:math' as math;
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
+import 'package:ams/base/res/media.dart';
 
 class VehicleRealtimeMap extends StatefulWidget {
   const VehicleRealtimeMap({
@@ -41,10 +42,16 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
   LatLng? _fromPos;
   LatLng? _toPos;
 
+  // Rotasi marker yang dirender (di-interpolasi halus).
+  double _currentRot = 0;
+  double _fromRot = 0;
+  double _toRot = 0;
+
   late final AnimationController _animCtrl;
-  late Animation<double> _t;
+  late final Animation<double> _t;
 
   double _zoom = 15;
+  bool _mapReady = false;
 
   static const InteractionOptions _interaction = InteractionOptions(
     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
@@ -55,26 +62,34 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
     super.initState();
     _zoom = widget.initialZoom;
 
+    // Seed posisi & rotasi awal — fix marker tidak tampil saat coordinate
+    // sudah valid di build pertama (didUpdateWidget belum terpanggil).
+    _renderPos = widget.coordinate;
+    _currentRot = widget.direction;
+    _fromRot = widget.direction;
+    _toRot = widget.direction;
+
     _animCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1800),
     );
 
-    _t = CurvedAnimation(parent: _animCtrl, curve: Curves.linear)
+    _t = CurvedAnimation(parent: _animCtrl, curve: Curves.easeInOut)
       ..addListener(() {
         if (_fromPos == null || _toPos == null) return;
         final v = _t.value;
+        final lat =
+            _fromPos!.latitude + (_toPos!.latitude - _fromPos!.latitude) * v;
+        final lng =
+            _fromPos!.longitude + (_toPos!.longitude - _fromPos!.longitude) * v;
+        final rot = _lerpAngle(_fromRot, _toRot, v);
 
         setState(() {
-          _renderPos = LatLng(
-            _fromPos!.latitude + (_toPos!.latitude - _fromPos!.latitude) * v,
-            _fromPos!.longitude + (_toPos!.longitude - _fromPos!.longitude) * v,
-          );
+          _renderPos = LatLng(lat, lng);
+          _currentRot = rot;
         });
 
-        if (widget.followMarker && _renderPos != null) {
-          _mapController.move(_renderPos!, _zoom);
-        }
+        if (widget.followMarker) _safeMove(LatLng(lat, lng));
       });
   }
 
@@ -85,13 +100,18 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
     final newPos = widget.coordinate;
     if (newPos == null) return;
 
+    // Posisi valid pertama kali.
     if (_renderPos == null) {
-      _renderPos = newPos;
+      setState(() {
+        _renderPos = newPos;
+        _currentRot = widget.direction;
+        _fromRot = widget.direction;
+        _toRot = widget.direction;
+      });
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        _mapController.move(newPos, _zoom);
+        _safeMove(newPos);
       });
-      setState(() {});
       return;
     }
 
@@ -104,6 +124,25 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
       _fromPos = _renderPos;
       _toPos = newPos;
 
+      // Rotasi target: arah gerak (bearing) bila benar-benar berpindah,
+      // selain itu pakai direction dari API. Hindari spin saat diam.
+      final movedFar =
+          _fromPos != null &&
+          ((_fromPos!.latitude - newPos.latitude).abs() > 1e-6 ||
+              (_fromPos!.longitude - newPos.longitude).abs() > 1e-6);
+
+      _fromRot = _currentRot;
+      _toRot = movedFar ? _computeBearing(_fromPos!, newPos) : widget.direction;
+
+      _animCtrl.stop();
+      _animCtrl.reset();
+      _animCtrl.forward();
+    } else if (widget.direction != oldWidget.direction) {
+      // Posisi sama, heading berubah (mis. berputar di tempat).
+      _fromPos = _renderPos;
+      _toPos = _renderPos;
+      _fromRot = _currentRot;
+      _toRot = widget.direction;
       _animCtrl.stop();
       _animCtrl.reset();
       _animCtrl.forward();
@@ -114,6 +153,33 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
   void dispose() {
     _animCtrl.dispose();
     super.dispose();
+  }
+
+  void _safeMove(LatLng pos) {
+    if (!_mapReady) return;
+    try {
+      _mapController.move(pos, _zoom);
+    } catch (_) {}
+  }
+
+  // Bearing 0–360° (sama dengan computeBearing Cordova).
+  double _computeBearing(LatLng from, LatLng to) {
+    double toRad(double d) => d * math.pi / 180.0;
+    double toDeg(double r) => r * 180.0 / math.pi;
+    final dLng = toRad(to.longitude - from.longitude);
+    final lat1 = toRad(from.latitude);
+    final lat2 = toRad(to.latitude);
+    final y = math.sin(dLng) * math.cos(lat2);
+    final x =
+        math.cos(lat1) * math.sin(lat2) -
+        math.sin(lat1) * math.cos(lat2) * math.cos(dLng);
+    return (toDeg(math.atan2(y, x)) + 360) % 360;
+  }
+
+  // Interpolasi sudut jalur terpendek (handle 350°→10°).
+  double _lerpAngle(double from, double to, double t) {
+    final diff = ((to - from + 540) % 360) - 180;
+    return (from + diff * t + 360) % 360;
   }
 
   String _registeredEvent() {
@@ -157,6 +223,10 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
         minZoom: 3,
         maxZoom: 18,
         interactionOptions: _interaction,
+        onMapReady: () {
+          _mapReady = true;
+          if (_renderPos != null) _safeMove(_renderPos!);
+        },
         onPositionChanged: (p, hasGesture) {
           if (p.zoom != null) _zoom = p.zoom!;
         },
@@ -164,9 +234,8 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.treffix.bitrack',
+          userAgentPackageName: 'com.treffix.ams',
         ),
-
         if (pos != null)
           MarkerLayer(
             markers: [
@@ -177,7 +246,7 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
                 alignment: Alignment.center,
                 child: _TruckMarkerWithTooltip(
                   asset: _truckAsset(),
-                  directionDeg: widget.direction,
+                  directionDeg: _currentRot,
                   speed: widget.speed,
                 ),
               ),
@@ -201,14 +270,13 @@ class _TruckMarkerWithTooltip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radians = directionDeg * 3.141592653589793 / 180.0;
+    final radians = directionDeg * math.pi / 180.0;
 
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
         Positioned(top: -15, child: _SpeedTooltip(speed: speed)),
-
         Stack(
           alignment: Alignment.center,
           children: [
@@ -220,7 +288,6 @@ class _TruckMarkerWithTooltip extends StatelessWidget {
                 color: AppStyles.primaryColor.withOpacity(0.15),
               ),
             ),
-
             Container(
               width: 60,
               height: 60,
@@ -231,7 +298,6 @@ class _TruckMarkerWithTooltip extends StatelessWidget {
             ),
           ],
         ),
-
         Transform.rotate(
           angle: radians,
           child: Image.asset(asset, width: 55, height: 55, fit: BoxFit.contain),

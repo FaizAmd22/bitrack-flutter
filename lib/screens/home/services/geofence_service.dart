@@ -1,4 +1,4 @@
-import 'package:bitrack_mobile_flutter/screens/home/models/filter_model.dart';
+import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:dio/dio.dart';
 
 class GeofenceRepo {

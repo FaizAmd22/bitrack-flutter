@@ -1,8 +1,8 @@
-import 'package:bitrack_mobile_flutter/base/constants/select_options.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/tx_inputs.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/models/add_vehicle_form_data.dart';
+import 'package:ams/base/constants/select_options.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/tx_inputs.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/add_vehicle/models/add_vehicle_form_data.dart';
 import 'package:flutter/material.dart';
 
 class DeviceInfoStep extends StatefulWidget {

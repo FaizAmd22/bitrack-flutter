@@ -1,6 +1,6 @@
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/screens/login/widgets/form_login.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/screens/login/widgets/form_login.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,9 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const Expanded(child: SizedBox()),
               Image.asset(AppMedia.logo, scale: 2.5),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Container(
                 width: size.width * 0.9,
                 padding: const EdgeInsets.symmetric(

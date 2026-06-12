@@ -3,13 +3,11 @@ class AddVehicleFormData {
   String plateNumber = '';
   String? brand;
   String? model;
-  String type = '';
   String year = '';
-  String color = '';
   String? vehicleCategory;
-  String odometerKm = '';
+  String odometer = '';
   String vin = '';
-  String engineNumber = '';
+  String? fleetGroupId;
 
   // Device
   DateTime? installationDate;
@@ -21,14 +19,13 @@ class AddVehicleFormData {
   void applyFromVehicleApi(Map<String, dynamic> v, {String? forcedPlate}) {
     plateNumber = (forcedPlate ?? v['license_plate'] ?? '').toString().trim();
     vin = (v['vin'] ?? '').toString();
-    engineNumber = (v['machine_number'] ?? v['engine_number'] ?? '').toString();
 
     brand = _nullable(v['vehicle_brand']);
     model = _nullable(v['vehicle_model']);
-    type = (v['vehicle_type'] ?? '').toString();
     year = (v['vehicle_year'] ?? '').toString();
     vehicleCategory = _nullable(v['vehicle_category']);
-    odometerKm = (v['odometer'] ?? '').toString();
+    odometer = (v['odometer'] ?? '').toString();
+    fleetGroupId = _nullable(v['fleet_group_id']);
 
     installationDate = _tryParseDate(v['installation_date']);
     deviceTypeCode = (v['device_type_code'] ?? 'TELTONIKA').toString();

@@ -1,6 +1,6 @@
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppStyles.darkRedColor,
+          color: AppStyles.primaryColor,
           image: const DecorationImage(
             image: AssetImage(AppMedia.bgLogin),
             fit: BoxFit.cover,

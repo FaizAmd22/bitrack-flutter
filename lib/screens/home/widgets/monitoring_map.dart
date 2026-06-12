@@ -1,14 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math' as math;
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
+import 'package:ams/screens/home/models/vehicle.dart';
 
 class MonitoringMapController {
   void Function(List<Vehicle> vehicles)? _fit;
@@ -91,6 +91,8 @@ class _MonitoringMapState extends State<MonitoringMap> {
 
   void _rebuildMarkersIfNeeded() {
     final vehicles = widget.vehicles;
+    int roundedBearing(double b) => ((b / 5).round() * 5) % 360;
+
     final key = Object.hash(
       widget.showPlate,
       vehicles.length,
@@ -100,7 +102,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
             v.id,
             v.latitude,
             v.longitude,
-            v.bearing,
+            roundedBearing(v.bearing),
             v.activity,
             v.deviceTime,
             v.ignition,
@@ -118,7 +120,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
     _cachedMarkers = vehicles
         .map((v) {
           final asset = _resolveTruckAsset(v, now);
-          final angleRad = v.bearing * math.pi / 180;
+          final angleRad = roundedBearing(v.bearing) * math.pi / 180;
 
           return Marker(
             point: LatLng(v.latitude, v.longitude),
@@ -204,10 +206,11 @@ class _MonitoringMapState extends State<MonitoringMap> {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'id.treffix.bitrack',
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
-            maxClusterRadius: 100,
+            maxClusterRadius: 120,
             size: const Size(40, 40),
             rotate: false,
             polygonOptions: const PolygonOptions(

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/services/fetch_vehicle_detail.dart';
+import 'package:ams/screens/vehicle_detail/services/fetch_vehicle_detail.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 final vehicleIdProvider = StateProvider<String?>((ref) => null);

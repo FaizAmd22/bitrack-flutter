@@ -1,4 +1,4 @@
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
+import 'package:ams/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

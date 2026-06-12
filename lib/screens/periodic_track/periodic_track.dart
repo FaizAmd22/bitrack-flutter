@@ -1,14 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/back_button_circle.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/periodic_track_filter_sheet.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/tx_inputs.dart';
-import 'package:bitrack_mobile_flutter/screens/periodic_track/services/fetch_periodic.dart';
-import 'package:bitrack_mobile_flutter/screens/periodic_track/widgets/circle_button.dart';
-import 'package:bitrack_mobile_flutter/screens/periodic_track/widgets/player_card.dart';
+import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/back_button_circle.dart';
+import 'package:ams/base/widgets/full_screen_loading.dart';
+import 'package:ams/base/widgets/periodic_track_filter_sheet.dart';
+import 'package:ams/base/widgets/tx_inputs.dart';
+import 'package:ams/screens/periodic_track/services/fetch_periodic.dart';
+import 'package:ams/screens/periodic_track/widgets/circle_button.dart';
+import 'package:ams/screens/periodic_track/widgets/player_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';

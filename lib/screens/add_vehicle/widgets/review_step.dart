@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/add_vehicle/models/add_vehicle_form_data.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/add_vehicle/models/add_vehicle_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,13 +32,10 @@ class ReviewStep extends StatelessWidget {
               _ReviewRow(t.plateNumber, _v(data.plateNumber)),
               _ReviewRow(t.brand, _v(data.brand)),
               _ReviewRow(t.model, _v(data.model)),
-              _ReviewRow(t.vehicleType, _v(data.type)),
               _ReviewRow(t.vehicleYear, _v(data.year)),
-              _ReviewRow(t.vehicleColor, _v(data.color)),
               _ReviewRow(t.vehicleCategory, _v(data.vehicleCategory)),
-              _ReviewRow(t.odometerKm, _v(data.odometerKm)),
+              _ReviewRow(t.odometer, _v(data.odometer)),
               _ReviewRow(t.vin, _v(data.vin)),
-              _ReviewRow(t.engineNumber, _v(data.engineNumber)),
             ],
           ),
           const SizedBox(height: 14),

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:bitrack_mobile_flutter/features/auth/providers/auth_providers.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/data/monitoring_api.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/vehicle.dart';
+import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/monitoring/data/monitoring_api.dart';
+import 'package:ams/screens/home/models/vehicle.dart';
 
 final monitoringProvider = FutureProvider.family<List<Vehicle>, String>((
   ref,

@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:bitrack_mobile_flutter/base/res/media.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/periodic_track_filter_sheet.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/widgets/indicator_card.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/widgets/button_card.dart';
+import 'package:ams/base/res/media.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/periodic_track_filter_sheet.dart';
+import 'package:ams/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
+import 'package:ams/screens/vehicle_detail/widgets/indicator_card.dart';
+import 'package:ams/screens/vehicle_detail/widgets/button_card.dart';
 import 'package:flutter/material.dart';
 
 class VehicleDetailContent extends StatelessWidget {
@@ -17,6 +17,7 @@ class VehicleDetailContent extends StatelessWidget {
   final bool dashcamOnline;
   final bool isChiller;
   final bool loadingDashcam;
+  final Map<String, dynamic>? vehicleData; // ← tambahan
 
   const VehicleDetailContent({
     super.key,
@@ -27,6 +28,7 @@ class VehicleDetailContent extends StatelessWidget {
     required this.dashcamOnline,
     required this.isChiller,
     required this.loadingDashcam,
+    this.vehicleData, // ← opsional, null saat masih loading dashcam
   });
 
   static const _topRadius = BorderRadius.only(
@@ -59,7 +61,6 @@ class VehicleDetailContent extends StatelessWidget {
       'vehicle_id',
       fallback: '',
     ).trim();
-    debugPrint("vehicleId (for dashcam): $vehicleId");
 
     List<IndicatorItemData> buildIndicators() {
       final ignition = safeIntFrom(detailData, 'ignition') == 1;
@@ -68,24 +69,20 @@ class VehicleDetailContent extends StatelessWidget {
       final dashcamLabel = !hasDashcam
           ? "N/A"
           : loadingDashcam
-              ? "Dashcam..."
-              : (dashcamOnline ? "Dashcam" : "N/A");
+          ? "Dashcam..."
+          : (dashcamOnline ? "Dashcam" : "N/A");
 
       final dashcamBg = !hasDashcam
           ? AppStyles.bgGrayColor
           : loadingDashcam
-              ? AppStyles.bgYellowColor
-              : (dashcamOnline
-                  ? AppStyles.bgGreenColor
-                  : AppStyles.bgGrayColor);
+          ? AppStyles.bgYellowColor
+          : (dashcamOnline ? AppStyles.bgGreenColor : AppStyles.bgGrayColor);
 
       final dashcamFg = !hasDashcam
           ? AppStyles.darkGrayColor
           : loadingDashcam
-              ? AppStyles.yellowColor
-              : (dashcamOnline
-                  ? AppStyles.greenColor
-                  : AppStyles.darkGrayColor);
+          ? AppStyles.yellowColor
+          : (dashcamOnline ? AppStyles.greenColor : AppStyles.darkGrayColor);
 
       return [
         IndicatorItemData(
@@ -97,8 +94,9 @@ class VehicleDetailContent extends StatelessWidget {
         IndicatorItemData(
           icon: "chiller.svg",
           label: isChiller ? "Chiller Unit" : "N/A",
-          background:
-              isChiller ? AppStyles.bgGreenColor : AppStyles.bgGrayColor,
+          background: isChiller
+              ? AppStyles.bgGreenColor
+              : AppStyles.bgGrayColor,
           color: isChiller ? AppStyles.greenColor : AppStyles.darkGrayColor,
         ),
         IndicatorItemData(
@@ -107,13 +105,13 @@ class VehicleDetailContent extends StatelessWidget {
           background: fuel <= 25
               ? AppStyles.bgRedColor
               : fuel <= 50
-                  ? AppStyles.bgYellowColor
-                  : AppStyles.bgGreenColor,
+              ? AppStyles.bgYellowColor
+              : AppStyles.bgGreenColor,
           color: fuel <= 25
               ? AppStyles.redColor
               : fuel <= 50
-                  ? AppStyles.yellowColor
-                  : AppStyles.greenColor,
+              ? AppStyles.yellowColor
+              : AppStyles.greenColor,
         ),
         IndicatorItemData(
           icon: "webcam.svg",
@@ -167,13 +165,9 @@ class VehicleDetailContent extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(model, style: AppStyles.textLBold),
-                              SizedBox(
-                                height: 7,
-                              ),
+                              const SizedBox(height: 7),
                               Text(fleet, style: AppStyles.textMd),
-                              SizedBox(
-                                height: 7,
-                              ),
+                              const SizedBox(height: 7),
                               Text(
                                 loadingAddress ? 'Loading...' : address,
                                 style: AppStyles.textSm,
@@ -181,13 +175,9 @@ class VehicleDetailContent extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 25,
-                        ),
+                        const SizedBox(height: 25),
                         IndicatorCard(items: buildIndicators()),
-                        SizedBox(
-                          height: 25,
-                        ),
+                        const SizedBox(height: 25),
                         Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
@@ -207,19 +197,20 @@ class VehicleDetailContent extends StatelessWidget {
                                   cacheHeight: 90,
                                 ),
                               ),
-                              SizedBox(
-                                height: 15,
-                              ),
+                              const SizedBox(width: 15),
                               Text(driver, style: AppStyles.textMdBold),
                             ],
                           ),
                         ),
+                        const SizedBox(height: 15),
                         ButtonCard(
                           hasDashcam: hasDashcam,
                           vehicleId: vehicleId,
+                          vehicleData: vehicleData,
                           onPeriodicTrack: () => PeriodicTrackFilterSheet.open(
                             context,
-                            licensePlate: plate,
+                            licensePlate:
+                                detailData['license_plate']?.toString() ?? '',
                           ),
                         ),
                       ],

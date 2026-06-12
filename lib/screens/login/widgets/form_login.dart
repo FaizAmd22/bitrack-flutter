@@ -1,12 +1,13 @@
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/app_input_field.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/confirm_dialog.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/login/widgets/biometric_button.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/widgets/app_input_field.dart';
+import 'package:ams/base/widgets/confirm_dialog.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/login/widgets/biometric_button.dart';
+import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/auth/providers/auth_providers.dart';
 
 class FormLogin extends ConsumerStatefulWidget {
   const FormLogin({super.key});
@@ -84,6 +85,9 @@ class _FormLoginState extends ConsumerState<FormLogin> {
       password: password,
     );
     if (result == null || !mounted) return;
+
+    ref.invalidate(notificationProvider);
+    ref.invalidate(notificationServiceProvider);
 
     await showDialog(
       context: context,

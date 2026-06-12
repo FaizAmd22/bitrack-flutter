@@ -17,10 +17,11 @@ class AppMedia {
   static const searchIcon = '$_baseIcon/search.svg';
   static const alertIcon = '$_baseIcon/alert.svg';
 
-  static const truckMoving = '$_baseTruck/vehicle_1.png';
-  static const truckStop = '$_baseTruck/vehicle_1.png';
-  static const truckIdle = '$_baseTruck/vehicle_1.png';
-  static const truckSilence = '$_baseTruck/vehicle_1.png';
+  static const truckMoving = '$_baseTruck/truck_moving.png';
+  static const truckStop = '$_baseTruck/truck_stop.png';
+  static const truckIdle = '$_baseTruck/truck_idle.png';
+  static const truckSilence = '$_baseTruck/truck_silence.png';
+  static const truckDefault = '$_baseTruck/truck_default.png';
 
   // static const truckSilence = '$_baseTruck/b_log_silence.png';
 }

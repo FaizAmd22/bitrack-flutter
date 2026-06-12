@@ -1,4 +1,4 @@
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
 class PlayerCard extends StatelessWidget {

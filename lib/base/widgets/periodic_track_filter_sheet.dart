@@ -1,7 +1,7 @@
-import 'package:bitrack_mobile_flutter/base/widgets/tx_inputs.dart';
+import 'package:ams/base/widgets/tx_inputs.dart';
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/routes/app_routes.dart';
 
 enum PeriodicFilterNavMode { push, replaceCurrent }
 

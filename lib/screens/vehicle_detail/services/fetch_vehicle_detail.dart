@@ -1,12 +1,10 @@
-import 'package:bitrack_mobile_flutter/base/network/api_client.dart';
+import 'package:ams/base/network/api_client.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 class FetchVehicleDetail {
   const FetchVehicleDetail();
 
   Future<Map<String, dynamic>> getVehicleByVehicleId(String id) async {
-    debugPrint('id vehicle : $id');
     try {
       final res = await ApiClient.dio.get(
         '/vehicle-monitoring/cluster/mw-mapping/$id/vehicle_id',

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/models/vehicle_page.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/service/fetch_vehicle.dart';
+import 'package:ams/screens/vehicle/models/vehicle_page.dart';
+import 'package:ams/screens/vehicle/services/fetch_vehicle.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 class VehicleListState {

@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Bitrack'**
+  /// **'AMS'**
   String get appTitle;
 
   /// No description provided for @language.
@@ -134,11 +134,35 @@ abstract class AppLocalizations {
   /// **'Vehicle'**
   String get navVehicle;
 
+  /// No description provided for @navNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get navNotification;
+
   /// No description provided for @navProfile.
   ///
   /// In en, this message translates to:
   /// **'Profile'**
   String get navProfile;
+
+  /// No description provided for @notifUrgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get notifUrgent;
+
+  /// No description provided for @notifSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get notifSummary;
+
+  /// No description provided for @notifNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No alert data'**
+  String get notifNoData;
 
   /// No description provided for @login.
   ///
@@ -581,25 +605,25 @@ abstract class AppLocalizations {
   /// No description provided for @addVehicleConfirmAddTitle.
   ///
   /// In en, this message translates to:
-  /// **'Ready to Add This Vehicle?'**
+  /// **'Add Vehicle'**
   String get addVehicleConfirmAddTitle;
 
   /// No description provided for @addVehicleConfirmAddDesc.
   ///
   /// In en, this message translates to:
-  /// **'Take a moment to confirm the details. Once submitted, this vehicle will be added to your fleet list.'**
+  /// **'Are you sure you want to add this vehicle?'**
   String get addVehicleConfirmAddDesc;
 
   /// No description provided for @addVehicleConfirmUpdateTitle.
   ///
   /// In en, this message translates to:
-  /// **'Ready to Update This Vehicle?'**
+  /// **'Update Vehicle'**
   String get addVehicleConfirmUpdateTitle;
 
   /// No description provided for @addVehicleConfirmUpdateDesc.
   ///
   /// In en, this message translates to:
-  /// **'Take a moment to verify these changes. Submitting will update this vehicle\'s information in your fleet list.'**
+  /// **'Are you sure you want to update this vehicle?'**
   String get addVehicleConfirmUpdateDesc;
 
   /// No description provided for @createTodo.
@@ -710,11 +734,11 @@ abstract class AppLocalizations {
   /// **'Select vehicle category ...'**
   String get selectVehicleCategoryHint;
 
-  /// No description provided for @odometerKm.
+  /// No description provided for @odometer.
   ///
   /// In en, this message translates to:
-  /// **'Odometer (KM)'**
-  String get odometerKm;
+  /// **'Odometer (M)'**
+  String get odometer;
 
   /// No description provided for @odometerHint.
   ///
@@ -949,6 +973,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change & Save New Password'**
   String get passwordChangeSaveBtn;
+
+  /// No description provided for @filterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterTitle;
+
+  /// No description provided for @filterStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get filterStartDate;
+
+  /// No description provided for @filterEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get filterEndDate;
+
+  /// No description provided for @filterFleetGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Fleet Group'**
+  String get filterFleetGroup;
+
+  /// No description provided for @filterVerifStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Status'**
+  String get filterVerifStatus;
+
+  /// No description provided for @filterAlertType.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert Type'**
+  String get filterAlertType;
+
+  /// No description provided for @filterApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filter'**
+  String get filterApply;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filter'**
+  String get filterClear;
+
+  /// No description provided for @filterChooseStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose start date'**
+  String get filterChooseStartDate;
+
+  /// No description provided for @filterChooseEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose end date'**
+  String get filterChooseEndDate;
+
+  /// No description provided for @filterChooseFleetGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose fleet group'**
+  String get filterChooseFleetGroup;
+
+  /// No description provided for @filterChooseVerifStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose verification status'**
+  String get filterChooseVerifStatus;
+
+  /// No description provided for @filterChooseAlertType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose alert type'**
+  String get filterChooseAlertType;
+
+  /// No description provided for @filterVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get filterVerified;
+
+  /// No description provided for @filterNotYetVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Yet Verified'**
+  String get filterNotYetVerified;
+
+  /// No description provided for @filterUnverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Verified'**
+  String get filterUnverified;
+
+  /// No description provided for @filterSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get filterSearch;
+
+  /// No description provided for @filterNoOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'No options found'**
+  String get filterNoOptions;
+
+  /// No description provided for @filterAllFleetGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'All Fleet Group'**
+  String get filterAllFleetGroup;
+
+  /// No description provided for @filterAllAlertType.
+  ///
+  /// In en, this message translates to:
+  /// **'All Alert Type'**
+  String get filterAllAlertType;
+
+  /// No description provided for @gpsDate.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS Date'**
+  String get gpsDate;
+
+  /// No description provided for @alertType.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert Type'**
+  String get alertType;
+
+  /// No description provided for @speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get speed;
+
+  /// No description provided for @addVehicleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vehicle'**
+  String get addVehicleTitle;
+
+  /// No description provided for @addVehicleIdentifierTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate'**
+  String get addVehicleIdentifierTitle;
+
+  /// No description provided for @addVehicleIdentifierPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter license plate'**
+  String get addVehicleIdentifierPlaceholder;
+
+  /// No description provided for @addVehicleRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate is required'**
+  String get addVehicleRequiredError;
+
+  /// No description provided for @addVehiclePlateExistsError.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate is already registered'**
+  String get addVehiclePlateExistsError;
+
+  /// No description provided for @addVehicleCheckFailedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check license plate. Please try again'**
+  String get addVehicleCheckFailedError;
+
+  /// No description provided for @addVehicleContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get addVehicleContinue;
+
+  /// No description provided for @addVehicleChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get addVehicleChecking;
+
+  /// No description provided for @successAddVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle added successfully'**
+  String get successAddVehicle;
+
+  /// No description provided for @successUpdateVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle updated successfully'**
+  String get successUpdateVehicle;
+
+  /// No description provided for @errFailedAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add vehicle. Please try again'**
+  String get errFailedAdd;
+
+  /// No description provided for @errFailedUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update vehicle. Please try again'**
+  String get errFailedUpdate;
+
+  /// No description provided for @errVinUnique.
+  ///
+  /// In en, this message translates to:
+  /// **'VIN already exists. Please enter a different one'**
+  String get errVinUnique;
+
+  /// No description provided for @selectFleetGroupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fleet Group'**
+  String get selectFleetGroupHint;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @seeNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'See Notes'**
+  String get seeNotes;
+
+  /// No description provided for @showMapCoordinate.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Map Coordinate'**
+  String get showMapCoordinate;
+
+  /// No description provided for @alertNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert Notes'**
+  String get alertNotes;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @noNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes available'**
+  String get noNotes;
+
+  /// No description provided for @noMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'No media available'**
+  String get noMedia;
+
+  /// No description provided for @mapCoordinate.
+  ///
+  /// In en, this message translates to:
+  /// **'Map Coordinate'**
+  String get mapCoordinate;
+
+  /// No description provided for @copyCoordinate.
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinate copied'**
+  String get copyCoordinate;
+
+  /// No description provided for @filterAllStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'All Status'**
+  String get filterAllStatus;
 }
 
 class _AppLocalizationsDelegate

@@ -1,28 +1,22 @@
-// ignore_for_file: deprecated_member_use
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/screens/home/models/filter_model.dart';
+// lib/screens/home/widgets/filter_tracker_bottom_sheet.dart
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:flutter/material.dart';
 
-enum _View { main, type, fleet, geo }
+class TrackerFilterResult {
+  final FilterOption selectedType;
+  final FilterOption selectedFleetGroup;
+  final FilterOption selectedGeofence;
 
-class FilterTrackerBottomSheet extends StatefulWidget {
-  final List<FilterOption> fleetGroups;
-  final List<FilterOption> geofences;
-
-  final FilterOption initialType;
-  final FilterOption initialFleetGroup;
-  final FilterOption initialGeofence;
-
-  const FilterTrackerBottomSheet({
-    super.key,
-    required this.fleetGroups,
-    required this.geofences,
-    required this.initialType,
-    required this.initialFleetGroup,
-    required this.initialGeofence,
+  const TrackerFilterResult({
+    required this.selectedType,
+    required this.selectedFleetGroup,
+    required this.selectedGeofence,
   });
+}
 
-  static Future<FilterResult?> open(
+class FilterTrackerBottomSheet {
+  static Future<TrackerFilterResult?> open(
     BuildContext context, {
     required List<FilterOption> fleetGroups,
     required List<FilterOption> geofences,
@@ -30,12 +24,14 @@ class FilterTrackerBottomSheet extends StatefulWidget {
     required FilterOption initialFleetGroup,
     required FilterOption initialGeofence,
   }) {
-    return showModalBottomSheet<FilterResult>(
+    return showModalBottomSheet<TrackerFilterResult>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => FilterTrackerBottomSheet(
+      backgroundColor: AppStyles.whiteColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => _FilterSheetBody(
         fleetGroups: fleetGroups,
         geofences: geofences,
         initialType: initialType,
@@ -44,376 +40,403 @@ class FilterTrackerBottomSheet extends StatefulWidget {
       ),
     );
   }
-
-  @override
-  State<FilterTrackerBottomSheet> createState() =>
-      _FilterTrackerBottomSheetState();
 }
 
-class _FilterTrackerBottomSheetState extends State<FilterTrackerBottomSheet> {
-  _View _view = _View.main;
+// Jenis filter yang tersedia. Geofence di-comment di Cordova; di sini
+// aktif tapi kamu bisa hapus dari list ini kalau belum dipakai.
+const _kTypeOptions = <FilterOption>[
+  FilterOption(value: 'fleetgroup', label: 'Fleet Group'),
+  // FilterOption(value: 'geofence', label: 'Geofence'),
+];
 
-  late FilterOption _selectedType;
-  late FilterOption _selectedFleet;
-  late FilterOption _selectedGeo;
+class _FilterSheetBody extends StatefulWidget {
+  final List<FilterOption> fleetGroups;
+  final List<FilterOption> geofences;
+  final FilterOption initialType;
+  final FilterOption initialFleetGroup;
+  final FilterOption initialGeofence;
 
-  String _search = '';
+  const _FilterSheetBody({
+    required this.fleetGroups,
+    required this.geofences,
+    required this.initialType,
+    required this.initialFleetGroup,
+    required this.initialGeofence,
+  });
 
   @override
-  void initState() {
-    super.initState();
-    _selectedType = widget.initialType;
-    _selectedFleet = widget.initialFleetGroup;
-    _selectedGeo = widget.initialGeofence;
-  }
+  State<_FilterSheetBody> createState() => _FilterSheetBodyState();
+}
 
-  void _back() {
-    if (_view != _View.main) {
-      setState(() {
-        _view = _View.main;
-        _search = '';
-      });
-      return;
-    }
-    Navigator.pop(context);
+class _FilterSheetBodyState extends State<_FilterSheetBody> {
+  late FilterOption _type = widget.initialType;
+  late FilterOption _fleetGroup = widget.initialFleetGroup;
+  late FilterOption _geofence = widget.initialGeofence;
+
+  static const _allFleet = FilterOption(
+    value: null,
+    label: 'Semua Fleet Group',
+  );
+  static const _allGeo = FilterOption(value: null, label: 'Semua Geofence');
+  static const _noType = FilterOption(value: null, label: 'Pilih jenis filter');
+
+  void _clear() {
+    Navigator.pop(
+      context,
+      const TrackerFilterResult(
+        selectedType: _noType,
+        selectedFleetGroup: _allFleet,
+        selectedGeofence: _allGeo,
+      ),
+    );
   }
 
   void _apply() {
     Navigator.pop(
       context,
-      FilterResult(
-        selectedType: _selectedType,
-        selectedFleetGroup: _selectedFleet,
-        selectedGeofence: _selectedGeo,
+      TrackerFilterResult(
+        selectedType: _type,
+        selectedFleetGroup: _fleetGroup,
+        selectedGeofence: _geofence,
       ),
     );
   }
 
-  void _clear() {
-    setState(() {
-      _selectedType = const FilterOption(
-        value: null,
-        label: 'Pilih jenis filter',
-      );
-      _selectedFleet = const FilterOption(
-        value: null,
-        label: 'Semua Fleet Group',
-      );
-      _selectedGeo = const FilterOption(value: null, label: 'Semua Geofence');
-      _view = _View.main;
-      _search = '';
-    });
+  Future<void> _pickType() async {
+    final picked = await _SearchablePicker.open(
+      context,
+      title: 'Jenis Filter',
+      options: _kTypeOptions,
+      selected: _type,
+    );
+    if (picked != null) setState(() => _type = picked);
   }
 
-  List<FilterOption> _filtered(List<FilterOption> items) {
-    final q = _search.trim().toLowerCase();
-    if (q.isEmpty) return items;
-    return items
-        .where((e) => e.label.toLowerCase().contains(q))
-        .toList(growable: false);
+  Future<void> _pickFleetGroup() async {
+    final picked = await _SearchablePicker.open(
+      context,
+      title: 'Fleet Group',
+      options: widget.fleetGroups,
+      selected: _fleetGroup,
+    );
+    if (picked != null) setState(() => _fleetGroup = picked);
+  }
+
+  Future<void> _pickGeofence() async {
+    final picked = await _SearchablePicker.open(
+      context,
+      title: 'Geofence',
+      options: widget.geofences,
+      selected: _geofence,
+    );
+    if (picked != null) setState(() => _geofence = picked);
   }
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-    return Material(
-      color: Colors.transparent,
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
       child: SafeArea(
         top: false,
-        child: Container(
-          height: mq.size.height * 0.75,
-          decoration: BoxDecoration(
-            color: AppStyles.whiteColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Container(
-                width: 48,
-                height: 5,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 12),
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(999),
+                  color: AppStyles.borderLightGray,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text('Filter', style: AppStyles.textLBold),
+            ),
+            const SizedBox(height: 8),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _Label('Jenis'),
+                  _SelectRow(
+                    value: _type.value == null ? null : _type.label,
+                    placeholder: 'Pilih jenis filter',
+                    onTap: _pickType,
+                  ),
+                  if (_type.value == 'fleetgroup') ...[
+                    const SizedBox(height: 16),
+                    _Label('Fleet Group'),
+                    _SelectRow(
+                      value: _fleetGroup.value == null
+                          ? null
+                          : _fleetGroup.label,
+                      placeholder: 'Pilih Fleet Group',
+                      onTap: _pickFleetGroup,
+                    ),
+                  ],
+                  if (_type.value == 'geofence') ...[
+                    const SizedBox(height: 16),
+                    _Label('Geofence'),
+                    _SelectRow(
+                      value: _geofence.value == null ? null : _geofence.label,
+                      placeholder: 'Pilih Geofence',
+                      onTap: _pickGeofence,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _clear,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        side: const BorderSide(color: AppStyles.primaryColor),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Hapus Filter',
+                        style: AppStyles.textSmBold.copyWith(
+                          color: AppStyles.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _apply,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppStyles.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Terapkan',
+                        style: AppStyles.textSmBold.copyWith(
+                          color: AppStyles.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Label extends StatelessWidget {
+  final String text;
+  const _Label(this.text);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(text, style: AppStyles.textMdBold),
+  );
+}
+
+class _SelectRow extends StatelessWidget {
+  final String? value;
+  final String placeholder;
+  final VoidCallback onTap;
+
+  const _SelectRow({
+    required this.value,
+    required this.placeholder,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppStyles.borderLightGray),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                value ?? placeholder,
+                style: AppStyles.textSm.copyWith(
+                  color: value == null
+                      ? AppStyles.textDarkGrayColor
+                      : AppStyles.blackColor,
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: AppStyles.primaryColor,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Bagian bawah file filter_tracker_bottom_sheet.dart (atau file sendiri)
+class _SearchablePicker extends StatefulWidget {
+  final String title;
+  final List<FilterOption> options;
+  final FilterOption? selected;
+
+  const _SearchablePicker({
+    required this.title,
+    required this.options,
+    this.selected,
+  });
+
+  static Future<FilterOption?> open(
+    BuildContext context, {
+    required String title,
+    required List<FilterOption> options,
+    FilterOption? selected,
+  }) {
+    return showModalBottomSheet<FilterOption>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppStyles.whiteColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) =>
+          _SearchablePicker(title: title, options: options, selected: selected),
+    );
+  }
+
+  @override
+  State<_SearchablePicker> createState() => _SearchablePickerState();
+}
+
+class _SearchablePickerState extends State<_SearchablePicker> {
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final q = _query.trim().toLowerCase();
+    final filtered = q.isEmpty
+        ? widget.options
+        : widget.options
+              .where((o) => o.label.toLowerCase().contains(q))
+              .toList();
+
+    final maxHeight = MediaQuery.of(context).size.height * 0.7;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  Text(widget.title, style: AppStyles.textLBold),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  autofocus: false,
+                  onChanged: (v) => setState(() => _query = v),
+                  decoration: InputDecoration(
+                    hintText: 'Cari...',
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppStyles.primaryColor,
+                    ),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: AppStyles.borderLightGray,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: AppStyles.borderLightGray,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-              _Header(title: _titleByView(), onBack: _back),
-              const Divider(height: 1),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-                  child: _buildContent(),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  16,
-                  8,
-                  16,
-                  16 + mq.viewInsets.bottom,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _clear,
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppStyles.primaryColor),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
+              Flexible(
+                child: filtered.isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.all(24),
                         child: Text(
-                          'Hapus Filter',
-                          style: AppStyles.textMd.copyWith(
-                            color: AppStyles.primaryColor,
+                          'Tidak ada opsi',
+                          style: AppStyles.textSm.copyWith(
+                            color: AppStyles.textDarkGrayColor,
                           ),
                         ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        itemCount: filtered.length,
+                        itemBuilder: (context, i) {
+                          final opt = filtered[i];
+                          final isSel = opt.value == widget.selected?.value;
+                          return ListTile(
+                            title: Text(
+                              opt.label,
+                              style: AppStyles.textSm.copyWith(
+                                color: AppStyles.blackColor,
+                              ),
+                            ),
+                            trailing: isSel
+                                ? const Icon(
+                                    Icons.check,
+                                    color: AppStyles.primaryColor,
+                                  )
+                                : null,
+                            onTap: () => Navigator.pop(context, opt),
+                          );
+                        },
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _apply,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppStyles.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Text(
-                          'Terapkan Filter',
-                          style: AppStyles.textMd.copyWith(
-                            color: AppStyles.whiteColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _titleByView() {
-    switch (_view) {
-      case _View.type:
-        return 'Pilihan';
-      case _View.fleet:
-        return 'Fleet Group';
-      case _View.geo:
-        return 'Geofence';
-      case _View.main:
-        return 'Filter';
-    }
-  }
-
-  Widget _buildContent() {
-    if (_view == _View.main) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Pilihan', style: AppStyles.textMdBold),
-          const SizedBox(height: 8),
-          _SelectTile(
-            label: _selectedType.label,
-            onTap: () => setState(() => _view = _View.type),
-          ),
-          const SizedBox(height: 14),
-
-          if (_selectedType.value == 'fleetgroup') ...[
-            Text('Fleet Group', style: AppStyles.textMdBold),
-            const SizedBox(height: 8),
-            _SelectTile(
-              label: _selectedFleet.label,
-              onTap: () => setState(() => _view = _View.fleet),
-            ),
-          ],
-
-          if (_selectedType.value == 'geofence') ...[
-            Text('Geofence', style: AppStyles.textMdBold),
-            const SizedBox(height: 8),
-            _SelectTile(
-              label: _selectedGeo.label,
-              onTap: () => setState(() => _view = _View.geo),
-            ),
-          ],
-        ],
-      );
-    }
-
-    final items = switch (_view) {
-      _View.type => const [
-        FilterOption(value: 'fleetgroup', label: 'Fleet Group'),
-        FilterOption(value: 'geofence', label: 'Geofence'),
-      ],
-      _View.fleet => widget.fleetGroups,
-      _View.geo => widget.geofences,
-      _ => const <FilterOption>[],
-    };
-
-    final list = _filtered(items);
-
-    return Column(
-      children: [
-        _SearchBox(
-          value: _search,
-          onChanged: (v) => setState(() => _search = v),
-        ),
-        const SizedBox(height: 10),
-        Expanded(
-          child: list.isEmpty
-              ? Center(
-                  child: Text(
-                    'Data tidak tersedia',
-                    style: AppStyles.textMd.copyWith(color: Colors.grey),
-                  ),
-                )
-              : ListView.separated(
-                  itemCount: list.length,
-                  separatorBuilder: (_, __) =>
-                      Divider(height: 1, color: Colors.grey.shade200),
-                  itemBuilder: (context, i) {
-                    final opt = list[i];
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      title: Text(
-                        opt.label,
-                        style: AppStyles.textMd.copyWith(
-                          color: AppStyles.blackColor,
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          if (_view == _View.type) {
-                            _selectedType = opt;
-
-                            if (opt.value == 'fleetgroup') {
-                              _selectedGeo = const FilterOption(
-                                value: null,
-                                label: 'Semua Geofence',
-                              );
-                            } else if (opt.value == 'geofence') {
-                              _selectedFleet = const FilterOption(
-                                value: null,
-                                label: 'Semua Fleet Group',
-                              );
-                            }
-                          } else if (_view == _View.fleet) {
-                            _selectedFleet = opt;
-                          } else if (_view == _View.geo) {
-                            _selectedGeo = opt;
-                          }
-
-                          _view = _View.main;
-                          _search = '';
-                        });
-                      },
-                    );
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  final String title;
-  final VoidCallback onBack;
-
-  const _Header({required this.title, required this.onBack});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 6, 12, 10),
-      child: Row(
-        children: [
-          Material(
-            color: Colors.grey.shade100,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: onBack,
-              child: const Padding(
-                padding: EdgeInsets.all(10),
-                child: Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(title, style: AppStyles.textMdBold),
-        ],
-      ),
-    );
-  }
-}
-
-class _SearchBox extends StatelessWidget {
-  final String value;
-  final ValueChanged<String> onChanged;
-
-  const _SearchBox({required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        hintText: 'Cari',
-        prefixIcon: Icon(Icons.search, color: AppStyles.primaryColor),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-      ),
-    );
-  }
-}
-
-class _SelectTile extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-
-  const _SelectTile({required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Row(
-            children: [
-              Expanded(child: Text(label, style: AppStyles.textMd)),
-              Icon(Icons.chevron_right, color: AppStyles.primaryColor),
             ],
           ),
         ),

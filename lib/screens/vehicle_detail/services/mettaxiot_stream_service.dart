@@ -12,7 +12,7 @@ class MettaxiotStreamService {
           connectTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 15),
           sendTimeout: const Duration(seconds: 15),
-          followRedirects: true,
+          followRedirects: true, // ← fix 302 redirect
           maxRedirects: 5,
           validateStatus: (c) => c != null && c >= 200 && c < 400,
         ),
@@ -21,6 +21,10 @@ class MettaxiotStreamService {
   static final MettaxiotStreamService I = MettaxiotStreamService._internal();
 
   final Dio _dio;
+
+  /// Expose Dio instance agar bisa dipakai di tempat lain (misal DashcamBottomSheet)
+  /// tanpa perlu membuat Dio baru — tetap 1 instance dengan config yang sama.
+  Dio get dio => _dio;
 
   String? _cachedToken;
   DateTime? _tokenTime;
@@ -78,7 +82,7 @@ class MettaxiotStreamService {
 
     debugPrint('HIT METTAXIOT_VIDEO => $_mettaxiotVideoUrl');
     final res = await _dio.post(
-      _mettaxiotVideoUrl, // pastikan ini FULL URL, bukan path relative
+      _mettaxiotVideoUrl,
       data: payload,
       options: Options(
         headers: {'Content-Type': 'application/json', 'Authorization': token},

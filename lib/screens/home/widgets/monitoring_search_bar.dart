@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/plate_search_bar.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/plate_search_bar.dart';
 
 class MonitoringSearchBar extends StatelessWidget {
   final String? searchQuery;

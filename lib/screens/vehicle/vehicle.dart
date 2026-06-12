@@ -1,17 +1,18 @@
 import 'dart:async';
 
-import 'package:bitrack_mobile_flutter/base/routes/app_routes.dart';
-import 'package:bitrack_mobile_flutter/l10n/app_localizations.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle_detail/models/add_vehicle_args.dart';
+import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/widgets/search_bar_base.dart';
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:ams/screens/vehicle/widgets/add_vehicle_sheet.dart';
+import 'package:ams/screens/vehicle_detail/models/add_vehicle_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bitrack_mobile_flutter/base/res/styles/app_styles.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/full_screen_loading.dart';
-import 'package:bitrack_mobile_flutter/base/widgets/plate_search_bar.dart';
-import 'package:bitrack_mobile_flutter/features/monitoring/providers/plate_suggestion_provider.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/providers/vehicle_infinite_provider.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/providers/fleet_group_provider.dart';
-import 'package:bitrack_mobile_flutter/screens/vehicle/widgets/card_vehicle.dart';
+import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/widgets/full_screen_loading.dart';
+import 'package:ams/features/monitoring/providers/plate_suggestion_provider.dart';
+import 'package:ams/screens/vehicle/providers/vehicle_infinite_provider.dart';
+import 'package:ams/screens/vehicle/providers/fleet_group_provider.dart';
+import 'package:ams/screens/vehicle/widgets/card_vehicle.dart';
 
 class VehicleScreen extends ConsumerStatefulWidget {
   const VehicleScreen({super.key});
@@ -69,6 +70,10 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
     });
   }
 
+  Future<void> _onRefresh() async {
+    await ref.read(vehicleInfiniteProvider.notifier).refresh(query: _debounced);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
@@ -81,14 +86,15 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
       backgroundColor: AppStyles.bgColor,
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.addVehicleScreen,
-            arguments: const AddVehicleArgs(status: AddVehicleStatus.create),
-          );
+        onPressed: () async {
+          final created = await AddVehicleSheet.open(context);
+          if (created == true && mounted) {
+            ref
+                .read(vehicleInfiniteProvider.notifier)
+                .refresh(query: _debounced);
+          }
         },
-        backgroundColor: const Color(0xFFE53935),
+        backgroundColor: AppStyles.primaryColor,
         elevation: 6,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 28),
@@ -100,15 +106,12 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
           children: [
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 16, top: 12),
-                  child: PlateSearchBar(
-                    value: _search,
-                    onChanged: _onChanged,
-                    suggestionPlates: suggestionPlates,
-                    hintText: t.searchLicensePlate,
-                    onTapFilter: () {},
-                  ),
+                SearchBarBase(
+                  value: _search,
+                  onChanged: _onChanged,
+                  suggestionPlates: suggestionPlates,
+                  hintText: t.searchLicensePlate,
+                  showFilter: false,
                 ),
                 const SizedBox(height: 12),
 
@@ -129,67 +132,90 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
                     ),
                     data: (state) {
                       if (state.items.isEmpty) {
-                        return Center(
-                          child: Text(
-                            _debounced.trim().isEmpty
-                                ? t.noVehicleYet
-                                : t.dataNotFound,
-                            style: AppStyles.textSm.copyWith(
-                              color: AppStyles.blackColor,
-                            ),
+                        return RefreshIndicator(
+                          color: AppStyles.primaryColor,
+                          onRefresh: _onRefresh,
+                          child: ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
+                                child: Center(
+                                  child: Text(
+                                    _debounced.trim().isEmpty
+                                        ? t.noVehicleYet
+                                        : t.dataNotFound,
+                                    style: AppStyles.textSm.copyWith(
+                                      color: AppStyles.blackColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }
 
-                      return ListView.separated(
-                        controller: _scroll,
-                        padding: const EdgeInsets.only(
-                          left: 8,
-                          right: 8,
-                          bottom: 90,
-                        ),
-                        itemCount:
-                            state.items.length + (state.isLoadingMore ? 1 : 0),
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          if (index >= state.items.length) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppStyles.primaryColor,
-                                ),
-                              ),
-                            );
-                          }
-
-                          final item = state.items[index];
-                          final fleetName = fleetGroupMapAsync.maybeWhen(
-                            data: (m) =>
-                                m[item['fleet_group_id']?.toString().trim()] ??
-                                '-',
-                            orElse: () => '-',
-                          );
-
-                          final merged = {
-                            ...item,
-                            'fleet_group_name': fleetName,
-                          };
-
-                          return CardVehicle(
-                            vehicle: merged,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.addVehicleScreen,
-                                arguments: AddVehicleArgs(
-                                  status: AddVehicleStatus.update,
-                                  license: item['license_plate'],
+                      return RefreshIndicator(
+                        color: AppStyles.primaryColor,
+                        onRefresh: _onRefresh,
+                        child: ListView.builder(
+                          controller: _scroll,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(top: 12, bottom: 90),
+                          itemCount:
+                              state.items.length +
+                              (state.isLoadingMore ? 1 : 0),
+                          // separatorBuilder: (_, __) =>
+                          //     const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            if (index >= state.items.length) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppStyles.primaryColor,
+                                  ),
                                 ),
                               );
-                            },
-                          );
-                        },
+                            }
+
+                            final item = state.items[index];
+                            final fleetName = fleetGroupMapAsync.maybeWhen(
+                              data: (m) =>
+                                  m[item['fleet_group_id']
+                                      ?.toString()
+                                      .trim()] ??
+                                  '-',
+                              orElse: () => '-',
+                            );
+
+                            final merged = {
+                              ...item,
+                              'fleet_group_name': fleetName,
+                            };
+
+                            return CardVehicle(
+                              vehicle: merged,
+                              onTap: () async {
+                                final updated = await Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.addVehicleScreen,
+                                  arguments: AddVehicleArgs(
+                                    status: AddVehicleStatus.update,
+                                    license: item['license_plate'],
+                                  ),
+                                );
+                                if (updated == true && mounted) {
+                                  ref
+                                      .read(vehicleInfiniteProvider.notifier)
+                                      .refresh(query: _debounced);
+                                }
+                              },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

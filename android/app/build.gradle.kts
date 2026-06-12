@@ -23,7 +23,7 @@ val googleMapsApiKey: String =
     (localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: "").trim()
 
 android {
-    namespace = "com.example.bitrack_mobile_flutter"
+    namespace = "com.treffix.ams"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.bitrack_mobile_flutter"
+        applicationId = "com.treffix.ams"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
