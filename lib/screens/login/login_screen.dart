@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const Expanded(child: SizedBox()),
-              Image.asset(AppMedia.logo, scale: 2.5),
+              Image.asset(AppMedia.logo, scale: 1.7),
               SizedBox(height: 20),
               Container(
                 width: size.width * 0.9,
