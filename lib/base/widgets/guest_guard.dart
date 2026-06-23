@@ -11,7 +11,11 @@ class GuestGuard extends StatefulWidget {
 }
 
 class _GuestGuardState extends State<GuestGuard> {
-  static const _storage = FlutterSecureStorage();
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
 
   bool _loading = true;
   bool _allowAccess = false;

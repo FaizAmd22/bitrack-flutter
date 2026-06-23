@@ -242,6 +242,12 @@ abstract class AppLocalizations {
   /// **'Login using biometric method'**
   String get biometricLoginLabel;
 
+  /// No description provided for @faceIdLoginLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Login using Face ID'**
+  String get faceIdLoginLabel;
+
   /// No description provided for @biometricNotSupported.
   ///
   /// In en, this message translates to:

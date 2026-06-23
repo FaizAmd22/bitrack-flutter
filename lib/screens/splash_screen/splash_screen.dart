@@ -12,7 +12,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  static const _storage = FlutterSecureStorage();
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
   static const _minSplash = Duration(milliseconds: 900);
 
   @override
@@ -29,12 +33,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _bootstrap() async {
-    final results = await Future.wait([
-      Future.delayed(_minSplash),
-      _storage.read(key: 'auth_token'),
-    ]);
-
-    final token = (results[1] as String?)?.trim() ?? '';
+    final minDelay = Future.delayed(_minSplash);
+    String token = '';
+    try {
+      final results = await Future.wait([
+        minDelay,
+        _storage.read(key: 'auth_token'),
+      ]);
+      token = (results[1] as String?)?.trim() ?? '';
+    } catch (_) {
+      await minDelay;
+    }
     if (!mounted) return;
 
     Navigator.pushReplacementNamed(

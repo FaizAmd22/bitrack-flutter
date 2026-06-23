@@ -26,7 +26,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await ApiClient.loadTokenFromStorage();
+  // Wrap in try-catch: on iOS, Keychain can throw when the device is locked
+  // at launch time. Without this guard, any exception here prevents runApp()
+  // from ever being called, leaving the native splash screen frozen.
+  try {
+    await ApiClient.loadTokenFromStorage();
+  } catch (e) {
+    debugPrint('Token load skipped: $e');
+  }
   runApp(const ProviderScope(child: MyApp()));
 }
 
