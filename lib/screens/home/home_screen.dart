@@ -73,9 +73,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (oldWidget.isActive != widget.isActive) {
       if (widget.isActive) {
-        setState(() => _showLoading = true);
         _startPolling();
-        ref.invalidate(monitoringProvider(_selectedActivity));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          setState(() => _showLoading = true);
+          ref.invalidate(monitoringProvider(_selectedActivity));
+        });
       } else {
         _stopPolling();
       }

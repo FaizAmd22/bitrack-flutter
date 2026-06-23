@@ -8,6 +8,7 @@ import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_auth/local_auth.dart';
 
 class BiometricButton extends ConsumerStatefulWidget {
@@ -24,11 +25,13 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
   bool _isLoading = false;
   String _savedEmail = '';
   String _savedPassword = '';
+  BiometricType? _biometricType;
 
   @override
   void initState() {
     super.initState();
     _loadCreds();
+    _detectBiometricType();
   }
 
   Future<void> _loadCreds() async {
@@ -39,6 +42,42 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
     if (!mounted) return;
     _savedEmail = (r[0] ?? '').trim();
     _savedPassword = (r[1] ?? '').trim();
+  }
+
+  Future<void> _detectBiometricType() async {
+    try {
+      final available = await _localAuth.getAvailableBiometrics();
+      if (!mounted) return;
+      BiometricType? detected;
+      if (available.contains(BiometricType.face)) {
+        detected = BiometricType.face;
+      } else if (available.contains(BiometricType.fingerprint)) {
+        detected = BiometricType.fingerprint;
+      } else if (available.isNotEmpty) {
+        detected = available.first;
+      }
+      setState(() => _biometricType = detected);
+    } catch (_) {}
+  }
+
+  Widget get _biometricIcon {
+    if (_biometricType == BiometricType.face) {
+      return SvgPicture.asset(
+        'assets/icons/face-id.svg',
+        width: 40,
+        height: 40,
+        colorFilter: ColorFilter.mode(
+          AppStyles.primaryColor,
+          BlendMode.srcIn,
+        ),
+      );
+    }
+    return Icon(Icons.fingerprint, size: 40, color: AppStyles.primaryColor);
+  }
+
+  String _biometricLabel(AppLocalizations t) {
+    if (_biometricType == BiometricType.face) return t.faceIdLoginLabel;
+    return t.biometricLoginLabel;
   }
 
   Future<void> _handleBiometricLogin() async {
@@ -127,7 +166,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       child: Column(
         children: [
           const SizedBox(height: 12),
-          Icon(Icons.fingerprint, size: 40, color: AppStyles.primaryColor),
+          _biometricIcon,
           const SizedBox(height: 8),
           if (_isLoading)
             const SizedBox(
@@ -137,7 +176,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
             )
           else
             Text(
-              t.biometricLoginLabel,
+              _biometricLabel(t),
               style: AppStyles.textMdBold.copyWith(
                 color: AppStyles.primaryColor,
               ),

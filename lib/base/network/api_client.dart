@@ -3,7 +3,7 @@
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/base/routes/navigation_service.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -12,7 +12,13 @@ class ApiClient {
 
   static String? _token;
   static bool _isLoggingOut = false;
-  static const _storage = FlutterSecureStorage();
+  // Use first_unlock_this_device so the token survives device lock/sleep
+  // without requiring the screen to be unlocked at app launch.
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
 
   static Future<void> setToken(String token) async {
     _token = token;
@@ -49,13 +55,10 @@ class ApiClient {
       _storage.delete(key: 'user_role_permission'),
     ]);
 
-    final navigator = NavigationService.navigatorKey.currentState;
-    if (navigator == null) return;
-
-    final currentRoute = ModalRoute.of(navigator.context)?.settings.name;
-    if (currentRoute != AppRoutes.loginScreen) {
-      navigator.pushNamedAndRemoveUntil(AppRoutes.loginScreen, (_) => false);
-    }
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      NavigationService.navigatorKey.currentState
+          ?.pushNamedAndRemoveUntil(AppRoutes.loginScreen, (_) => false);
+    });
   }
 
   static final Dio dio =

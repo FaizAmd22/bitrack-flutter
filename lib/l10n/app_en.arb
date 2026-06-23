@@ -30,6 +30,7 @@
   "save": "Save",
 
   "biometricLoginLabel": "Login using biometric method",
+  "faceIdLoginLabel": "Login using Face ID",
   "biometricNotSupported": "This device does not support biometric login",
   "biometricReason": "Use biometrics to login",
   "biometricCredNotFound": "Biometric login data was not found",

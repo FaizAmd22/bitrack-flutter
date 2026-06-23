@@ -75,7 +75,6 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: Container(
-        height: 82,
         decoration: BoxDecoration(
           color: AppStyles.bottomNavbarColor,
           boxShadow: [

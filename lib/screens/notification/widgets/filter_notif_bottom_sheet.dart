@@ -221,15 +221,13 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
 
     return Material(
       color: Colors.transparent,
-      child: SafeArea(
-        top: false,
-        child: Container(
-          height: mq.size.height * 0.82,
-          decoration: const BoxDecoration(
-            color: AppStyles.whiteColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
+      child: Container(
+        height: mq.size.height * 0.82,
+        decoration: const BoxDecoration(
+          color: AppStyles.whiteColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
             children: [
               const SizedBox(height: 10),
               Container(
@@ -302,7 +300,6 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
                   ),
                 ),
             ],
-          ),
         ),
       ),
     );

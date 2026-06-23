@@ -84,6 +84,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get biometricLoginLabel => 'Login using biometric method';
 
   @override
+  String get faceIdLoginLabel => 'Login using Face ID';
+
+  @override
   String get biometricNotSupported =>
       'This device does not support biometric login';
 

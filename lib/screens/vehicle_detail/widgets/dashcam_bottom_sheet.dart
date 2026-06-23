@@ -1,7 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:path_provider/path_provider.dart';
 
 import 'package:ams/screens/vehicle_detail/models/dashcam_models.dart';
 import 'package:ams/screens/vehicle_detail/services/g711_decoder.dart';
@@ -50,6 +53,15 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 
+  // PCM buffer: accumulate chunks, flush every 250ms so iOS has enough
+  // audio data per play() call (~2000 samples = 250ms at 8kHz).
+  final List<Int16List> _pcmChunks = [];
+  Timer? _audioFlushTimer;
+
+  // Ping-pong WAV files with .wav extension so iOS AVPlayer detects the format.
+  String? _audioCacheDir;
+  int _wavFileIndex = 0;
+
   // ── Lifecycle ──────────────────────────────────────────────────────────────
 
   @override
@@ -58,10 +70,26 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
     for (final ch in widget.dashcamConfig.channels) {
       _channels[ch] = ChannelState();
     }
+    _audioPlayer.setAudioContext(
+      AudioContext(
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.playback,
+          options: {AVAudioSessionOptions.mixWithOthers},
+        ),
+        android: AudioContextAndroid(
+          isSpeakerphoneOn: true,
+          stayAwake: false,
+          contentType: AndroidContentType.music,
+          usageType: AndroidUsageType.media,
+          audioFocus: AndroidAudioFocus.none,
+        ),
+      ),
+    );
   }
 
   @override
   void dispose() {
+    _audioFlushTimer?.cancel();
     _cancelAllTimers();
     _stopAudioStream();
     _audioPlayer.dispose();
@@ -184,12 +212,39 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
   }
 
   void _startAudioStream(String talkUrl) {
+    _pcmChunks.clear();
+    _audioFlushTimer?.cancel();
+
+    // Flush accumulated PCM every 250 ms → ~2000 samples per play() call,
+    // long enough for iOS AVAudioPlayer to actually produce output.
+    _audioFlushTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      if (_pcmChunks.isEmpty) return;
+      final chunks = List<Int16List>.from(_pcmChunks);
+      _pcmChunks.clear();
+      final total = chunks.fold<int>(0, (s, c) => s + c.length);
+      final merged = Int16List(total);
+      int off = 0;
+      for (final c in chunks) {
+        merged.setAll(off, c);
+        off += c.length;
+      }
+      unawaited(_playWavBytes(G711Decoder.toWav(merged)));
+    });
+
     _wsChannel = WebSocketChannel.connect(Uri.parse(talkUrl));
     _wsSub = _wsChannel!.stream.listen(
       (data) {
-        if (data is List<int>) {
-          final pcm = G711Decoder.decode(Uint8List.fromList(data));
-          unawaited(_playWavBytes(G711Decoder.toWav(pcm)));
+        final Uint8List? bytes;
+        if (data is Uint8List) {
+          bytes = data;
+        } else if (data is List<int>) {
+          bytes = Uint8List.fromList(data);
+        } else {
+          bytes = null;
+        }
+
+        if (bytes != null && bytes.isNotEmpty) {
+          _pcmChunks.add(G711Decoder.decode(bytes));
         } else if (data is String) {
           final errorMsg = switch (data) {
             'repeat' => 'Device is busy',
@@ -209,6 +264,9 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
   }
 
   void _stopAudioStream() {
+    _audioFlushTimer?.cancel();
+    _audioFlushTimer = null;
+    _pcmChunks.clear();
     _wsSub?.cancel();
     _wsSub = null;
     _wsChannel?.sink.close();
@@ -219,9 +277,17 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   // ── Audio playback ────────────────────────────────────────────────────────
 
+  // audioplayers on iOS writes BytesSource to a temp file with no extension,
+  // which AVPlayer can't identify. Write the WAV ourselves with a .wav
+  // extension using a ping-pong pair so we never overwrite a file that's
+  // still being read.
   Future<void> _playWavBytes(Uint8List wav) async {
     try {
-      await _audioPlayer.play(BytesSource(wav));
+      _audioCacheDir ??= (await getTemporaryDirectory()).path;
+      _wavFileIndex = (_wavFileIndex + 1) % 2;
+      final path = '$_audioCacheDir/dashcam_audio_$_wavFileIndex.wav';
+      await File(path).writeAsBytes(wav, flush: true);
+      await _audioPlayer.play(DeviceFileSource(path));
     } catch (e) {
       debugPrint('Audio playback error: $e');
     }
@@ -251,30 +317,27 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
     return Material(
       color: Colors.transparent,
-      child: SafeArea(
-        top: false,
-        child: Container(
-          height: mq.size.height * 0.65,
-          decoration: const BoxDecoration(
-            color: AppStyles.whiteColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
-            children: [
-              _buildDragHandle(),
-              _buildTitle(),
-              Expanded(child: _buildChannelList()),
-              if (_audioError != null) _buildAudioErrorBanner(),
-              BottomActions(
-                isSpeaker: _isSpeaker,
-                isSpeakerLoading: _isSpeakerLoading,
-                isMicrophone: _isMicrophone,
-                onSpeakerTap: _handleSpeaker,
-                onMicrophoneTap: _handleMicrophone,
-                bottomInset: mq.viewInsets.bottom,
-              ),
-            ],
-          ),
+      child: Container(
+        height: mq.size.height * 0.65,
+        decoration: const BoxDecoration(
+          color: AppStyles.whiteColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          children: [
+            _buildDragHandle(),
+            _buildTitle(),
+            Expanded(child: _buildChannelList()),
+            if (_audioError != null) _buildAudioErrorBanner(),
+            BottomActions(
+              isSpeaker: _isSpeaker,
+              isSpeakerLoading: _isSpeakerLoading,
+              isMicrophone: _isMicrophone,
+              onSpeakerTap: _handleSpeaker,
+              onMicrophoneTap: _handleMicrophone,
+              bottomInset: mq.viewInsets.bottom,
+            ),
+          ],
         ),
       ),
     );

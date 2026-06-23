@@ -30,6 +30,7 @@
   "save": "Simpan",
 
   "biometricLoginLabel": "Login menggunakan metode biometrik",
+  "faceIdLoginLabel": "Login menggunakan Face ID",
   "biometricNotSupported": "Perangkat tidak mendukung login biometrik",
   "biometricReason": "Gunakan biometrik untuk login",
   "biometricCredNotFound": "Data login biometrik tidak ditemukan",
