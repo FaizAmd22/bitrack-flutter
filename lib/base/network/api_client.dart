@@ -12,25 +12,29 @@ class ApiClient {
 
   static String? _token;
   static bool _isLoggingOut = false;
+  static const _storage = FlutterSecureStorage();
 
-  static void setToken(String token) {
+  static Future<void> setToken(String token) async {
     _token = token;
-    _isLoggingOut = false; // reset saat login baru sukses
+    _isLoggingOut = false;
+    await _storage.write(key: 'auth_token', value: token);
   }
 
   static void clearToken() => _token = null;
-
-  static const _storage = FlutterSecureStorage();
 
   static Future<void> loadTokenFromStorage() async {
     final token = await _storage.read(key: 'auth_token');
     if (token != null && token.isNotEmpty) {
       _token = token;
-      _isLoggingOut = false; // pastikan flag bersih saat app start
+      _isLoggingOut = false;
     }
   }
 
-  static Future<void> _performLogout() async {
+  // Satu-satunya jalur logout (dipicu otomatis saat 401 maupun manual dari
+  // UI seperti tombol Sign Out / sukses ganti password). Sengaja hapus key
+  // sesi saja, BUKAN deleteAll(), supaya kredensial biometric (disimpan
+  // terpisah agar bisa login cepat lagi tanpa ketik ulang) tidak ikut hilang.
+  static Future<void> logout() async {
     if (_isLoggingOut) return;
     _isLoggingOut = true;
 
@@ -62,14 +66,13 @@ class ApiClient {
             receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Accept': 'application/json',
-              'Content-Type': 'application/json',
+              // 'Content-Type': 'application/json',
             },
           ),
         )
         ..interceptors.add(
           InterceptorsWrapper(
             onRequest: (options, handler) {
-              // ✅ Login path SELALU lolos, tidak peduli _isLoggingOut
               if (options.path.endsWith('/login')) {
                 handler.next(options);
                 return;
@@ -93,10 +96,9 @@ class ApiClient {
               handler.next(options);
             },
             onError: (DioException e, handler) async {
-              // ✅ Login 401 jangan trigger logout flow
               if (e.response?.statusCode == 401 &&
                   !e.requestOptions.path.endsWith('/login')) {
-                await _performLogout();
+                await logout();
               }
               handler.next(e);
             },

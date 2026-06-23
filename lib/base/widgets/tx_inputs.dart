@@ -210,11 +210,18 @@ class TxInputDate extends FormField<DateTime> {
                    ? null
                    : () async {
                        final now = DateTime.now();
+                       final effectiveFirst = firstDate ?? DateTime(2000);
+                       final effectiveLast = lastDate ?? DateTime(now.year + 20);
+
+                       var init = state.value ?? now;
+                       if (init.isBefore(effectiveFirst)) init = effectiveFirst;
+                       if (init.isAfter(effectiveLast)) init = effectiveLast;
+
                        final picked = await showDatePicker(
                          context: state.context,
-                         initialDate: state.value ?? now,
-                         firstDate: firstDate ?? DateTime(2000),
-                         lastDate: lastDate ?? DateTime(now.year + 20),
+                         initialDate: init,
+                         firstDate: effectiveFirst,
+                         lastDate: effectiveLast,
                        );
                        if (picked != null) {
                          state.didChange(picked);
@@ -280,13 +287,18 @@ class TxInputDateTime extends FormField<DateTime> {
 
            Future<void> pickDateTime() async {
              final now = DateTime.now();
-             final init = state.value ?? now;
+             final effectiveFirst = firstDate ?? DateTime(2000);
+             final effectiveLast = lastDate ?? DateTime(now.year + 20);
+
+             var init = state.value ?? now;
+             if (init.isBefore(effectiveFirst)) init = effectiveFirst;
+             if (init.isAfter(effectiveLast)) init = effectiveLast;
 
              final pickedDate = await showDatePicker(
                context: state.context,
                initialDate: init,
-               firstDate: firstDate ?? DateTime(2000),
-               lastDate: lastDate ?? DateTime(now.year + 20),
+               firstDate: effectiveFirst,
+               lastDate: effectiveLast,
                builder: (context, child) {
                  return Theme(
                    data: Theme.of(context).copyWith(

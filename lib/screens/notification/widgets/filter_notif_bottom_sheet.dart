@@ -66,7 +66,7 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
     if (f.fleetGroup != null) {
       _fleetGroup = FilterOption(
         value: f.fleetGroup,
-        label: f.fleetGroupLabel ?? f.fleetGroup!, // pakai label jika ada
+        label: f.fleetGroupLabel ?? f.fleetGroup!,
       );
     }
     if (f.status != null) {
@@ -95,11 +95,25 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
   }
 
   void _apply() {
+    final normalizedStart = _startDate != null
+        ? DateTime(
+            _startDate!.year,
+            _startDate!.month,
+            _startDate!.day,
+            0,
+            0,
+            0,
+          )
+        : null;
+    final normalizedEnd = _endDate != null
+        ? DateTime(_endDate!.year, _endDate!.month, _endDate!.day, 23, 59, 59)
+        : null;
+
     Navigator.pop(
       context,
       NotificationFilter(
-        startDate: _startDate,
-        endDate: _endDate,
+        startDate: normalizedStart,
+        endDate: normalizedEnd,
         fleetGroup: _fleetGroup?.value,
         fleetGroupLabel: _fleetGroup?.label,
         status: _status?.value,
@@ -168,11 +182,7 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
         return [
           FilterOption(value: null, label: t.filterAllStatus),
           FilterOption(value: 'verified', label: t.filterVerified),
-          FilterOption(
-            value: 'not_yet_verified',
-            label: t.filterNotYetVerified,
-          ),
-          FilterOption(value: 'unverified', label: t.filterUnverified),
+          FilterOption(value: 'not_verify', label: t.filterUnverified),
         ];
       case _View.alertType:
         return [
@@ -349,8 +359,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
           ),
           const SizedBox(height: 6),
           _SelectTile(
-            label: _fleetGroup?.label ?? t.filterChooseFleetGroup,
-            hasValue: _fleetGroup?.value != null,
+            label: _fleetGroup?.label ?? t.filterAllFleetGroup,
+            hasValue: true,
             onTap: () => setState(() => _view = _View.fleet),
           ),
           const SizedBox(height: 14),
@@ -365,8 +375,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
           ),
           const SizedBox(height: 6),
           _SelectTile(
-            label: _status?.label ?? t.filterChooseVerifStatus,
-            hasValue: _status?.value != null,
+            label: _status?.label ?? t.filterAllStatus,
+            hasValue: true,
             onTap: () => setState(() => _view = _View.status),
           ),
           const SizedBox(height: 14),
@@ -381,8 +391,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
           ),
           const SizedBox(height: 6),
           _SelectTile(
-            label: _alertType?.label ?? t.filterChooseAlertType,
-            hasValue: _alertType?.value != null,
+            label: _alertType?.label ?? t.filterAllAlertType,
+            hasValue: true,
             onTap: () => setState(() => _view = _View.alertType),
           ),
           const SizedBox(height: 20),

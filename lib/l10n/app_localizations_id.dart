@@ -9,7 +9,7 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get appTitle => 'AMS';
+  String get appTitle => 'FixTrack';
 
   @override
   String get language => 'Bahasa';
@@ -312,6 +312,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get selectBrandFirst => 'Pilih merek terlebih dahulu';
 
   @override
+  String get selectModelFirst => 'Pilih model terlebih dahulu';
+
+  @override
+  String get selectTypeHint => 'Pilih tipe ...';
+
+  @override
+  String get noTypeAvailable => 'Tipe tidak tersedia';
+
+  @override
   String get vehicleType => 'Tipe';
 
   @override
@@ -459,6 +468,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get passwordUpdatedDummy => 'Password berhasil diperbarui.';
 
   @override
+  String get passwordUpdateFailed =>
+      'Gagal memperbarui password. Silakan coba lagi.';
+
+  @override
   String get passwordChangeSaveBtn => 'Ubah & Simpan Password Baru';
 
   @override
@@ -578,7 +591,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get loading => 'Memuat...';
 
   @override
-  String get seeNotes => 'Lihat Catatan';
+  String get seeNotesVerification => 'Lihat Catatan Verifikasi';
+
+  @override
+  String get seeNotesValidation => 'Lihat Catatan Validasi';
 
   @override
   String get showMapCoordinate => 'Lihat Koordinat Peta';

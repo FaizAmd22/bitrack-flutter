@@ -39,6 +39,7 @@ class SubmitVehicleService {
 
       'vehicle_brand': (d.brand ?? '').trim(),
       'vehicle_model': (d.model ?? '').trim(),
+      'vehicle_type': (d.type ?? '').trim(),
       'vehicle_year': toNum(d.year),
       'odometer': toNum(d.odometer),
       'fleet_group_id': (d.fleetGroupId ?? '').trim(),

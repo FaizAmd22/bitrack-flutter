@@ -8,14 +8,20 @@ class CheckLicensePlateService {
     final plate = licensePlate.trim();
     try {
       final res = await ApiClient.dio.get(
-        '/mobile/vehicle/check-create-mobile',
+        '/master-vehicle/check-fleetify',
         queryParameters: {if (plate.isNotEmpty) 'license_plate': plate},
       );
 
-      final status = res.data is Map ? res.data['status'] : null;
-      final exists = status == false || status == 'false';
+      final body = res.data;
+      if (body is! Map) return false;
 
-      return exists;
+      final status = body['status'];
+      final statusTrue = status == true || status == 'true';
+
+      final metadata = body['metadata'];
+      final found = metadata is Map && metadata['found'] == true;
+
+      return statusTrue && found;
     } catch (e) {
       debugPrint('checkLicensePlate error: $e');
       rethrow;

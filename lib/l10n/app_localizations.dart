@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'AMS'**
+  /// **'FixTrack'**
   String get appTitle;
 
   /// No description provided for @language.
@@ -686,6 +686,24 @@ abstract class AppLocalizations {
   /// **'Select brand first'**
   String get selectBrandFirst;
 
+  /// No description provided for @selectModelFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select model first'**
+  String get selectModelFirst;
+
+  /// No description provided for @selectTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select type ...'**
+  String get selectTypeHint;
+
+  /// No description provided for @noTypeAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No type available'**
+  String get noTypeAvailable;
+
   /// No description provided for @vehicleType.
   ///
   /// In en, this message translates to:
@@ -968,6 +986,12 @@ abstract class AppLocalizations {
   /// **'Password updated successfully.'**
   String get passwordUpdatedDummy;
 
+  /// No description provided for @passwordUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update password. Please try again.'**
+  String get passwordUpdateFailed;
+
   /// No description provided for @passwordChangeSaveBtn.
   ///
   /// In en, this message translates to:
@@ -1202,11 +1226,17 @@ abstract class AppLocalizations {
   /// **'Loading...'**
   String get loading;
 
-  /// No description provided for @seeNotes.
+  /// No description provided for @seeNotesVerification.
   ///
   /// In en, this message translates to:
-  /// **'See Notes'**
-  String get seeNotes;
+  /// **'See Notes Verification'**
+  String get seeNotesVerification;
+
+  /// No description provided for @seeNotesValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'See Notes Validation'**
+  String get seeNotesValidation;
 
   /// No description provided for @showMapCoordinate.
   ///

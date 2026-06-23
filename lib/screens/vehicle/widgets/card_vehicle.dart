@@ -57,11 +57,15 @@ class CardVehicle extends StatelessWidget {
     final createdAt = _formatDateCard(vehicle['created_at']?.toString());
 
     final plate = _s(vehicle['license_plate']);
-    final brand = _s(vehicle['vehicle_brand'], fallback: '');
-    final model = _s(vehicle['vehicle_model'], fallback: '');
-    final year = _s(vehicle['vehicle_year'], fallback: '');
+    final brand = _s(vehicle['brand'], fallback: '');
+    final model = _s(vehicle['model'], fallback: '');
+    final year = _s(vehicle['year'], fallback: '');
 
-    final fleetName = _s(vehicle['fleet_group_name'], fallback: '-');
+    final fleetGroup = vehicle['fleet_group'];
+    final fleetName = _s(
+      fleetGroup is Map ? fleetGroup['name'] : null,
+      fallback: '-',
+    );
 
     final muted = AppStyles.darkGrayColor.withOpacity(0.65);
 

@@ -4,19 +4,22 @@ import 'package:dio/dio.dart';
 class VehicleMasterApi {
   const VehicleMasterApi();
 
-  Future<List<Map<String, dynamic>>> fetchBrandsRaw({
+  // Tiap brand sudah membawa models (dan tiap model membawa types) langsung,
+  // jadi tidak perlu lagi fetch brand & model terpisah lalu join brand_id.
+  Future<List<Map<String, dynamic>>> fetchBrandHierarchy({
     CancelToken? cancelToken,
   }) async {
-    final res = await ApiClient.dio.get('/brand', cancelToken: cancelToken);
-    final data = (res.data['data'] as List?) ?? [];
-    return data.cast<Map<String, dynamic>>();
-  }
+    final res = await ApiClient.dio.get(
+      '/master-vehicle/brands',
+      cancelToken: cancelToken,
+    );
 
-  Future<List<Map<String, dynamic>>> fetchModelsRaw({
-    CancelToken? cancelToken,
-  }) async {
-    final res = await ApiClient.dio.get('/model', cancelToken: cancelToken);
-    final data = (res.data['data'] as List?) ?? [];
-    return data.cast<Map<String, dynamic>>();
+    final body = res.data;
+    if (body is! Map || body['data'] is! List) return [];
+
+    return (body['data'] as List)
+        .whereType<Map>()
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
   }
 }

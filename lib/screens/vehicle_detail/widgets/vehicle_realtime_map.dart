@@ -234,7 +234,7 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.treffix.ams',
+          userAgentPackageName: 'com.treffix.fixtrack',
         ),
         if (pos != null)
           MarkerLayer(

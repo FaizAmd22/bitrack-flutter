@@ -80,8 +80,6 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
     final suggestionPlates = ref.watch(plateSuggestionProvider(_activity));
     final vehiclesAsync = ref.watch(vehicleInfiniteProvider);
 
-    final fleetGroupMapAsync = ref.watch(fleetGroupMapProvider);
-
     return Scaffold(
       backgroundColor: AppStyles.bgColor,
 
@@ -182,22 +180,9 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
                             }
 
                             final item = state.items[index];
-                            final fleetName = fleetGroupMapAsync.maybeWhen(
-                              data: (m) =>
-                                  m[item['fleet_group_id']
-                                      ?.toString()
-                                      .trim()] ??
-                                  '-',
-                              orElse: () => '-',
-                            );
-
-                            final merged = {
-                              ...item,
-                              'fleet_group_name': fleetName,
-                            };
 
                             return CardVehicle(
-                              vehicle: merged,
+                              vehicle: item,
                               onTap: () async {
                                 final updated = await Navigator.pushNamed(
                                   context,
@@ -205,6 +190,7 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
                                   arguments: AddVehicleArgs(
                                     status: AddVehicleStatus.update,
                                     license: item['license_plate'],
+                                    id: item['id']?.toString(),
                                   ),
                                 );
                                 if (updated == true && mounted) {

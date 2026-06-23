@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'AMS';
+  String get appTitle => 'FixTrack';
 
   @override
   String get language => 'Language';
@@ -312,6 +312,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectBrandFirst => 'Select brand first';
 
   @override
+  String get selectModelFirst => 'Select model first';
+
+  @override
+  String get selectTypeHint => 'Select type ...';
+
+  @override
+  String get noTypeAvailable => 'No type available';
+
+  @override
   String get vehicleType => 'Type';
 
   @override
@@ -461,6 +470,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordUpdatedDummy => 'Password updated successfully.';
 
   @override
+  String get passwordUpdateFailed =>
+      'Failed to update password. Please try again.';
+
+  @override
   String get passwordChangeSaveBtn => 'Change & Save New Password';
 
   @override
@@ -580,7 +593,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading...';
 
   @override
-  String get seeNotes => 'See Notes';
+  String get seeNotesVerification => 'See Notes Verification';
+
+  @override
+  String get seeNotesValidation => 'See Notes Validation';
 
   @override
   String get showMapCoordinate => 'Show Map Coordinate';

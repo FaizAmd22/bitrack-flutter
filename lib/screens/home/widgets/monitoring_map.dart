@@ -121,6 +121,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
         .map((v) {
           final asset = _resolveTruckAsset(v, now);
           final angleRad = roundedBearing(v.bearing) * math.pi / 180;
+          debugPrint('data vehicle : "$v"');
 
           return Marker(
             point: LatLng(v.latitude, v.longitude),
@@ -132,7 +133,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.vehicleDetailScreen,
-                  arguments: v.id,
+                  arguments: v.vehicleId.isNotEmpty ? v.vehicleId : v.id,
                 );
               },
               child: Transform.translate(

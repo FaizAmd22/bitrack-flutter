@@ -201,7 +201,7 @@ class _VehicleInformationBottomSheetState
           SizedBox(height: 20),
           RowText(
             text1: t.vehicleStatusTotalOdometer,
-            text2: "${dataVehicle['total_odometer'] ?? '-'} KM",
+            text2: "${dataVehicle['total_odometer'] ?? '-'} M",
           ),
           SizedBox(height: 20),
           RowText(

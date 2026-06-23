@@ -1,13 +1,17 @@
 import 'package:ams/base/network/api_client.dart';
 import 'package:dio/dio.dart';
 
-class FetchVehicleDetailNull {
-  const FetchVehicleDetailNull();
+class FetchMonitoringDetail {
+  const FetchMonitoringDetail();
 
-  Future<Map<String, dynamic>> getVehicleByVehicleId(String id) async {
+  Future<Map<String, dynamic>> getDetail(
+    String id, {
+    String tab = 'DASHBOARD',
+  }) async {
     try {
       final res = await ApiClient.dio.get(
-        '/vehicle-monitoring/cluster/mw-mapping/$id/null',
+        '/monitoring/$id',
+        queryParameters: {'tab': tab},
       );
 
       final body = res.data;
@@ -23,8 +27,10 @@ class FetchVehicleDetailNull {
       final status = e.response?.statusCode;
       final data = e.response?.data;
 
-      if (data is Map && data['error_msg'] != null) {
-        throw Exception('Request failed ($status): ${data['error_msg']}');
+      if (data is Map && (data['message'] ?? data['error_msg']) != null) {
+        throw Exception(
+          'Request failed ($status): ${data['message'] ?? data['error_msg']}',
+        );
       }
 
       throw Exception(

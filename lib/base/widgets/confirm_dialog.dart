@@ -20,11 +20,8 @@ class ConfirmDialog extends StatelessWidget {
   });
 
   void _onCancel(BuildContext context) {
-    if (funcCancel != null) {
-      funcCancel!();
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context);
+    funcCancel?.call();
   }
 
   void _onSubmit(BuildContext context) {

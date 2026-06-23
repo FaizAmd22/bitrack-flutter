@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ams/base/network/api_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -45,7 +47,10 @@ class AuthController extends StateNotifier<AuthState> {
 
       if (!status) {
         final String errorMsg =
-            (result['error_msg'] ?? 'Login gagal, coba lagi').toString();
+            (result['message'] ??
+                    result['error_msg'] ??
+                    'Login gagal, coba lagi')
+                .toString();
 
         state = state.copyWith(isLoading: false, errorMessage: errorMsg);
         return null;
@@ -53,13 +58,10 @@ class AuthController extends StateNotifier<AuthState> {
 
       final data = result['data'] as Map<String, dynamic>?;
       final token = data?['token']?.toString();
-      final userList = data?['user_data'] as List<dynamic>?;
-      final dataUser = (userList != null && userList.isNotEmpty)
-          ? userList[0]
-          : null;
+      final dataUser = data?['user'] as Map<String, dynamic>?;
 
       if (token != null && token.isNotEmpty) {
-        await _secureStorage.write(key: 'auth_token', value: token);
+        // await _secureStorage.write(key: 'auth_token', value: token);
         ApiClient.setToken(token);
       }
 
@@ -78,13 +80,11 @@ class AuthController extends StateNotifier<AuthState> {
         );
         await _secureStorage.write(
           key: 'user_role',
-          value: dataUser['role']?['role_name']?.toString() ?? '',
+          value: dataUser['role']?.toString() ?? '',
         );
         await _secureStorage.write(
           key: 'user_role_permission',
-          value:
-              dataUser['role']?['role_permession']?['permession']?.toString() ??
-              '',
+          value: jsonEncode(dataUser['permission_allowed'] ?? []),
         );
       }
 

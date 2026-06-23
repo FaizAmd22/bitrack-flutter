@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/widgets/full_screen_loading.dart';
 import 'package:ams/base/widgets/search_bar_base.dart';
-import 'package:ams/features/monitoring/providers/fleet_geofence_provider.dart';
 import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
@@ -139,57 +138,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ];
   }
 
-  List<FilterOption> _buildGeofenceOptions(Map<String, dynamic> result) {
-    final raw = result['data'];
-    final List list = raw is List ? raw : const [];
-
-    final out = <FilterOption>[];
-
-    for (final item in list) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-
-      final geos = m['geofence'];
-      if (geos is! List) continue;
-
-      for (final g in geos) {
-        if (g is! Map) continue;
-        final gm = Map<String, dynamic>.from(g);
-
-        final id = (gm['geofence_id'] ?? gm['id'] ?? '').toString().trim();
-        final name = (gm['geofence_name'] ?? gm['name'] ?? '')
-            .toString()
-            .trim();
-
-        if (id.isEmpty || name.isEmpty) continue;
-        out.add(FilterOption(value: id, label: name));
-      }
-    }
-
-    final seen = <String>{};
-    final unique = out.where((e) => e.value != null && seen.add(e.value!));
-
-    return [
-      const FilterOption(value: null, label: 'Semua Geofence'),
-      ...unique,
-    ];
-  }
-
   Future<void> _openFilterSheet(List<Vehicle> currentVehicles) async {
     final fleetGroups = _buildFleetGroupOptionsFromMonitoring(currentVehicles);
 
-    Map<String, dynamic> dataAsync;
-    try {
-      dataAsync = await ref.read(fleetGeofenceProvider.future);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-      );
-      return;
-    }
-
-    final geofences = _buildGeofenceOptions(dataAsync);
+    // Geofence belum bisa dipilih sebagai jenis filter (lihat _kTypeOptions
+    // di filter_tracker_bottom_sheet.dart), jadi tidak perlu data geofence.
+    const geofences = <FilterOption>[
+      FilterOption(value: null, label: 'Semua Geofence'),
+    ];
 
     final result = await FilterTrackerBottomSheet.open(
       context,

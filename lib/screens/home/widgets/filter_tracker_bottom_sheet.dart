@@ -177,9 +177,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
                     const SizedBox(height: 16),
                     _Label('Fleet Group'),
                     _SelectRow(
-                      value: _fleetGroup.value == null
-                          ? null
-                          : _fleetGroup.label,
+                      value: _fleetGroup.label,
                       placeholder: 'Pilih Fleet Group',
                       onTap: _pickFleetGroup,
                     ),
@@ -188,7 +186,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
                     const SizedBox(height: 16),
                     _Label('Geofence'),
                     _SelectRow(
-                      value: _geofence.value == null ? null : _geofence.label,
+                      value: _geofence.label,
                       placeholder: 'Pilih Geofence',
                       onTap: _pickGeofence,
                     ),

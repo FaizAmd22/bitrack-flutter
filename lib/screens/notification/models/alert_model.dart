@@ -9,12 +9,15 @@ class AlertModel {
   final String? deviceTime;
   final String? verifiedBy;
   final String? driverName;
-  final String? fleetGroupId;
   final String? fleetGroupName;
   final double? speed;
   final int? duration;
   final String? note;
   final List<String>? attachment;
+  final String? noteValidation;
+  final List<String>? attachmentValidation;
+  final String? status;
+  final String? statusText;
 
   const AlertModel({
     this.id,
@@ -27,12 +30,15 @@ class AlertModel {
     this.deviceTime,
     this.verifiedBy,
     this.driverName,
-    this.fleetGroupId,
     this.fleetGroupName,
     this.speed,
     this.duration,
     this.note,
     this.attachment,
+    this.noteValidation,
+    this.attachmentValidation,
+    this.status,
+    this.statusText,
   });
 
   factory AlertModel.fromJson(Map<String, dynamic> json) {
@@ -40,19 +46,22 @@ class AlertModel {
       id: json['id']?.toString(),
       licensePlate: json['license_plate']?.toString(),
       eventType: json['event_type']?.toString(),
-      eventName: json['event_name']?.toString(),
+      eventName: (json['event'] ?? json['event_name'])?.toString(),
       latitude: _toDouble(json['latitude']),
       longitude: _toDouble(json['longitude']),
       deviceTime:
           json['device_time']?.toString() ?? json['created_at']?.toString(),
       verifiedBy: json['verified_by']?.toString(),
       driverName: json['driver_name']?.toString(),
-      fleetGroupId: json['fleet_group_id']?.toString(),
       fleetGroupName: json['fleet_group_name']?.toString(),
       speed: _toDouble(json['speed']),
       duration: _toInt(json['duration']),
       note: json['note']?.toString(),
       attachment: _toStringList(json['attachment']),
+      noteValidation: json['note_validation']?.toString(),
+      attachmentValidation: _toStringList(json['attachment_validation']),
+      status: json['status']?.toString(),
+      statusText: json['status_text']?.toString(),
     );
   }
 
@@ -94,12 +103,15 @@ class AlertModel {
       deviceTime: deviceTime,
       verifiedBy: verifiedBy,
       driverName: driverName,
-      fleetGroupId: fleetGroupId,
       fleetGroupName: fleetGroupName,
       speed: speed,
       duration: duration,
       note: note,
       attachment: attachment,
+      noteValidation: noteValidation,
+      attachmentValidation: attachmentValidation,
+      status: status,
+      statusText: statusText,
     );
   }
 }

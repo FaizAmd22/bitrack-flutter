@@ -78,29 +78,52 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
   Future<void> _fetchData() async {
     if (_startDate == null || _endDate == null || _licensePlate == null) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _data = [];
+      _currentIndex = 0;
+      _isPlaying = true;
+    });
 
     try {
-      final parsed = await _periodicApi.fetchPeriodic(
+      await _periodicApi.fetchPeriodic(
         startDate: _startDate!,
         endDate: _endDate!,
         licensePlate: _licensePlate!,
+        onPage: _onPageReceived,
       );
-
-      setState(() {
-        _data = parsed;
-        _currentIndex = 0;
-        _isPlaying = true;
-      });
-
-      if (_data.isNotEmpty) {
-        final p = _data.first;
-        _mapController.move(LatLng(p.latitude, p.longitude), 16);
-      }
     } catch (e) {
       debugPrint('fetch periodic error: $e');
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // Tiap halaman yang berhasil di-fetch langsung ditambahkan supaya peta &
+  // chart tampil progresif, bukan menunggu seluruh rentang tanggal selesai.
+  void _onPageReceived(List<PeriodicPoint> page) {
+    if (!mounted || page.isEmpty) return;
+
+    final wasEmpty = _data.isEmpty;
+
+    setState(() {
+      // List baru (bukan mutasi in-place) supaya widget anak yang
+      // membandingkan oldWidget.points != widget.points (mis. PeriodicMap)
+      // benar-benar mendeteksi perubahan.
+      _data = [..._data, ...page];
+      if (wasEmpty) _isLoading = false;
+    });
+
+    if (wasEmpty) {
+      // PeriodicMap baru masuk ke tree pada rebuild berikutnya (karena
+      // sebelumnya _data kosong); tunggu frame itu selesai dulu sebelum
+      // menyentuh MapController, kalau tidak _internalController-nya belum
+      // siap dan .move() melempar LateInitializationError.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _data.isEmpty) return;
+        final p = _data.first;
+        _mapController.move(LatLng(p.latitude, p.longitude), 16);
+      });
     }
   }
 

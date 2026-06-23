@@ -7,8 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-const int _pageSize = 10;
-
 class NotificationFilter {
   final DateTime? startDate;
   final DateTime? endDate;
@@ -49,75 +47,75 @@ class NotificationFilter {
   NotificationFilter clear() => const NotificationFilter();
 }
 
-class NotificationTabState {
+class NotificationListState {
   final List<AlertModel> items;
-  final int nextPage;
+  final int page;
   final bool hasMore;
   final bool isLoadingMore;
+  final int total;
 
-  const NotificationTabState({
+  const NotificationListState({
     required this.items,
-    required this.nextPage,
+    required this.page,
     required this.hasMore,
     required this.isLoadingMore,
+    required this.total,
   });
 
-  factory NotificationTabState.initial() => const NotificationTabState(
+  factory NotificationListState.initial() => const NotificationListState(
     items: [],
-    nextPage: 1,
+    page: 1,
     hasMore: true,
     isLoadingMore: false,
+    total: 0,
   );
 
-  NotificationTabState copyWith({
+  NotificationListState copyWith({
     List<AlertModel>? items,
-    int? nextPage,
+    int? page,
     bool? hasMore,
     bool? isLoadingMore,
+    int? total,
   }) {
-    return NotificationTabState(
+    return NotificationListState(
       items: items ?? this.items,
-      nextPage: nextPage ?? this.nextPage,
+      page: page ?? this.page,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      total: total ?? this.total,
     );
   }
 }
 
 class NotificationState {
   final bool isLoading;
-  final NotificationTabState urgent;
-  final NotificationTabState summary;
+  final NotificationListState list;
   final NotificationFilter filter;
   final String search;
 
   const NotificationState({
     required this.isLoading,
-    required this.urgent,
-    required this.summary,
+    required this.list,
     required this.filter,
     required this.search,
   });
 
   factory NotificationState.initial() => NotificationState(
     isLoading: false,
-    urgent: NotificationTabState.initial(),
-    summary: NotificationTabState.initial(),
+    list: NotificationListState.initial(),
     filter: const NotificationFilter(),
     search: '',
   );
 
   NotificationState copyWith({
     bool? isLoading,
-    NotificationTabState? urgent,
-    NotificationTabState? summary,
+    NotificationListState? list,
     NotificationFilter? filter,
     String? search,
   }) {
     return NotificationState(
       isLoading: isLoading ?? this.isLoading,
-      urgent: urgent ?? this.urgent,
-      summary: summary ?? this.summary,
+      list: list ?? this.list,
       filter: filter ?? this.filter,
       search: search ?? this.search,
     );
@@ -159,27 +157,13 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
       isLoading: true,
       search: s,
       filter: f,
-      urgent: NotificationTabState.initial(),
-      summary: NotificationTabState.initial(),
+      list: NotificationListState.initial(),
     );
 
     try {
-      await Future(() async {
-        await _loadTab(
-          isUrgent: true,
-          page: 1,
-          existing: const [],
-          search: s,
-          filter: f,
-        );
-        await _loadTab(
-          isUrgent: false,
-          page: 1,
-          existing: const [],
-          search: s,
-          filter: f,
-        );
-      }).timeout(const Duration(seconds: 30));
+      await _loadPage(page: 1, existing: const []).timeout(
+        const Duration(seconds: 30),
+      );
     } on TimeoutException {
       debugPrint('notification refresh: timed out after 30s');
     } catch (e) {
@@ -191,69 +175,39 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     if (mounted) _service.markAllAsRead().ignore();
   }
 
-  Future<void> loadMoreUrgent() async {
-    final tab = state.urgent;
-    if (tab.isLoadingMore || !tab.hasMore) return;
+  Future<void> loadMore() async {
+    final list = state.list;
+    if (list.isLoadingMore || !list.hasMore) return;
 
-    state = state.copyWith(urgent: tab.copyWith(isLoadingMore: true));
+    state = state.copyWith(list: list.copyWith(isLoadingMore: true));
 
-    await _loadTab(
-      isUrgent: true,
-      page: tab.nextPage,
-      existing: tab.items,
-      search: state.search,
-      filter: state.filter,
-    );
+    await _loadPage(page: list.page + 1, existing: list.items);
   }
 
-  Future<void> loadMoreSummary() async {
-    final tab = state.summary;
-    if (tab.isLoadingMore || !tab.hasMore) return;
-
-    state = state.copyWith(summary: tab.copyWith(isLoadingMore: true));
-
-    await _loadTab(
-      isUrgent: false,
-      page: tab.nextPage,
-      existing: tab.items,
-      search: state.search,
-      filter: state.filter,
-    );
-  }
-
-  Future<void> _loadTab({
-    required bool isUrgent,
+  Future<void> _loadPage({
     required int page,
     required List<AlertModel> existing,
-    required String search,
-    required NotificationFilter filter,
   }) async {
     try {
-      final rawList = isUrgent
-          ? await _service.fetchAlertUrgent(
-              page: page,
-              startDate: filter.startDate,
-              endDate: filter.endDate,
-              eventType: filter.alertType,
-              fleetGroupId: filter.fleetGroup,
-              statusVerified: filter.status,
-              licensePlate: search.isNotEmpty ? search : null,
-            )
-          : await _service.fetchAlertSummary(
-              page: page,
-              startDate: filter.startDate,
-              endDate: filter.endDate,
-              eventType: filter.alertType,
-              fleetGroupId: filter.fleetGroup,
-              statusVerified: filter.status,
-              licensePlate: search.isNotEmpty ? search : null,
-            );
+      final filter = state.filter;
+      final search = state.search;
 
-      debugPrint(
-        '>>> _loadTab isUrgent=$isUrgent page=$page rawCount=${rawList.length}',
+      final result = await _service.fetchAlerts(
+        page: page,
+        startDate: filter.startDate,
+        endDate: filter.endDate,
+        eventType: filter.alertType,
+        fleetGroupId: filter.fleetGroup,
+        status: filter.status,
+        licensePlate: search.isNotEmpty ? search : null,
       );
 
-      final newItems = rawList.map((e) {
+      debugPrint(
+        '>>> _loadPage page=$page rawCount=${result.items.length} '
+        'totalPages=${result.totalPages}',
+      );
+
+      final newItems = result.items.map((e) {
         try {
           return AlertModel.fromJson(e as Map<String, dynamic>);
         } catch (_) {
@@ -263,53 +217,28 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
 
       if (!mounted) return;
 
-      final hasMore = newItems.length >= _pageSize;
       final merged = [...existing, ...newItems];
+      final hasMore = result.page < result.totalPages;
 
-      if (isUrgent) {
-        state = state.copyWith(
-          urgent: state.urgent.copyWith(
-            items: merged,
-            nextPage: page + 1,
-            hasMore: hasMore,
-            isLoadingMore: false,
-          ),
-        );
-      } else {
-        state = state.copyWith(
-          summary: state.summary.copyWith(
-            items: merged,
-            nextPage: page + 1,
-            hasMore: hasMore,
-            isLoadingMore: false,
-          ),
-        );
-      }
-
-      unawaited(
-        _attachAddressesParallel(
-          newItems,
-          isUrgent: isUrgent,
-          offset: existing.length,
+      state = state.copyWith(
+        list: state.list.copyWith(
+          items: merged,
+          page: result.page,
+          hasMore: hasMore,
+          isLoadingMore: false,
+          total: result.total,
         ),
       );
+
+      unawaited(_attachAddressesParallel(newItems, offset: existing.length));
     } catch (e) {
       if (!mounted) return;
-      if (isUrgent) {
-        state = state.copyWith(
-          urgent: state.urgent.copyWith(isLoadingMore: false),
-        );
-      } else {
-        state = state.copyWith(
-          summary: state.summary.copyWith(isLoadingMore: false),
-        );
-      }
+      state = state.copyWith(list: state.list.copyWith(isLoadingMore: false));
     }
   }
 
   Future<void> _attachAddressesParallel(
     List<AlertModel> items, {
-    required bool isUrgent,
     required int offset,
   }) async {
     final futures = items.map((item) async {
@@ -330,20 +259,10 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
       if (address == null) continue;
 
       final idx = offset + i;
-      if (isUrgent) {
-        final current = List<AlertModel>.from(state.urgent.items);
-        if (idx < current.length && current[idx].id == items[i].id) {
-          current[idx] = current[idx].copyWith(address: address);
-          state = state.copyWith(urgent: state.urgent.copyWith(items: current));
-        }
-      } else {
-        final current = List<AlertModel>.from(state.summary.items);
-        if (idx < current.length && current[idx].id == items[i].id) {
-          current[idx] = current[idx].copyWith(address: address);
-          state = state.copyWith(
-            summary: state.summary.copyWith(items: current),
-          );
-        }
+      final current = List<AlertModel>.from(state.list.items);
+      if (idx < current.length && current[idx].id == items[i].id) {
+        current[idx] = current[idx].copyWith(address: address);
+        state = state.copyWith(list: state.list.copyWith(items: current));
       }
     }
   }

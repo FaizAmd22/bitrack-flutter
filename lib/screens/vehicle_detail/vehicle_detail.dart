@@ -7,18 +7,15 @@ import 'package:ams/base/widgets/full_screen_loading.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/vehicle_detail/providers/vehicle_information_provider.dart';
 import 'package:ams/screens/vehicle_detail/services/fetch_address.dart';
-import 'package:ams/screens/vehicle_detail/services/fetch_realtime_vehicle.dart';
-import 'package:ams/screens/vehicle_detail/services/fetch_vehicle.dart';
-import 'package:ams/screens/vehicle_detail/services/fetch_vehicle_detail_null.dart';
+import 'package:ams/screens/vehicle_detail/services/fetch_monitoring_detail.dart';
+import 'package:ams/screens/vehicle_detail/utils/flatten_monitoring_detail.dart';
+import 'package:ams/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
 import 'package:ams/screens/vehicle_detail/widgets/vehicle_detail_content.dart';
 import 'package:ams/screens/vehicle_detail/widgets/vehicle_realtime_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:ams/screens/vehicle_detail/utils/dashcam_parser.dart';
-import 'package:ams/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
 
-const _realtimeInterval = Duration(seconds: 3);
 const _detailInterval = Duration(seconds: 10);
 
 class VehicleDetail extends ConsumerStatefulWidget {
@@ -29,8 +26,7 @@ class VehicleDetail extends ConsumerStatefulWidget {
 }
 
 class _VehicleDetailState extends ConsumerState<VehicleDetail> {
-  final _api = const FetchVehicleDetailNull();
-  final _realtimeApi = const FetchRealtimeVehicle();
+  final _api = const FetchMonitoringDetail();
 
   String _detailId = '';
   late Future<Map<String, dynamic>> _future;
@@ -40,7 +36,6 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
   double _direction = 0;
   Map<String, dynamic> _detailData = {};
 
-  Timer? _realtimeTimer;
   Timer? _detailTimer;
 
   String _address = '-';
@@ -48,18 +43,8 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
   double? _lastLat;
   double? _lastLng;
 
-  bool _loadingDashcam = false;
-  bool _dashcamOnline = false;
-  bool _hasDashcam = false;
-  bool _isChiller = false;
-  bool _dashcamLoaded = false;
-
-  // ── Tambahan: simpan vehicle map lengkap untuk DashcamBottomSheet ──────────
-  Map<String, dynamic>? _vehicleData;
-
   @override
   void dispose() {
-    _realtimeTimer?.cancel();
     _detailTimer?.cancel();
     super.dispose();
   }
@@ -73,6 +58,11 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     final id = (args as String?)?.trim() ?? '';
     _detailId = id;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(vehicleIdProvider.notifier).state = id.isEmpty ? null : id;
+    });
+
     _future = _detailId.isNotEmpty
         ? _loadInitial()
         : Future.error('detailId kosong');
@@ -80,8 +70,12 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     _initialized = true;
   }
 
+  Map<String, dynamic> _flattenDetail(Map<String, dynamic> data) =>
+      flattenMonitoringDetail(data, detailId: _detailId);
+
   Future<Map<String, dynamic>> _loadInitial() async {
-    final detail = await _api.getVehicleByVehicleId(_detailId);
+    final raw = await _api.getDetail(_detailId);
+    final detail = _flattenDetail(raw);
 
     if (mounted) {
       final lat = _toDouble(detail['latitude']);
@@ -99,41 +93,8 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
       }
     }
 
-    _startRealtimePolling();
     _startDetailPolling();
     return detail;
-  }
-
-  void _startRealtimePolling() {
-    _realtimeTimer?.cancel();
-    if (_detailId.isEmpty) return;
-    _fetchRealtimeData();
-    _realtimeTimer = Timer.periodic(
-      _realtimeInterval,
-      (_) => _fetchRealtimeData(),
-    );
-  }
-
-  Future<void> _fetchRealtimeData() async {
-    if (_detailId.isEmpty) return;
-    try {
-      final data = await _realtimeApi.getRealtimeVehicle(_detailId);
-      if (!mounted) return;
-
-      final lat = _toDouble(data['latitude']);
-      final lng = _toDouble(data['longitude']);
-
-      if (lat == null || lng == null) return;
-
-      setState(() {
-        _coordinate = LatLng(lat, lng);
-        _direction = _toDouble(data['direction']) ?? _direction;
-      });
-
-      _onCoordinateReady(lat, lng);
-    } catch (e) {
-      debugPrint('FETCH REALTIME VEHICLE ERROR: $e');
-    }
   }
 
   void _startDetailPolling() {
@@ -145,9 +106,24 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
   Future<void> _fetchDetailData() async {
     if (_detailId.isEmpty) return;
     try {
-      final data = await _api.getVehicleByVehicleId(_detailId);
+      final raw = await _api.getDetail(_detailId);
       if (!mounted) return;
-      setState(() => _detailData = data);
+
+      final detail = _flattenDetail(raw);
+      final lat = _toDouble(detail['latitude']);
+      final lng = _toDouble(detail['longitude']);
+
+      setState(() {
+        _detailData = detail;
+        if (lat != null && lng != null) {
+          _coordinate = LatLng(lat, lng);
+          _direction = _toDouble(detail['direction']) ?? _direction;
+        }
+      });
+
+      if (lat != null && lng != null) {
+        _onCoordinateReady(lat, lng);
+      }
     } catch (e) {
       debugPrint('FETCH DETAIL VEHICLE ERROR: $e');
     }
@@ -159,10 +135,8 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
       _loadingAddress = false;
       _lastLat = null;
       _lastLng = null;
-      _dashcamLoaded = false;
       _coordinate = null;
       _detailData = {};
-      _vehicleData = null; // reset vehicle data juga
       _future = _loadInitial();
     });
   }
@@ -200,71 +174,6 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     });
   }
 
-  Future<void> _loadDashcamStatus(Map<String, dynamic> detailNull) async {
-    final vehicleId = (detailNull['vehicle_id'] ?? '').toString().trim();
-    if (vehicleId.isEmpty) return;
-
-    setState(() => _loadingDashcam = true);
-
-    try {
-      final vehicle = await const FetchVehicle().getVehicle(vehicleId);
-      final category = (vehicle['vehicle_category'] ?? '').toString().trim();
-      final isChiller = category.toLowerCase() == 'chiller';
-      final info = parseDashcamFromVehicle(vehicle);
-
-      if (info == null) {
-        if (!mounted) return;
-        setState(() {
-          _hasDashcam = false;
-          _dashcamOnline = false;
-          _isChiller = isChiller;
-          _loadingDashcam = false;
-          _dashcamLoaded = true;
-          _vehicleData = vehicle; // simpan meski tidak ada dashcam
-        });
-        return;
-      }
-
-      bool online = false;
-      if (info.type.toUpperCase().trim() == 'METTAX') {
-        final mettax = MettaxiotStreamService.I;
-        final stream = await mettax.getLiveStreamUrl(
-          deviceId: info.deviceId,
-          channelId: info.channels.first,
-        );
-        online = stream.trim().isNotEmpty;
-      } else {
-        online = info.deviceId.trim().isNotEmpty && info.channels.isNotEmpty;
-      }
-
-      if (!mounted) return;
-      setState(() {
-        _hasDashcam = true;
-        _dashcamOnline = online;
-        _isChiller = isChiller;
-        _loadingDashcam = false;
-        _dashcamLoaded = true;
-        _vehicleData = vehicle; // ← simpan vehicle map lengkap
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _hasDashcam = true;
-        _dashcamOnline = false;
-        _loadingDashcam = false;
-        _dashcamLoaded = true;
-        // _vehicleData tetap null jika fetch gagal
-      });
-    }
-  }
-
-  void _storeVehicleIdToProvider(String vehicleId) {
-    final current = ref.read(vehicleIdProvider);
-    if (vehicleId.isNotEmpty && current != vehicleId) {
-      ref.read(vehicleIdProvider.notifier).state = vehicleId;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final h = MediaQuery.sizeOf(context).height;
@@ -274,6 +183,10 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     final activity = _detailData['vehicle_activity']?.toString();
     final deviceTime = _detailData['device_time']?.toString() ?? '';
     final ignition = int.tryParse('${_detailData['ignition']}') ?? 0;
+
+    final livecam = _detailData['livecam'];
+    final hasDashcam = livecam is Map;
+    final isChiller = safeBoolFrom(_detailData, 'chiller');
 
     return Scaffold(
       body: Stack(
@@ -344,23 +257,6 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
               }
 
               final detailNull = snapshot.data!;
-              final vehicleId = (detailNull['vehicle_id'] ?? '')
-                  .toString()
-                  .trim();
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!mounted) return;
-                _storeVehicleIdToProvider(vehicleId);
-              });
-
-              if (!_dashcamLoaded) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted && !_dashcamLoaded && !_loadingDashcam) {
-                    _loadDashcamStatus(detailNull);
-                  }
-                });
-              }
-
               final contentData = _detailData.isNotEmpty
                   ? _detailData
                   : detailNull;
@@ -369,11 +265,11 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
                 detailData: contentData,
                 address: _address,
                 loadingAddress: _loadingAddress,
-                hasDashcam: _hasDashcam,
-                dashcamOnline: _dashcamOnline,
-                isChiller: _isChiller,
-                loadingDashcam: _loadingDashcam,
-                vehicleData: _vehicleData, // ← pass ke content
+                hasDashcam: hasDashcam,
+                dashcamOnline: hasDashcam,
+                isChiller: isChiller,
+                loadingDashcam: false,
+                vehicleData: hasDashcam ? {'dashcam': livecam} : null,
               );
             },
           ),

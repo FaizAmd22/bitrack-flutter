@@ -39,7 +39,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'AMS',
+      title: 'FixTrack',
       navigatorKey: NavigationService.navigatorKey,
       locale: locale,
       supportedLocales: LocaleNotifier.supportedLocales,

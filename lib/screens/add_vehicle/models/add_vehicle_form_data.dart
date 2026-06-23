@@ -3,6 +3,7 @@ class AddVehicleFormData {
   String plateNumber = '';
   String? brand;
   String? model;
+  String? type;
   String year = '';
   String? vehicleCategory;
   String odometer = '';
@@ -22,6 +23,7 @@ class AddVehicleFormData {
 
     brand = _nullable(v['vehicle_brand']);
     model = _nullable(v['vehicle_model']);
+    type = _nullable(v['vehicle_type']);
     year = (v['vehicle_year'] ?? '').toString();
     vehicleCategory = _nullable(v['vehicle_category']);
     odometer = (v['odometer'] ?? '').toString();

@@ -18,8 +18,8 @@ final fleetGroupMapProvider = Provider<AsyncValue<Map<String, String>>>((ref) {
   return asyncList.whenData((list) {
     final map = <String, String>{};
     for (final fg in list) {
-      final id = (fg['id'] ?? '').toString().trim();
-      final name = (fg['fleet_group_name'] ?? '').toString().trim();
+      final id = (fg['value'] ?? '').toString().trim();
+      final name = (fg['label'] ?? '').toString().trim();
       if (id.isNotEmpty) {
         map[id] = name.isNotEmpty ? name : '-';
       }

@@ -344,7 +344,7 @@ class _PeriodicMapState extends State<PeriodicMap>
           urlTemplate: widget.isSatellite
               ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
               : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.treffix.ams',
+          userAgentPackageName: 'com.treffix.fixtrack',
         ),
         PolylineLayer(
           polylines: [

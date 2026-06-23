@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "AMS",
+  "appTitle": "FixTrack",
   "language": "Language",
   "english": "English",
   "indonesian": "Bahasa Indonesia",
@@ -129,6 +129,9 @@
   "selectBrandHint": "Select brand ...",
   "selectModelHint": "Select model ...",
   "selectBrandFirst": "Select brand first",
+  "selectModelFirst": "Select model first",
+  "selectTypeHint": "Select type ...",
+  "noTypeAvailable": "No type available",
 
   "vehicleType": "Type",
   "vehicleTypeHint": "Enter vehicle type ...",
@@ -194,6 +197,7 @@
   "passwordNotMeetRequirements": "Password does not meet the requirements.",
   "passwordNotMatch": "Passwords do not match.",
   "passwordUpdatedDummy": "Password updated successfully.",
+  "passwordUpdateFailed": "Failed to update password. Please try again.",
 
   "passwordChangeSaveBtn": "Change & Save New Password",
 
@@ -244,7 +248,8 @@
   "selectFleetGroupHint": "Select Fleet Group",
   "loading": "Loading...",
 
-  "seeNotes": "See Notes",
+  "seeNotesVerification": "See Notes Verification",
+  "seeNotesValidation": "See Notes Validation",
   "showMapCoordinate": "Show Map Coordinate",
   "alertNotes": "Alert Notes",
   "notes": "Notes",

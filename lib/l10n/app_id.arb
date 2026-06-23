@@ -1,6 +1,6 @@
 {
   "@@locale": "id",
-  "appTitle": "AMS",
+  "appTitle": "FixTrack",
   "language": "Bahasa",
   "english": "Inggris",
   "indonesian": "Bahasa Indonesia",
@@ -130,6 +130,9 @@
   "selectBrandHint": "Pilih merek ...",
   "selectModelHint": "Pilih model ...",
   "selectBrandFirst": "Pilih merek terlebih dahulu",
+  "selectModelFirst": "Pilih model terlebih dahulu",
+  "selectTypeHint": "Pilih tipe ...",
+  "noTypeAvailable": "Tipe tidak tersedia",
 
   "vehicleType": "Tipe",
   "vehicleTypeHint": "Masukkan tipe kendaraan ...",
@@ -195,6 +198,7 @@
   "passwordNotMeetRequirements": "Password belum memenuhi ketentuan.",
   "passwordNotMatch": "Password tidak sama.",
   "passwordUpdatedDummy": "Password berhasil diperbarui.",
+  "passwordUpdateFailed": "Gagal memperbarui password. Silakan coba lagi.",
 
   "passwordChangeSaveBtn": "Ubah & Simpan Password Baru",
 
@@ -244,7 +248,8 @@
   "selectFleetGroupHint": "Pilih Fleet Group",
   "loading": "Memuat...",
 
-  "seeNotes": "Lihat Catatan",
+  "seeNotesVerification": "Lihat Catatan Verifikasi",
+  "seeNotesValidation": "Lihat Catatan Validasi",
   "showMapCoordinate": "Lihat Koordinat Peta",
   "alertNotes": "Catatan Peringatan",
   "notes": "Catatan",

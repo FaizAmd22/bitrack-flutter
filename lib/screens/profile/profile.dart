@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:ams/base/network/api_client.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/base/widgets/confirm_dialog.dart';
@@ -89,15 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         textCancel: t.cancel,
         textSubmit: t.logout,
         funcSubmit: () async {
-          await _storage.deleteAll();
-
-          if (!mounted) return;
-
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            AppRoutes.loginScreen,
-            (_) => false,
-          );
+          await ApiClient.logout();
         },
       ),
     );

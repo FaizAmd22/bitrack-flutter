@@ -74,8 +74,9 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       return;
     }
 
+    final id = (a.id ?? '').trim();
     final plate = (a.license ?? '').trim();
-    if (plate.isEmpty) {
+    if (id.isEmpty && plate.isEmpty) {
       setState(() {
         data = AddVehicleFormData();
         _initKey = 'update-empty-plate';
@@ -83,16 +84,22 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       return;
     }
 
+    // Id sudah pasti benar (datang dari list), pakai langsung untuk submit
+    // update walau fetch detail di bawah gagal/tidak ketemu.
+    if (id.isNotEmpty) _vehicleId = id;
+
     setState(() => _loadingVehicle = true);
     try {
-      final v = await _vehicleApi.fetchVehicleByLicense(plate);
-      debugPrint('>>> fetchVehicleByLicense result: $v');
+      final v = id.isNotEmpty
+          ? await _vehicleApi.fetchVehicleById(id)
+          : await _vehicleApi.fetchVehicleByLicense(plate);
+      debugPrint('>>> fetch vehicle for update result: $v');
 
       final next = AddVehicleFormData();
       if (v != null) {
-        next.applyFromVehicleApi(v, forcedPlate: plate);
-        _initKey = (v['id'] ?? 'update').toString();
-        _vehicleId = (v['id'] ?? '').toString();
+        next.applyFromVehicleApi(v, forcedPlate: plate.isEmpty ? null : plate);
+        _initKey = (v['id'] ?? id).toString();
+        _vehicleId ??= (v['id'] ?? '').toString();
       } else {
         next.plateNumber = plate;
         _initKey = 'update-no-data';
@@ -125,11 +132,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
             : t.addVehicleConfirmAddDesc,
         textCancel: t.cancel,
         textSubmit: t.confirm,
-        funcCancel: () async {
-          // tidak melakukan apa-apa; ConfirmDialog menutup dirinya sendiri
-        },
         funcSubmit: () async {
-          // ConfirmDialog menutup dirinya sendiri; kita langsung submit
           await _doSubmit(isUpdate);
         },
       ),

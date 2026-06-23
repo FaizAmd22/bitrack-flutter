@@ -8,7 +8,8 @@ class AuthApi {
   }) async {
     try {
       final response = await ApiClient.dio.post(
-        '/login',
+        // '/login',
+        '/auth/login',
         data: {'email': email, 'password': password},
       );
 

@@ -1,34 +1,24 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/utils/string_utils.dart';
 import 'package:ams/screens/notification/models/alert_model.dart';
 import 'package:ams/screens/notification/widgets/card_notif_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// ─── Status logic (mirrors React getCardStatus) ───────────────────────────────
-
-enum _CardStatus { verified, warning, danger }
+enum _CardStatus { verified, needVerify }
 
 _CardStatus _getStatus(AlertModel item) {
-  final v = item.verifiedBy?.trim() ?? '';
-  if (v.isNotEmpty) return _CardStatus.verified;
-
-  final raw = item.deviceTime;
-  if (raw == null || raw.isEmpty) return _CardStatus.warning;
-
-  DateTime? dt;
-  try {
-    dt = DateFormat('yyyy-MM-dd HH:mm:ss').parseStrict(raw.trim());
-  } catch (_) {
-    try {
-      dt = DateTime.parse(raw.trim().replaceFirst(' ', 'T'));
-    } catch (_) {}
+  final status = item.status?.trim().toUpperCase();
+  if (status != null && status.isNotEmpty) {
+    return status == 'NEED_VERIFIED'
+        ? _CardStatus.needVerify
+        : _CardStatus.verified;
   }
 
-  if (dt == null) return _CardStatus.warning;
-  final hours = DateTime.now().difference(dt).inMinutes / 60.0;
-  return hours > 4 ? _CardStatus.danger : _CardStatus.warning;
+  final v = item.verifiedBy?.trim() ?? '';
+  return v.isNotEmpty ? _CardStatus.verified : _CardStatus.needVerify;
 }
 
 class _StatusStyle {
@@ -38,25 +28,23 @@ class _StatusStyle {
   const _StatusStyle({required this.bg, required this.fg, required this.label});
 }
 
-_StatusStyle _styleFor(_CardStatus status, String? verifiedBy) {
+_StatusStyle _styleFor(_CardStatus status, AlertModel item) {
   switch (status) {
     case _CardStatus.verified:
       return _StatusStyle(
         bg: const Color(0xFFE3F2FD),
         fg: const Color(0xFF2196F3),
-        label: 'Verified by ${verifiedBy ?? ''}',
+        label:
+            item.statusText ??
+            (item.verifiedBy != null
+                ? 'Verified by ${item.verifiedBy}'
+                : 'Verified'),
       );
-    case _CardStatus.warning:
+    case _CardStatus.needVerify:
       return _StatusStyle(
         bg: AppStyles.bgYellowColor,
         fg: AppStyles.yellowColor,
-        label: 'Not yet verified',
-      );
-    case _CardStatus.danger:
-      return _StatusStyle(
-        bg: AppStyles.bgRedColor,
-        fg: AppStyles.redColor,
-        label: 'Not verified',
+        label: item.statusText ?? 'Not yet verified',
       );
   }
 }
@@ -104,8 +92,6 @@ String _fmtDuration(int? secs) {
 bool _isOverstay(String? eventType) =>
     eventType == 'OVERSTAY_ENGINE_ON' || eventType == 'OVERSTAY_ENGINE_OFF';
 
-// ─── Widget ───────────────────────────────────────────────────────────────────
-
 class CardNotif extends StatelessWidget {
   final AlertModel item;
 
@@ -114,7 +100,7 @@ class CardNotif extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = _getStatus(item);
-    final style = _styleFor(status, item.verifiedBy);
+    final style = _styleFor(status, item);
     final muted = AppStyles.darkGrayColor.withOpacity(0.6);
 
     final rightCell = _isOverstay(item.eventType)
@@ -213,9 +199,11 @@ class CardNotif extends StatelessWidget {
                   children: [
                     // Event name
                     Text(
-                      item.eventName?.isNotEmpty == true
-                          ? item.eventName!
-                          : (item.eventType ?? '-'),
+                      titleCase(
+                        item.eventName?.isNotEmpty == true
+                            ? item.eventName!
+                            : (item.eventType ?? '-'),
+                      ),
                       style: AppStyles.textMdBold.copyWith(
                         color: AppStyles.textBlackColor,
                       ),

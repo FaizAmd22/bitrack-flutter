@@ -1,4 +1,4 @@
-package com.treffix.ams
+package com.treffix.fixtrack
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

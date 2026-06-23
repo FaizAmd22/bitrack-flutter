@@ -2,11 +2,17 @@
 
 import 'dart:async';
 
+import 'package:ams/base/network/api_client.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/features/auth/providers/auth_providers.dart';
 import 'package:ams/features/auth/providers/user_storage_provider.dart';
+import 'package:ams/screens/change_password/services/otp_service.dart';
+import 'package:ams/screens/change_password/services/update_password_service.dart';
 import 'package:ams/l10n/app_localizations.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'widgets/otp_box.dart';
 import 'widgets/password_field.dart';
 import 'widgets/rule_text.dart';
@@ -25,6 +31,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   StepView _step = StepView.verify;
 
   static const int otpLen = 5;
+  static const int resendCooldown = 60; // detik
+
   final List<TextEditingController> _otpCtrls = List.generate(
     otpLen,
     (_) => TextEditingController(),
@@ -35,6 +43,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   Timer? _resendTimer;
   int _resendSeconds = 0;
+
+  bool _sending = false; // sedang kirim/resend OTP
+  bool _verifying = false; // sedang verifikasi OTP
 
   final _newPassCtrl = TextEditingController();
   final _rePassCtrl = TextEditingController();
@@ -47,12 +58,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   bool _ruleSymbol = false;
 
   String? _passError;
+  bool _updating = false; // sedang submit password baru ke backend
+
+  final _updatePasswordService = const UpdatePasswordService();
 
   @override
   void initState() {
     super.initState();
-    _startResendCountdown(0);
     _newPassCtrl.addListener(_evalPasswordRules);
+    // Kirim OTP otomatis begitu layar terbuka (setelah frame pertama,
+    // supaya context & provider sudah siap).
+    WidgetsBinding.instance.addPostFrameCallback((_) => _sendOtp());
   }
 
   @override
@@ -95,6 +111,60 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     _otpNodes.first.requestFocus();
   }
 
+  // ── Kirim / Resend OTP ─────────────────────────────────────────────────────
+  Future<void> _sendOtp({bool resend = false}) async {
+    if (_sending) return;
+    final t = AppLocalizations.of(context);
+
+    setState(() {
+      _sending = true;
+      _otpError = null;
+    });
+
+    try {
+      final email = await ref.read(userEmailProvider.future);
+      if (email.isEmpty) {
+        if (!mounted) return;
+        // TODO: ganti dengan key lokalisasi yang sesuai jika tersedia.
+        setState(() => _otpError = 'Email tidak ditemukan.');
+        return;
+      }
+
+      final result = await ref.read(otpApiProvider).sendOtp(email);
+      if (!mounted) return;
+
+      if (result.ok) {
+        _startResendCountdown(resendCooldown);
+        if (resend) {
+          _clearOtp();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(t.otpCodeResentDummy)));
+        }
+      } else if (result.cooldown) {
+        // Backend masih cooldown → mulai hitung mundur lokal.
+        _startResendCountdown(resendCooldown);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.reason ?? 'Tunggu sebelum minta OTP lagi.'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result.reason ?? 'Gagal mengirim OTP.')),
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      // Timeout / connection refused / dll.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mengirim OTP. Periksa koneksi.')),
+      );
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
   void _onOtpChanged(int index, String v) {
     setState(() => _otpError = null);
 
@@ -128,7 +198,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
   }
 
-  void _submitOtp() {
+  // ── Verifikasi OTP ke backend ──────────────────────────────────────────────
+  Future<void> _submitOtp() async {
     final t = AppLocalizations.of(context);
 
     final code = _otpValue();
@@ -137,16 +208,28 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       return;
     }
 
-    // dummy
-    if (code == "55555") {
-      setState(() {
-        _otpError = null;
-        _step = StepView.change;
-      });
-      return;
-    }
+    setState(() {
+      _verifying = true;
+      _otpError = null;
+    });
 
-    setState(() => _otpError = t.otpInvalidTryAgain);
+    try {
+      final email = await ref.read(userEmailProvider.future);
+      final result = await ref.read(otpApiProvider).verifyOtp(email, code);
+      if (!mounted) return;
+
+      if (result.ok) {
+        setState(() => _step = StepView.change);
+      } else {
+        setState(() => _otpError = result.reason ?? t.otpInvalidTryAgain);
+        _clearOtp();
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _otpError = t.otpInvalidTryAgain);
+    } finally {
+      if (mounted) setState(() => _verifying = false);
+    }
   }
 
   void _evalPasswordRules() {
@@ -166,7 +249,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     });
   }
 
-  void _submitNewPassword() {
+  Future<void> _submitNewPassword() async {
     final t = AppLocalizations.of(context);
 
     final newP = _newPassCtrl.text.trim();
@@ -187,10 +270,68 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(t.passwordUpdatedDummy)));
-    Navigator.pop(context);
+    const storage = FlutterSecureStorage();
+    final userId = await storage.read(key: 'user_id') ?? '';
+    if (userId.isEmpty) {
+      setState(() => _passError = t.passwordUpdateFailed);
+      return;
+    }
+
+    setState(() {
+      _updating = true;
+      _passError = null;
+    });
+
+    try {
+      final result = await _updatePasswordService.updatePassword(
+        id: userId,
+        password: newP,
+      );
+      if (!mounted) return;
+
+      if (!result.success) {
+        setState(() {
+          _updating = false;
+          _passError = result.errorMsg ?? t.passwordUpdateFailed;
+        });
+        return;
+      }
+
+      setState(() => _updating = false);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.passwordUpdatedDummy)));
+
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted) return;
+
+      // biometric_password lama sudah tidak valid begitu password berganti;
+      // hapus dulu sebelum logout supaya tidak ada percobaan biometric login
+      // yang diam-diam gagal pakai password basi.
+      await ref.read(authControllerProvider.notifier).clearBiometricCredential();
+
+      // Samakan dengan logout supaya tidak ada token/cache lama yang
+      // nyangkut. Pakai ApiClient.logout() (bukan deleteAll()) supaya kalau
+      // ada data lain yang sengaja dipertahankan di masa depan, ini tetap
+      // konsisten dengan jalur logout biasa.
+      await ApiClient.logout();
+    } on DioException catch (e) {
+      if (!mounted) return;
+      final data = e.response?.data;
+      final msg = data is Map
+          ? (data['message'] ?? data['error_msg'])?.toString()
+          : null;
+      setState(() {
+        _updating = false;
+        _passError = msg ?? t.passwordUpdateFailed;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _updating = false;
+        _passError = t.passwordUpdateFailed;
+      });
+    }
   }
 
   @override
@@ -308,22 +449,15 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                 style: AppStyles.textMd.copyWith(color: Colors.black54),
               ),
               GestureDetector(
-                onTap: _resendSeconds > 0
+                onTap: (_resendSeconds > 0 || _sending)
                     ? null
-                    : () {
-                        _clearOtp();
-                        setState(() => _otpError = null);
-                        _startResendCountdown(30);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(t.otpCodeResentDummy)),
-                        );
-                      },
+                    : () => _sendOtp(resend: true),
                 child: Text(
                   _resendSeconds > 0
                       ? t.otpTryAgainCountdown(_resendSeconds)
                       : t.otpTryAgain,
                   style: AppStyles.textMd.copyWith(
-                    color: _resendSeconds > 0
+                    color: (_resendSeconds > 0 || _sending)
                         ? Colors.black38
                         : AppStyles.primaryColor,
                     fontWeight: FontWeight.w700,
@@ -347,8 +481,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              onPressed: _submitOtp,
-              child: Text(t.otpVerifyCodeBtn),
+              onPressed: _verifying ? null : _submitOtp,
+              child: _verifying
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(t.otpVerifyCodeBtn),
             ),
           ),
         ],
@@ -430,8 +573,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
-            onPressed: _submitNewPassword,
-            child: Text(t.passwordChangeSaveBtn),
+            onPressed: _updating ? null : _submitNewPassword,
+            child: _updating
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : Text(t.passwordChangeSaveBtn),
           ),
         ),
       ),

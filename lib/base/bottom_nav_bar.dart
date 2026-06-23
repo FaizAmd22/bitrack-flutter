@@ -5,28 +5,65 @@ import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/home_screen.dart';
 import 'package:ams/screens/notification/notification_screen.dart';
+import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:ams/screens/profile/profile.dart';
 import 'package:ams/screens/vehicle/vehicle.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class BottomNavBar extends StatefulWidget {
+class BottomNavBar extends ConsumerStatefulWidget {
   const BottomNavBar({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  ConsumerState<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int _selectedIndex = 0;
 
   final GlobalKey<NotificationScreenState> _notifKey =
       GlobalKey<NotificationScreenState>();
 
+  String _badgeLabel(int count) => count > 99 ? '99+' : '$count';
+
+  Widget _notifBadge(int count, Widget child) {
+    return Badge(
+      backgroundColor: Colors.transparent, // matikan stadium bawaan
+      padding: EdgeInsets.zero,
+      isLabelVisible: count > 0,
+      label: Container(
+        width: 18,
+        height: 18, // width == height => lingkaran
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppStyles.primaryColor,
+          shape: BoxShape.circle,
+        ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown, // "99+" otomatis mengecil biar nggak overflow
+          child: Text(
+            _badgeLabel(count),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              height: 1.0,
+            ),
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context);
+    final notifCount = ref.watch(
+      notificationProvider.select((s) => s.list.total),
+    );
 
     final screens = [
       HomeScreen(isActive: _selectedIndex == 0),
@@ -83,8 +120,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
               label: translate.navTracker,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(FluentSystemIcons.ic_fluent_alert_regular),
-              activeIcon: const Icon(FluentSystemIcons.ic_fluent_alert_filled),
+              icon: _notifBadge(
+                notifCount,
+                const Icon(FluentSystemIcons.ic_fluent_alert_regular),
+              ),
+              activeIcon: _notifBadge(
+                notifCount,
+                const Icon(FluentSystemIcons.ic_fluent_alert_filled),
+              ),
               label: translate.navNotification,
             ),
             BottomNavigationBarItem(

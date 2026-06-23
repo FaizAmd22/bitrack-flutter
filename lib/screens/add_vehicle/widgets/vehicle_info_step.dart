@@ -44,12 +44,12 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
 
   String? _brandId;
   String? _modelId;
+  String? _typeId;
   String? _vehicleCategory;
   String? _fleetGroupId;
 
   List<Map<String, dynamic>> _fleetGroups = [];
   List<Map<String, dynamic>> _brands = [];
-  List<Map<String, dynamic>> _models = [];
 
   late CancelToken _cancelToken;
 
@@ -100,79 +100,75 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     setState(() => _loading = true);
 
     try {
-      final brandsRaw = await _api.fetchBrandsRaw(cancelToken: _cancelToken);
-      final modelsRaw = await _api.fetchModelsRaw(cancelToken: _cancelToken);
+      final brandHierarchy = await _api.fetchBrandHierarchy(
+        cancelToken: _cancelToken,
+      );
       final fleetRaw = await ref.read(fleetGroupProvider.future);
 
       if (!mounted) return;
 
-      final brandMap = <String, Map<String, dynamic>>{};
-      for (final b in brandsRaw) {
-        final id = (b['id'] ?? '').toString().trim();
-        final name = (b['brand_name'] ?? '').toString().trim();
-        if (id.isNotEmpty) {
-          brandMap[id] = b;
-        } else if (name.isNotEmpty) {
-          brandMap['name:$name'] = b;
-        }
-      }
-
-      final modelMap = <String, Map<String, dynamic>>{};
-      for (final m in modelsRaw) {
-        final id = (m['id'] ?? '').toString().trim();
-        final name = (m['model_name'] ?? '').toString().trim();
-        final brandId = (m['brand_id'] ?? '').toString().trim();
-        final key = id.isNotEmpty ? id : 'name:$brandId|$name';
-        if (name.isNotEmpty) modelMap[key] = m;
-      }
-
-      final brands = brandMap.values.toList()
+      final brands = List<Map<String, dynamic>>.from(brandHierarchy)
         ..sort(
           (a, b) => (a['brand_name'] ?? '').toString().compareTo(
             (b['brand_name'] ?? '').toString(),
           ),
         );
 
-      final models = modelMap.values.toList()
-        ..sort(
-          (a, b) => (a['model_name'] ?? '').toString().compareTo(
-            (b['model_name'] ?? '').toString(),
-          ),
-        );
-
       final brandExists =
           _brandId != null &&
           brands.any((b) => (b['id'] ?? '').toString() == _brandId);
+
+      final modelsOfSelectedBrand = brandExists
+          ? _modelsOf(
+              brands.firstWhere((b) => (b['id'] ?? '').toString() == _brandId),
+            )
+          : <Map<String, dynamic>>[];
+
       final modelExists =
           _modelId != null &&
-          models.any((m) => (m['id'] ?? '').toString() == _modelId);
+          modelsOfSelectedBrand.any(
+            (m) => (m['id'] ?? '').toString() == _modelId,
+          );
+
+      final typesOfSelectedModel = modelExists
+          ? _typesOf(
+              modelsOfSelectedBrand.firstWhere(
+                (m) => (m['id'] ?? '').toString() == _modelId,
+              ),
+            )
+          : <Map<String, dynamic>>[];
+
+      final typeExists =
+          _typeId != null &&
+          typesOfSelectedModel.any((ty) => (ty['id'] ?? '').toString() == _typeId);
 
       final fleetGroups = <Map<String, dynamic>>[];
       final seenFleet = <String>{};
       for (final f in fleetRaw) {
         final m = Map<String, dynamic>.from(f as Map);
-        final id = (m['id'] ?? '').toString().trim();
-        final name = (m['fleet_group_name'] ?? '').toString().trim();
+        final id = (m['value'] ?? '').toString().trim();
+        final name = (m['label'] ?? '').toString().trim();
         if (id.isEmpty || name.isEmpty) continue;
         if (seenFleet.add(id)) fleetGroups.add(m);
       }
       fleetGroups.sort(
-        (a, b) => (a['fleet_group_name'] ?? '').toString().compareTo(
-          (b['fleet_group_name'] ?? '').toString(),
-        ),
+        (a, b) =>
+            (a['label'] ?? '').toString().compareTo((b['label'] ?? '').toString()),
       );
 
       final fleetExists =
           _fleetGroupId != null &&
-          fleetGroups.any((f) => (f['id'] ?? '').toString() == _fleetGroupId);
+          fleetGroups.any(
+            (f) => (f['value'] ?? '').toString() == _fleetGroupId,
+          );
 
       if (!mounted) return;
       setState(() {
         _brands = brands;
-        _models = models;
         _fleetGroups = fleetGroups;
         if (!brandExists) _brandId = null;
         if (!modelExists) _modelId = null;
+        if (!typeExists) _typeId = null;
         if (!fleetExists) _fleetGroupId = null;
       });
     } on DioException catch (e) {
@@ -188,11 +184,48 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     }
   }
 
+  List<Map<String, dynamic>> _modelsOf(Map<String, dynamic> brand) {
+    final models = brand['models'];
+    if (models is! List) return [];
+    return models
+        .whereType<Map>()
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList()
+      ..sort(
+        (a, b) => (a['model_name'] ?? '').toString().compareTo(
+          (b['model_name'] ?? '').toString(),
+        ),
+      );
+  }
+
   List<Map<String, dynamic>> get _filteredModels {
     if (_brandId == null || _brandId!.isEmpty) return [];
-    return _models
-        .where((m) => (m['brand_id'] ?? '').toString() == _brandId)
-        .toList();
+    final brand = _brands.where((b) => (b['id'] ?? '').toString() == _brandId);
+    if (brand.isEmpty) return [];
+    return _modelsOf(brand.first);
+  }
+
+  List<Map<String, dynamic>> _typesOf(Map<String, dynamic> model) {
+    final types = model['types'];
+    if (types is! List) return [];
+    return types
+        .whereType<Map>()
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList()
+      ..sort(
+        (a, b) => (a['type_name'] ?? '').toString().compareTo(
+          (b['type_name'] ?? '').toString(),
+        ),
+      );
+  }
+
+  List<Map<String, dynamic>> get _filteredTypes {
+    if (_modelId == null || _modelId!.isEmpty) return [];
+    final model = _filteredModels.where(
+      (m) => (m['id'] ?? '').toString() == _modelId,
+    );
+    if (model.isEmpty) return [];
+    return _typesOf(model.first);
   }
 
   String? _findBrandIdByName(String? name) {
@@ -207,9 +240,19 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
 
   String? _findModelIdByName(String? name) {
     if (name == null) return null;
-    final m = _models.where(
+    final m = _filteredModels.where(
       (e) =>
           (e['model_name'] ?? '').toString().toLowerCase() ==
+          name.toLowerCase(),
+    );
+    return m.isEmpty ? null : (m.first['id'] ?? '').toString();
+  }
+
+  String? _findTypeIdByName(String? name) {
+    if (name == null) return null;
+    final m = _filteredTypes.where(
+      (e) =>
+          (e['type_name'] ?? '').toString().toLowerCase() ==
           name.toLowerCase(),
     );
     return m.isEmpty ? null : (m.first['id'] ?? '').toString();
@@ -221,6 +264,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
 
     _brandId ??= _findBrandIdByName(widget.data.brand);
     _modelId ??= _findModelIdByName(widget.data.model);
+    _typeId ??= _findTypeIdByName(widget.data.type);
 
     return Stack(
       children: [
@@ -294,9 +338,11 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                       setState(() {
                         _brandId = opt.value;
                         _modelId = null;
+                        _typeId = null;
                       });
                       widget.data.brand = opt.label;
                       widget.data.model = null;
+                      widget.data.type = null;
                     },
                   ),
                   PickerField(
@@ -317,8 +363,36 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                         .toList(),
                     validator: (v) => _requiredDropdown(context, v, t.model),
                     onSelected: (opt) {
-                      setState(() => _modelId = opt.value);
+                      setState(() {
+                        _modelId = opt.value;
+                        _typeId = null;
+                      });
                       widget.data.model = opt.label;
+                      widget.data.type = null;
+                    },
+                  ),
+                  PickerField(
+                    label: t.vehicleType,
+                    hintText: _modelId == null
+                        ? t.selectModelFirst
+                        : (_filteredTypes.isEmpty
+                              ? t.noTypeAvailable
+                              : t.selectTypeHint),
+                    value: _typeId,
+                    searchable: true,
+                    enabled:
+                        !_loading && _modelId != null && _filteredTypes.isNotEmpty,
+                    options: _filteredTypes
+                        .map(
+                          (ty) => PickerOption(
+                            value: ty['id'].toString(),
+                            label: ty['type_name'].toString(),
+                          ),
+                        )
+                        .toList(),
+                    onSelected: (opt) {
+                      setState(() => _typeId = opt.value);
+                      widget.data.type = opt.label;
                     },
                   ),
                   TxInputNumber(
@@ -371,8 +445,8 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                     options: _fleetGroups
                         .map(
                           (f) => PickerOption(
-                            value: f['id'].toString(),
-                            label: f['fleet_group_name'].toString(),
+                            value: f['value'].toString(),
+                            label: f['label'].toString(),
                           ),
                         )
                         .toList(),

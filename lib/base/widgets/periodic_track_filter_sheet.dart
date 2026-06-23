@@ -45,6 +45,17 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
   DateTime? _start;
   DateTime? _end;
 
+  static const _maxRange = Duration(days: 3);
+
+  // Maksimal End Date: 3 hari dari Start Date, tapi tidak boleh melebihi
+  // sekarang (tidak ada data masa depan).
+  DateTime get _maxEndDate {
+    final now = DateTime.now();
+    if (_start == null) return now;
+    final byRange = _start!.add(_maxRange);
+    return byRange.isBefore(now) ? byRange : now;
+  }
+
   void _submit() {
     final ok = _formKey.currentState?.validate() ?? false;
     if (!ok) return;
@@ -114,13 +125,14 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                   label: 'Start Date',
                   hintText: 'Choose Start Date',
                   value: _start,
+                  lastDate: DateTime.now(),
                   displayFormat: 'd MMMM y HH:mm',
                   onChanged: (v) {
                     setState(() {
                       _start = v;
                       if (_end != null &&
-                          _start != null &&
-                          _end!.isBefore(_start!)) {
+                          (_end!.isBefore(_start!) ||
+                              _end!.isAfter(_maxEndDate))) {
                         _end = null;
                       }
                     });
@@ -136,12 +148,16 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                   hintText: 'Choose End Date',
                   value: _end,
                   firstDate: _start,
+                  lastDate: _maxEndDate,
                   displayFormat: 'd MMMM y HH:mm',
                   onChanged: (v) => setState(() => _end = v),
                   validator: (v) {
                     if (v == null) return 'End Date wajib diisi';
                     if (_start != null && v.isBefore(_start!)) {
                       return 'End Date tidak boleh lebih kecil dari Start Date';
+                    }
+                    if (v.isAfter(_maxEndDate)) {
+                      return 'Rentang maksimal 3 hari dari Start Date';
                     }
                     return null;
                   },

@@ -1,5 +1,6 @@
 class Vehicle {
   final String id;
+  final String vehicleId;
   final double latitude;
   final double longitude;
   final double bearing;
@@ -11,6 +12,7 @@ class Vehicle {
 
   const Vehicle({
     required this.id,
+    required this.vehicleId,
     required this.latitude,
     required this.longitude,
     required this.bearing,
@@ -51,6 +53,7 @@ class Vehicle {
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
       id: (json['_id'] ?? json['id'] ?? '').toString(),
+      vehicleId: (json['vehicle_id'] ?? '').toString(),
       latitude: _toDouble(json['latitude']),
       longitude: _toDouble(json['longitude']),
       bearing: _toDouble(json['direction'] ?? json['bearing']),

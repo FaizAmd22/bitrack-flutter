@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/utils/string_utils.dart';
 import 'package:ams/base/widgets/search_bar_base.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:ams/screens/notification/widgets/card_notif.dart';
 import 'package:ams/screens/notification/widgets/filter_notif_bottom_sheet.dart';
+import 'package:ams/screens/vehicle/providers/fleet_group_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,11 +20,8 @@ class NotificationScreen extends ConsumerStatefulWidget {
 }
 
 // State class public agar bisa dipanggil lewat GlobalKey dari BottomNavBar.
-class NotificationScreenState extends ConsumerState<NotificationScreen>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
-  late final ScrollController _urgentScroll;
-  late final ScrollController _summaryScroll;
+class NotificationScreenState extends ConsumerState<NotificationScreen> {
+  late final ScrollController _scroll;
 
   final _searchController = TextEditingController();
   Timer? _debounce;
@@ -32,9 +31,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _urgentScroll = ScrollController()..addListener(_onUrgentScroll);
-    _summaryScroll = ScrollController()..addListener(_onSummaryScroll);
+    _scroll = ScrollController()..addListener(_onScroll);
 
     // Fetch awal — sekali saja saat halaman pertama dibuat.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,11 +42,8 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
   @override
   void dispose() {
     _debounce?.cancel();
-    _tabController.dispose();
-    _urgentScroll.removeListener(_onUrgentScroll);
-    _summaryScroll.removeListener(_onSummaryScroll);
-    _urgentScroll.dispose();
-    _summaryScroll.dispose();
+    _scroll.removeListener(_onScroll);
+    _scroll.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -78,19 +72,11 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
     });
   }
 
-  void _onUrgentScroll() {
-    if (!_urgentScroll.hasClients) return;
-    final pos = _urgentScroll.position;
+  void _onScroll() {
+    if (!_scroll.hasClients) return;
+    final pos = _scroll.position;
     if (pos.pixels >= pos.maxScrollExtent - 250) {
-      ref.read(notificationProvider.notifier).loadMoreUrgent();
-    }
-  }
-
-  void _onSummaryScroll() {
-    if (!_summaryScroll.hasClients) return;
-    final pos = _summaryScroll.position;
-    if (pos.pixels >= pos.maxScrollExtent - 250) {
-      ref.read(notificationProvider.notifier).loadMoreSummary();
+      ref.read(notificationProvider.notifier).loadMore();
     }
   }
 
@@ -102,27 +88,35 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
 
   Future<void> _openFilter() async {
     final state = ref.read(notificationProvider);
-    final allItems = [...state.urgent.items, ...state.summary.items];
 
-    final seenFleet = <String>{};
-    final fleetGroups = <FilterOption>[];
+    List<Map<String, dynamic>> fleetGroupRaw = const [];
+    try {
+      fleetGroupRaw = await ref.read(fleetGroupProvider.future);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+      );
+    }
+
+    final fleetGroups = fleetGroupRaw
+        .map((fg) {
+          final id = (fg['value'] ?? '').toString().trim();
+          if (id.isEmpty) return null;
+          final name = (fg['label'] ?? '').toString().trim();
+          return FilterOption(value: id, label: name.isNotEmpty ? name : id);
+        })
+        .whereType<FilterOption>()
+        .toList();
+
     final seenAlert = <String>{};
     final alertTypes = <FilterOption>[];
-
-    for (final item in allItems) {
-      if (item.fleetGroupId != null && seenFleet.add(item.fleetGroupId!)) {
-        fleetGroups.add(
-          FilterOption(
-            value: item.fleetGroupId,
-            label: item.fleetGroupName ?? item.fleetGroupId!,
-          ),
-        );
-      }
+    for (final item in state.list.items) {
       if (item.eventType != null && seenAlert.add(item.eventType!)) {
         alertTypes.add(
           FilterOption(
             value: item.eventType,
-            label: item.eventName ?? item.eventType!,
+            label: titleCase(item.eventName ?? item.eventType!),
           ),
         );
       }
@@ -160,7 +154,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
               hintText: t.searchLicensePlate,
               onOpenFilter: (_) => _openFilter(),
             ),
-            _buildTabBar(t),
+            const SizedBox(height: 10),
             Expanded(
               child: state.isLoading
                   ? const Center(
@@ -168,24 +162,10 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
                         color: AppStyles.primaryColor,
                       ),
                     )
-                  : TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildList(
-                          items: state.urgent.items,
-                          hasMore: state.urgent.hasMore,
-                          isLoadingMore: state.urgent.isLoadingMore,
-                          scroll: _urgentScroll,
-                          emptyLabel: t.notifNoData,
-                        ),
-                        _buildList(
-                          items: state.summary.items,
-                          hasMore: state.summary.hasMore,
-                          isLoadingMore: state.summary.isLoadingMore,
-                          scroll: _summaryScroll,
-                          emptyLabel: t.notifNoData,
-                        ),
-                      ],
+                  : _buildList(
+                      items: state.list.items,
+                      isLoadingMore: state.list.isLoadingMore,
+                      emptyLabel: t.notifNoData,
                     ),
             ),
           ],
@@ -194,53 +174,9 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
     );
   }
 
-  Widget _buildTabBar(AppLocalizations t) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppStyles.inputDisableBg,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(4),
-        child: TabBar(
-          controller: _tabController,
-          indicator: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                // ignore: deprecated_member_use
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          dividerColor: Colors.transparent,
-          labelColor: AppStyles.primaryColor,
-          unselectedLabelColor: AppStyles.textDarkGrayColor,
-          labelStyle: AppStyles.textSmBold.copyWith(
-            color: AppStyles.primaryColor,
-          ),
-          unselectedLabelStyle: AppStyles.textSm.copyWith(
-            color: AppStyles.textDarkGrayColor,
-          ),
-          tabs: [
-            Tab(text: t.notifUrgent),
-            Tab(text: t.notifSummary),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildList({
     required List items,
-    required bool hasMore,
     required bool isLoadingMore,
-    required ScrollController scroll,
     required String emptyLabel,
   }) {
     return RefreshIndicator(
@@ -264,7 +200,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen>
               ],
             )
           : ListView.builder(
-              controller: scroll,
+              controller: _scroll,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.only(top: 12, bottom: 90),
               itemCount: items.length + (isLoadingMore ? 1 : 0),

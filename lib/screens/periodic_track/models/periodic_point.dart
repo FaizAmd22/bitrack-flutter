@@ -45,7 +45,7 @@ class PeriodicPoint {
       dallasTemp1: toD(json['dallas_temperature_1']),
       dallasTemp2: toD(json['dallas_temperature_2']),
       eventType: (json['event_type'] ?? 'SAMPLING').toString(),
-      eventName: (json['event_name'] ?? '').toString(),
+      eventName: (json['event'] ?? json['event_name'] ?? '').toString(),
     );
   }
 }
