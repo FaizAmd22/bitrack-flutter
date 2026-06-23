@@ -67,7 +67,7 @@ class _PeriodicChartState extends State<PeriodicChart> {
     final DateTime? activeTime = widget.activeTime;
     final _ChartPoint? activePoint = (activeTime == null)
         ? null
-        : _nearestPointByTime(data, activeTime);
+        : _nearestPointByTime(normalized, activeTime);
 
     return SizedBox(
       height: 260,
