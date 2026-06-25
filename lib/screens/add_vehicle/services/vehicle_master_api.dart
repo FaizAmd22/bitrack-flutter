@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 class VehicleMasterApi {
   const VehicleMasterApi();
 
-  // Tiap brand sudah membawa models (dan tiap model membawa types) langsung,
-  // jadi tidak perlu lagi fetch brand & model terpisah lalu join brand_id.
   Future<List<Map<String, dynamic>>> fetchBrandHierarchy({
     CancelToken? cancelToken,
   }) async {

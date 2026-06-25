@@ -528,6 +528,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterUnverified => 'Not Verified';
 
   @override
+  String get filterNeedVerifications => 'Need Verifications';
+
+  @override
+  String get filterNeedValidations => 'Need Validations';
+
+  @override
+  String get filterValidated => 'Validated';
+
+  @override
   String get filterSearch => 'Search';
 
   @override

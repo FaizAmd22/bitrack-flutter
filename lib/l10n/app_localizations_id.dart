@@ -526,6 +526,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get filterUnverified => 'Tidak Terverifikasi';
 
   @override
+  String get filterNeedVerifications => 'Perlu Verifikasi';
+
+  @override
+  String get filterNeedValidations => 'Perlu Validasi';
+
+  @override
+  String get filterValidated => 'Tervalidasi';
+
+  @override
   String get filterSearch => 'Cari';
 
   @override

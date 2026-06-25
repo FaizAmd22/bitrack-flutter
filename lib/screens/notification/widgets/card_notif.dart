@@ -7,18 +7,20 @@ import 'package:ams/screens/notification/widgets/card_notif_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-enum _CardStatus { verified, needVerify }
+enum _CardStatus { needVerify, needValidate, validated }
 
 _CardStatus _getStatus(AlertModel item) {
+  // Verifikasi diprioritaskan: selama belum diverifikasi, status validasi diabaikan.
   final status = item.status?.trim().toUpperCase();
-  if (status != null && status.isNotEmpty) {
-    return status == 'NEED_VERIFIED'
-        ? _CardStatus.needVerify
-        : _CardStatus.verified;
-  }
+  final needVerify = status != null && status.isNotEmpty
+      ? status == 'NEED_VERIFIED'
+      : (item.verifiedBy?.trim().isEmpty ?? true);
+  if (needVerify) return _CardStatus.needVerify;
 
-  final v = item.verifiedBy?.trim() ?? '';
-  return v.isNotEmpty ? _CardStatus.verified : _CardStatus.needVerify;
+  final validation = item.statusValidation?.trim().toUpperCase();
+  return validation == 'VALIDATED'
+      ? _CardStatus.validated
+      : _CardStatus.needValidate;
 }
 
 class _StatusStyle {
@@ -30,21 +32,23 @@ class _StatusStyle {
 
 _StatusStyle _styleFor(_CardStatus status, AlertModel item) {
   switch (status) {
-    case _CardStatus.verified:
-      return _StatusStyle(
-        bg: const Color(0xFFE3F2FD),
-        fg: const Color(0xFF2196F3),
-        label:
-            item.statusText ??
-            (item.verifiedBy != null
-                ? 'Verified by ${item.verifiedBy}'
-                : 'Verified'),
-      );
     case _CardStatus.needVerify:
       return _StatusStyle(
         bg: AppStyles.bgYellowColor,
         fg: AppStyles.yellowColor,
         label: item.statusText ?? 'Not yet verified',
+      );
+    case _CardStatus.needValidate:
+      return _StatusStyle(
+        bg: const Color(0xFFE3F2FD),
+        fg: const Color(0xFF2196F3),
+        label: item.statusValidationText ?? 'Not yet validated',
+      );
+    case _CardStatus.validated:
+      return _StatusStyle(
+        bg: AppStyles.bgGreenColor,
+        fg: AppStyles.greenColor,
+        label: item.statusValidationText ?? 'Validated',
       );
   }
 }

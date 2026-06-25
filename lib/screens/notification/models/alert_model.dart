@@ -18,6 +18,8 @@ class AlertModel {
   final List<String>? attachmentValidation;
   final String? status;
   final String? statusText;
+  final String? statusValidation;
+  final String? statusValidationText;
 
   const AlertModel({
     this.id,
@@ -39,6 +41,8 @@ class AlertModel {
     this.attachmentValidation,
     this.status,
     this.statusText,
+    this.statusValidation,
+    this.statusValidationText,
   });
 
   factory AlertModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +66,8 @@ class AlertModel {
       attachmentValidation: _toStringList(json['attachment_validation']),
       status: json['status']?.toString(),
       statusText: json['status_text']?.toString(),
+      statusValidation: json['status_validation']?.toString(),
+      statusValidationText: json['status_validation_text']?.toString(),
     );
   }
 
@@ -112,6 +118,8 @@ class AlertModel {
       attachmentValidation: attachmentValidation,
       status: status,
       statusText: statusText,
+      statusValidation: statusValidation,
+      statusValidationText: statusValidationText,
     );
   }
 }

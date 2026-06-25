@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:ams/base/res/styles/app_styles.dart';
-import 'package:ams/base/utils/string_utils.dart';
 import 'package:ams/base/widgets/search_bar_base.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
+import 'package:ams/screens/notification/providers/alert_type_provider.dart';
 import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:ams/screens/notification/widgets/card_notif.dart';
 import 'package:ams/screens/notification/widgets/filter_notif_bottom_sheet.dart';
@@ -19,7 +19,6 @@ class NotificationScreen extends ConsumerStatefulWidget {
   ConsumerState<NotificationScreen> createState() => NotificationScreenState();
 }
 
-// State class public agar bisa dipanggil lewat GlobalKey dari BottomNavBar.
 class NotificationScreenState extends ConsumerState<NotificationScreen> {
   late final ScrollController _scroll;
 
@@ -33,7 +32,6 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
     super.initState();
     _scroll = ScrollController()..addListener(_onScroll);
 
-    // Fetch awal — sekali saja saat halaman pertama dibuat.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _load();
     });
@@ -54,7 +52,6 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
         .refresh(search: _search, filter: _filter);
   }
 
-  /// Dipanggil oleh BottomNavBar HANYA saat user pindah ke tab notifikasi.
   void refreshFromOutside() {
     ref
         .read(notificationProvider.notifier)
@@ -87,8 +84,6 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
   }
 
   Future<void> _openFilter() async {
-    final state = ref.read(notificationProvider);
-
     List<Map<String, dynamic>> fleetGroupRaw = const [];
     try {
       fleetGroupRaw = await ref.read(fleetGroupProvider.future);
@@ -109,18 +104,28 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
         .whereType<FilterOption>()
         .toList();
 
-    final seenAlert = <String>{};
-    final alertTypes = <FilterOption>[];
-    for (final item in state.list.items) {
-      if (item.eventType != null && seenAlert.add(item.eventType!)) {
-        alertTypes.add(
-          FilterOption(
-            value: item.eventType,
-            label: titleCase(item.eventName ?? item.eventType!),
-          ),
-        );
-      }
+    List<Map<String, dynamic>> alertTypeRaw = const [];
+    try {
+      alertTypeRaw = await ref.read(alertTypeProvider.future);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+      );
     }
+
+    final alertTypes = alertTypeRaw
+        .map((a) {
+          final value = (a['value'] ?? '').toString().trim();
+          if (value.isEmpty) return null;
+          final label = (a['label'] ?? '').toString().trim();
+          return FilterOption(
+            value: value,
+            label: label.isNotEmpty ? label : value,
+          );
+        })
+        .whereType<FilterOption>()
+        .toList();
 
     if (!mounted) return;
     final result = await FilterNotifBottomSheet.open(

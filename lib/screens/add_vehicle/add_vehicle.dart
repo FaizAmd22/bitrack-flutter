@@ -15,7 +15,6 @@ import 'package:ams/screens/add_vehicle/widgets/device_info_step.dart';
 import 'package:ams/screens/add_vehicle/widgets/review_step.dart';
 import 'package:ams/screens/add_vehicle/widgets/vehicle_info_step.dart';
 import 'package:ams/l10n/app_localizations.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -84,8 +83,6 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       return;
     }
 
-    // Id sudah pasti benar (datang dari list), pakai langsung untuk submit
-    // update walau fetch detail di bawah gagal/tidak ketemu.
     if (id.isNotEmpty) _vehicleId = id;
 
     setState(() => _loadingVehicle = true);
@@ -144,31 +141,22 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
 
     setState(() => _submitting = true);
 
-    const storage = FlutterSecureStorage();
-    final createdBy = await storage.read(key: 'user_name') ?? '';
-
     try {
       final result = isUpdate
-          ? await _submitService.update(
-              data,
-              id: _vehicleId ?? '',
-              createdBy: createdBy,
-            )
-          : await _submitService.create(data, createdBy: createdBy);
+          ? await _submitService.update(data, id: _vehicleId ?? '')
+          : await _submitService.create(data);
 
       if (!mounted) return;
 
-      // Jalur 1: HTTP 200 + status:"false" (mis. SIM card)
       if (!result.success) {
         setState(() => _submitting = false);
         AppToast.showFailed(
           context,
           result.errorMsg ?? (isUpdate ? t.errFailedUpdate : t.errFailedAdd),
         );
-        return; // jangan navigate
+        return;
       }
 
-      // SUKSES
       setState(() => _submitting = false);
       AppToast.show(
         context,
@@ -176,9 +164,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       );
       await Future.delayed(const Duration(milliseconds: 600));
       if (!mounted) return;
-      Navigator.pop(context, true); // ← kirim sinyal sukses (create & update)
+      Navigator.pop(context, true);
     } on DioException catch (e) {
-      // Jalur 2: HTTP 422 (mis. VIN validation.unique)
       if (!mounted) return;
       setState(() => _submitting = false);
 
@@ -189,9 +176,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
         context,
         uniqueMsg ?? (isUpdate ? t.errFailedUpdate : t.errFailedAdd),
       );
-      return; // jangan navigate
+      return;
     } catch (e) {
-      // Error lain (jaringan, timeout)
       if (!mounted) return;
       setState(() => _submitting = false);
       AppToast.showFailed(

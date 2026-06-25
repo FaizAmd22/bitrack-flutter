@@ -181,8 +181,13 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
       case _View.status:
         return [
           FilterOption(value: null, label: t.filterAllStatus),
+          FilterOption(
+            value: 'need_verified',
+            label: t.filterNeedVerifications,
+          ),
           FilterOption(value: 'verified', label: t.filterVerified),
-          FilterOption(value: 'not_verify', label: t.filterUnverified),
+          FilterOption(value: 'need_validated', label: t.filterNeedValidations),
+          FilterOption(value: 'validated', label: t.filterValidated),
         ];
       case _View.alertType:
         return [
@@ -228,78 +233,76 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Container(
-                width: 48,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(999),
-                ),
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              width: 48,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(999),
               ),
-              const SizedBox(height: 8),
-              _Header(title: _titleForView(t), onBack: _back),
-              const Divider(height: 1),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-                  child: _view == _View.main ? _buildMain(t) : _buildSubView(t),
-                ),
+            ),
+            const SizedBox(height: 8),
+            _Header(title: _titleForView(t), onBack: _back),
+            const Divider(height: 1),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                child: _view == _View.main ? _buildMain(t) : _buildSubView(t),
               ),
-              if (_view == _View.main)
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    8,
-                    16,
-                    16 + mq.viewInsets.bottom,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: _clear,
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                              color: AppStyles.primaryColor,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            if (_view == _View.main)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  8,
+                  16,
+                  16 + mq.viewInsets.bottom,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _clear,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppStyles.primaryColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(
-                            t.filterClear,
-                            style: AppStyles.textMd.copyWith(
-                              color: AppStyles.primaryColor,
-                            ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Text(
+                          t.filterClear,
+                          style: AppStyles.textMd.copyWith(
+                            color: AppStyles.primaryColor,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: _apply,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppStyles.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _apply,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppStyles.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(
-                            t.filterApply,
-                            style: AppStyles.textMd.copyWith(
-                              color: AppStyles.whiteColor,
-                            ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Text(
+                          t.filterApply,
+                          style: AppStyles.textMd.copyWith(
+                            color: AppStyles.whiteColor,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-            ],
+              ),
+          ],
         ),
       ),
     );

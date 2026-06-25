@@ -1100,6 +1100,24 @@ abstract class AppLocalizations {
   /// **'Not Verified'**
   String get filterUnverified;
 
+  /// No description provided for @filterNeedVerifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Need Verifications'**
+  String get filterNeedVerifications;
+
+  /// No description provided for @filterNeedValidations.
+  ///
+  /// In en, this message translates to:
+  /// **'Need Validations'**
+  String get filterNeedValidations;
+
+  /// No description provided for @filterValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get filterValidated;
+
   /// No description provided for @filterSearch.
   ///
   /// In en, this message translates to:
