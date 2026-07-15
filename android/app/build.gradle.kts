@@ -24,7 +24,7 @@ val googleMapsApiKey: String =
     (localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: "").trim()
 
 android {
-    namespace = "com.treffix.fixtrack"
+    namespace = "fixtrack.treffix.id"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
@@ -34,7 +34,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.treffix.fixtrack"
+        applicationId = "fixtrack.treffix.id"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

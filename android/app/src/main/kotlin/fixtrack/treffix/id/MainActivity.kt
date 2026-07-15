@@ -1,4 +1,4 @@
-package com.treffix.fixtrack
+package fixtrack.treffix.id
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

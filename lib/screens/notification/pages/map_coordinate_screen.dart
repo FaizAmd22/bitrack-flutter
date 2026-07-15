@@ -62,7 +62,7 @@ class _MapCoordinateScreenState extends State<MapCoordinateScreen> {
                 TileLayer(
                   urlTemplate:
                       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.treffix.fixtrack',
+                  userAgentPackageName: 'fixtrack.treffix.id',
                 ),
                 MarkerLayer(
                   markers: [

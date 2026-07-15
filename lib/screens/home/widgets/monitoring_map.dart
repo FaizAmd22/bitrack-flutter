@@ -207,7 +207,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.treffix.fixtrack',
+          userAgentPackageName: 'fixtrack.treffix.id',
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
