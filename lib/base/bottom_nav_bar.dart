@@ -62,7 +62,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context);
     final notifCount = ref.watch(
-      notificationProvider.select((s) => s.list.total),
+      notificationProvider.select((s) => s.badgeTotal),
     );
 
     final screens = [
@@ -91,7 +91,6 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
             if (i == _selectedIndex) return;
             setState(() => _selectedIndex = i);
 
-            // Saat user pindah KE tab notifikasi (index 1), refresh datanya.
             if (i == 1) {
               _notifKey.currentState?.refreshFromOutside();
             }

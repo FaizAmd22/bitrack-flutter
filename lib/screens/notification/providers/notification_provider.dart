@@ -92,12 +92,16 @@ class NotificationState {
   final NotificationListState list;
   final NotificationFilter filter;
   final String search;
+  // Total notif keseluruhan (tanpa filter apapun), dipakai khusus untuk badge
+  // di bottom nav supaya tidak ikut berubah saat user memfilter di halaman ini.
+  final int badgeTotal;
 
   const NotificationState({
     required this.isLoading,
     required this.list,
     required this.filter,
     required this.search,
+    required this.badgeTotal,
   });
 
   factory NotificationState.initial() => NotificationState(
@@ -105,6 +109,7 @@ class NotificationState {
     list: NotificationListState.initial(),
     filter: const NotificationFilter(),
     search: '',
+    badgeTotal: 0,
   );
 
   NotificationState copyWith({
@@ -112,12 +117,14 @@ class NotificationState {
     NotificationListState? list,
     NotificationFilter? filter,
     String? search,
+    int? badgeTotal,
   }) {
     return NotificationState(
       isLoading: isLoading ?? this.isLoading,
       list: list ?? this.list,
       filter: filter ?? this.filter,
       search: search ?? this.search,
+      badgeTotal: badgeTotal ?? this.badgeTotal,
     );
   }
 }
@@ -173,6 +180,19 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     }
 
     if (mounted) _service.markAllAsRead().ignore();
+    unawaited(refreshBadgeTotal());
+  }
+
+  // Selalu fetch tanpa filter/search supaya badge di bottom nav menampilkan
+  // jumlah notif keseluruhan, terlepas dari filter yang aktif di halaman ini.
+  Future<void> refreshBadgeTotal() async {
+    try {
+      final result = await _service.fetchAlerts(page: 1);
+      if (!mounted) return;
+      state = state.copyWith(badgeTotal: result.total);
+    } catch (e) {
+      debugPrint('refreshBadgeTotal error: $e');
+    }
   }
 
   Future<void> loadMore() async {
