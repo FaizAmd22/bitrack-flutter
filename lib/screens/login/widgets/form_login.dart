@@ -8,6 +8,7 @@ import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
 
 class FormLogin extends ConsumerStatefulWidget {
   const FormLogin({super.key});
@@ -88,6 +89,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
 
     ref.invalidate(notificationProvider);
     ref.invalidate(notificationServiceProvider);
+    ref.invalidate(monitoringProvider);
 
     await showDialog(
       context: context,

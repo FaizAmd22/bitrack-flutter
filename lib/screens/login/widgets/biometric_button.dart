@@ -3,6 +3,7 @@
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
@@ -140,6 +141,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
 
       ref.invalidate(notificationProvider);
       ref.invalidate(notificationServiceProvider);
+      ref.invalidate(monitoringProvider);
 
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
     } catch (e) {

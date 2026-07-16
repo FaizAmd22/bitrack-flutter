@@ -1,4 +1,5 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:flutter/foundation.dart';
 
 class MonitoringApi {
   static String _activityParam(String status) {
@@ -65,7 +66,11 @@ class MonitoringApi {
             'fleet_group_id': fleetGroupId,
         },
       );
-      return response.data as Map<String, dynamic>;
+      final data = response.data as Map<String, dynamic>;
+      final list = data['data'] as List?;
+      debugPrint('[MonitoringApi/position] total data: ${list?.length ?? 0}');
+      debugPrint('[MonitoringApi/position] raw data: ${data['data']}');
+      return data;
     } catch (_) {
       throw Exception('Terjadi kesalahan saat memuat posisi kendaraan');
     }
