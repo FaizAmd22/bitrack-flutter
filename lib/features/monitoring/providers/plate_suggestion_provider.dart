@@ -6,7 +6,9 @@ final plateSuggestionProvider = Provider.family<List<String>, String>((
   ref,
   activity,
 ) {
-  final asyncVehicles = ref.watch(monitoringProvider(activity));
+  final asyncVehicles = ref.watch(
+    monitoringProvider(MonitoringQuery(activity: activity)),
+  );
   final vehicles = asyncVehicles.asData?.value ?? const <Vehicle>[];
 
   final seen = <String>{};

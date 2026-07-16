@@ -6,12 +6,35 @@ import 'package:ams/screens/home/models/vehicle.dart';
 // tetap tercakup tanpa harus mengimplementasikan cursor pagination di map.
 const _monitoringFetchLimit = 1000;
 
-final monitoringProvider = FutureProvider.family<List<Vehicle>, String>((
+class MonitoringQuery {
+  final String activity;
+  final String? licensePlate;
+  final String? fleetGroupId;
+
+  const MonitoringQuery({
+    required this.activity,
+    this.licensePlate,
+    this.fleetGroupId,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MonitoringQuery &&
+          other.activity == activity &&
+          other.licensePlate == licensePlate &&
+          other.fleetGroupId == fleetGroupId);
+
+  @override
+  int get hashCode => Object.hash(activity, licensePlate, fleetGroupId);
+}
+
+final monitoringProvider = FutureProvider.family<List<Vehicle>, MonitoringQuery>((
   ref,
-  activity,
+  query,
 ) async {
   final statusResult = await MonitoringApi.fetchMonitoring(
-    status: activity,
+    status: query.activity,
     limit: _monitoringFetchLimit,
   );
 
@@ -22,7 +45,12 @@ final monitoringProvider = FutureProvider.family<List<Vehicle>, String>((
     throw Exception(msg);
   }
 
-  final positionResult = await MonitoringApi.fetchPosition();
+  // /monitoring/position mendukung filter server-side by license_plate
+  // (search plat) dan fleet_group_id (filter fleet group).
+  final positionResult = await MonitoringApi.fetchPosition(
+    licensePlate: query.licensePlate,
+    fleetGroupId: query.fleetGroupId,
+  );
 
   if (positionResult['status']?.toString() != 'true') {
     final msg = (positionResult['message'] ?? positionResult['error_msg'])
@@ -36,8 +64,8 @@ final monitoringProvider = FutureProvider.family<List<Vehicle>, String>((
 
   final positionById = <String, Map<String, dynamic>>{
     for (final p in positionList)
-      if (p is Map && p['_id'] != null)
-        p['_id'].toString(): Map<String, dynamic>.from(p),
+      if (p is Map && (p['id'] ?? p['_id']) != null)
+        (p['id'] ?? p['_id']).toString(): Map<String, dynamic>.from(p),
   };
 
   final vehicles = <Vehicle>[];

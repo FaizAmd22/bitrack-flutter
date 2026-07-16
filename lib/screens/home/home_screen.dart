@@ -12,6 +12,7 @@ import 'package:ams/screens/home/models/vehicle.dart';
 import 'package:ams/screens/home/widgets/activity_chips.dart';
 import 'package:ams/screens/home/widgets/filter_tracker_bottom_sheet.dart';
 import 'package:ams/screens/home/widgets/monitoring_map.dart';
+import 'package:ams/screens/vehicle/providers/fleet_group_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,8 +38,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<String> _cachedSuggestionPlates = const [];
   int _lastVehiclesHash = 0;
-
-  List<Vehicle> _filteredVehiclesCache = const [];
 
   FilterOption _selectedFilterType = const FilterOption(
     value: null,
@@ -77,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
           setState(() => _showLoading = true);
-          ref.invalidate(monitoringProvider(_selectedActivity));
+          ref.invalidate(monitoringProvider);
         });
       } else {
         _stopPolling();
@@ -89,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _polling?.cancel();
     _polling = Timer.periodic(const Duration(seconds: 20), (_) {
       if (!mounted) return;
-      ref.invalidate(monitoringProvider(_selectedActivity));
+      ref.invalidate(monitoringProvider);
     });
   }
 
@@ -105,6 +104,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
+  // Query yang dipakai untuk menampilkan posisi kendaraan di peta:
+  // search (license_plate) dan fleet group difilter langsung oleh server
+  // lewat /monitoring/position, bukan lagi difilter lokal.
+  MonitoringQuery _currentMapQuery() {
+    final term = (_debouncedQuery ?? '').trim();
+    return MonitoringQuery(
+      activity: _selectedActivity,
+      licensePlate: term.isEmpty ? null : term,
+      fleetGroupId: selectedFleetgroupId,
+    );
+  }
+
+  Future<void> _fitToQuery(MonitoringQuery query) async {
+    try {
+      final vehicles = await ref.read(monitoringProvider(query).future);
+      if (!mounted) return;
+      _mapController.fitToVehicles(_sanitizeVehicles(vehicles));
+    } catch (_) {
+      // Biarkan error ditampilkan lewat monitoringAsync.hasError di build().
+    }
+  }
+
   void _onSearchChanged(String val) {
     setState(() => _searchQuery = val);
 
@@ -112,38 +133,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _debounce = Timer(const Duration(milliseconds: 200), () {
       if (!mounted) return;
       setState(() => _debouncedQuery = val);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        _mapController.fitToVehicles(_filteredVehiclesCache);
-      });
+      _fitToQuery(_currentMapQuery());
     });
   }
 
-  List<FilterOption> _buildFleetGroupOptionsFromMonitoring(
-    List<Vehicle> vehicles,
+  List<FilterOption> _buildFleetGroupOptions(
+    List<Map<String, dynamic>> fleetGroups,
   ) {
-    final seen = <String>{};
-    final out = <FilterOption>[];
+    final out = <FilterOption>[
+      const FilterOption(value: null, label: 'Semua Fleet Group'),
+    ];
 
-    for (final v in vehicles) {
-      final name = v.fleetGroupName.trim();
-      if (name.isEmpty) continue;
-
-      if (seen.add(name)) {
-        out.add(FilterOption(value: name, label: name));
-      }
+    for (final fg in fleetGroups) {
+      final id = (fg['value'] ?? '').toString().trim();
+      if (id.isEmpty) continue;
+      final name = (fg['label'] ?? '').toString().trim();
+      out.add(FilterOption(value: id, label: name.isNotEmpty ? name : id));
     }
 
-    return [
-      const FilterOption(value: null, label: 'Semua Fleet Group'),
-      ...out,
-    ];
+    return out;
   }
 
-  Future<void> _openFilterSheet(List<Vehicle> currentVehicles) async {
-    final fleetGroups = _buildFleetGroupOptionsFromMonitoring(currentVehicles);
-
+  Future<void> _openFilterSheet(List<FilterOption> fleetGroups) async {
     // Geofence belum bisa dipilih sebagai jenis filter (lihat _kTypeOptions
     // di filter_tracker_bottom_sheet.dart), jadi tidak perlu data geofence.
     const geofences = <FilterOption>[
@@ -171,21 +182,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       selectedGeofenceId = _selectedGeofence.value;
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _mapController.fitToVehicles(_filteredVehiclesCache);
-    });
+    await _fitToQuery(_currentMapQuery());
   }
 
-  List<Vehicle> _filterVehicles(
-    List<Vehicle> source, {
-    String? search,
-    String? fleetGroupName,
-    String? geofenceId,
-  }) {
-    final q = (search ?? '').trim().toLowerCase();
-    final fg = fleetGroupName?.trim();
-
+  // Hygiene data saja (dedup, koordinat invalid, plat kosong). Search
+  // (license_plate) dan fleet group sudah difilter server-side.
+  List<Vehicle> _sanitizeVehicles(List<Vehicle> source) {
     final seen = <String>{};
     final out = <Vehicle>[];
 
@@ -200,14 +202,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // skip plat kosong
       if (v.licensePlate.trim().isEmpty) continue;
 
-      // search startsWith
-      if (q.isNotEmpty && !v.licensePlate.toLowerCase().startsWith(q)) continue;
-
-      // fleet group
-      if (fg != null && fg.isNotEmpty && v.fleetGroupName.trim() != fg) {
-        continue;
-      }
-
       out.add(v);
     }
 
@@ -215,15 +209,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   List<Vehicle> _lastVehicles = const [];
+  List<Vehicle> _lastMapVehicles = const [];
 
   @override
   Widget build(BuildContext context) {
-    final monitoringAsync = ref.watch(monitoringProvider(_selectedActivity));
-    final rawVehicles = monitoringAsync.asData?.value ?? _lastVehicles;
+    final rawAsync = ref.watch(
+      monitoringProvider(MonitoringQuery(activity: _selectedActivity)),
+    );
+    final rawVehicles = rawAsync.asData?.value ?? _lastVehicles;
 
     // Simpan data valid terbaru
+    if (rawAsync.asData != null) {
+      _lastVehicles = rawAsync.asData!.value;
+    }
+
+    final monitoringAsync = ref.watch(monitoringProvider(_currentMapQuery()));
+    final mapVehiclesRaw = monitoringAsync.asData?.value ?? _lastMapVehicles;
+
     if (monitoringAsync.asData != null) {
-      _lastVehicles = monitoringAsync.asData!.value;
+      _lastMapVehicles = monitoringAsync.asData!.value;
     }
 
     // Matikan loading begitu request selesai (data ATAU error)
@@ -242,14 +246,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .toList(growable: false);
     }
 
-    final filteredVehicles = _filterVehicles(
-      rawVehicles,
-      search: _debouncedQuery,
-      fleetGroupName: selectedFleetgroupId,
-      geofenceId: selectedGeofenceId,
-    );
+    final filteredVehicles = _sanitizeVehicles(mapVehiclesRaw);
 
-    _filteredVehiclesCache = filteredVehicles;
+    final fleetGroupsAsync = ref.watch(fleetGroupProvider);
+    final fleetGroupOptions = _buildFleetGroupOptions(
+      fleetGroupsAsync.asData?.value ?? const [],
+    );
 
     return Scaffold(
       backgroundColor: AppStyles.bgColor,
@@ -279,7 +281,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onChanged: _onSearchChanged,
               hintText: 'Search Vehicle License Plate ...',
               suggestionPlates: _cachedSuggestionPlates,
-              onOpenFilter: (_) => _openFilterSheet(rawVehicles),
+              onOpenFilter: (_) => _openFilterSheet(fleetGroupOptions),
               below: ActivityChips(
                 selectedActivity: _selectedActivity,
                 totalVehicle: rawVehicles.length,
@@ -290,11 +292,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     _debouncedQuery = '';
                     _showLoading = true;
                   });
-                  ref.invalidate(monitoringProvider(value));
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (!mounted) return;
-                    _mapController.fitToVehicles(_filteredVehiclesCache);
-                  });
+                  ref.invalidate(monitoringProvider);
+                  _fitToQuery(_currentMapQuery());
                 },
               ),
             ),
