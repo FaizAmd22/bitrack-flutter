@@ -261,5 +261,21 @@
   "noMedia": "Tidak ada media",
   "mapCoordinate": "Koordinat Peta",
   "copyCoordinate": "Koordinat disalin",
-  "filterAllStatus": "Semua Status"
+  "filterAllStatus": "Semua Status",
+
+  "registerLinkPrefix": "Belum punya akun? ",
+  "registerLinkAction": "Daftar di sini",
+  "registerTitle": "Daftar Akun",
+  "registerSubtitle": "Lengkapi data di bawah untuk membuat akun baru",
+  "registerFullName": "Nama Lengkap",
+  "registerFullNamePlaceholder": "Masukkan nama lengkap ...",
+  "registerPhone": "No. Handphone",
+  "registerPhonePlaceholder": "Masukkan no. handphone ...",
+  "registerPhoneInvalid": "Nomor telepon hanya boleh berisi angka",
+  "registerCompanyName": "Nama Perusahaan (Opsional)",
+  "registerCompanyNamePlaceholder": "Masukkan nama perusahaan ...",
+  "registerSubmitBtn": "Daftar",
+  "registerPendingTitle": "Menunggu Konfirmasi",
+  "registerPendingDesc": "Terima kasih telah mendaftar. Konfirmasi akan dikirimkan ke email Anda setelah pendaftaran disetujui.",
+  "registerPendingOkBtn": "Oke, Mengerti"
 }

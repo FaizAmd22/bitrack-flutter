@@ -11,6 +11,7 @@ import 'package:ams/screens/notification/pages/map_coordinate_screen.dart';
 import 'package:ams/screens/notification/pages/notes_screen.dart';
 import 'package:ams/screens/notification_settings/notification_settings.dart';
 import 'package:ams/screens/periodic_track/periodic_track.dart';
+import 'package:ams/screens/register/register_screen.dart';
 import 'package:ams/screens/splash_screen/splash_screen.dart';
 import 'package:ams/screens/vehicle_detail/vehicle_detail.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,8 @@ class MyApp extends ConsumerWidget {
       routes: {
         AppRoutes.splashScreen: (_) => const SplashScreen(),
         AppRoutes.loginScreen: (_) => const GuestGuard(child: LoginScreen()),
+        AppRoutes.registerScreen: (_) =>
+            const GuestGuard(child: RegisterScreen()),
         AppRoutes.homeScreen: (_) => const AuthGuard(child: BottomNavBar()),
         AppRoutes.vehicleDetailScreen: (_) =>
             const AuthGuard(child: VehicleDetail()),

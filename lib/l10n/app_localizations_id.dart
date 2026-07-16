@@ -631,4 +631,51 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get filterAllStatus => 'Semua Status';
+
+  @override
+  String get registerLinkPrefix => 'Belum punya akun? ';
+
+  @override
+  String get registerLinkAction => 'Daftar di sini';
+
+  @override
+  String get registerTitle => 'Daftar Akun';
+
+  @override
+  String get registerSubtitle =>
+      'Lengkapi data di bawah untuk membuat akun baru';
+
+  @override
+  String get registerFullName => 'Nama Lengkap';
+
+  @override
+  String get registerFullNamePlaceholder => 'Masukkan nama lengkap ...';
+
+  @override
+  String get registerPhone => 'No. Handphone';
+
+  @override
+  String get registerPhonePlaceholder => 'Masukkan no. handphone ...';
+
+  @override
+  String get registerPhoneInvalid => 'Nomor telepon hanya boleh berisi angka';
+
+  @override
+  String get registerCompanyName => 'Nama Perusahaan (Opsional)';
+
+  @override
+  String get registerCompanyNamePlaceholder => 'Masukkan nama perusahaan ...';
+
+  @override
+  String get registerSubmitBtn => 'Daftar';
+
+  @override
+  String get registerPendingTitle => 'Menunggu Konfirmasi';
+
+  @override
+  String get registerPendingDesc =>
+      'Terima kasih telah mendaftar. Konfirmasi akan dikirimkan ke email Anda setelah pendaftaran disetujui.';
+
+  @override
+  String get registerPendingOkBtn => 'Oke, Mengerti';
 }

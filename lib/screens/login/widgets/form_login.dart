@@ -8,6 +8,7 @@ import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ams/features/auth/providers/auth_providers.dart';
+import 'package:ams/features/app_config/providers/app_config_providers.dart';
 import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
 
 class FormLogin extends ConsumerStatefulWidget {
@@ -125,6 +126,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     final errorMessage = ref.watch(
       authControllerProvider.select((s) => s.errorMessage),
     );
+    final showRegisterLink = ref.watch(showRegisterLinkProvider).value ?? false;
 
     return Form(
       key: _formKey,
@@ -205,6 +207,30 @@ class _FormLoginState extends ConsumerState<FormLogin> {
           ),
 
           if (_showBiometricButton) const BiometricButton(),
+
+          if (showRegisterLink) ...[
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  translate.registerLinkPrefix,
+                  style: AppStyles.textMd.copyWith(color: Colors.black54),
+                ),
+                GestureDetector(
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoutes.registerScreen),
+                  child: Text(
+                    translate.registerLinkAction,
+                    style: AppStyles.textMd.copyWith(
+                      color: AppStyles.primaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

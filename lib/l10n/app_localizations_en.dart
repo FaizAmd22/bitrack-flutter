@@ -633,4 +633,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterAllStatus => 'All Status';
+
+  @override
+  String get registerLinkPrefix => 'Don\'t have an account? ';
+
+  @override
+  String get registerLinkAction => 'Register here';
+
+  @override
+  String get registerTitle => 'Create Account';
+
+  @override
+  String get registerSubtitle =>
+      'Fill in the details below to create a new account';
+
+  @override
+  String get registerFullName => 'Full Name';
+
+  @override
+  String get registerFullNamePlaceholder => 'Enter full name ...';
+
+  @override
+  String get registerPhone => 'Phone Number';
+
+  @override
+  String get registerPhonePlaceholder => 'Enter phone number ...';
+
+  @override
+  String get registerPhoneInvalid => 'Phone number can only contain numbers';
+
+  @override
+  String get registerCompanyName => 'Company Name (Optional)';
+
+  @override
+  String get registerCompanyNamePlaceholder => 'Enter company name ...';
+
+  @override
+  String get registerSubmitBtn => 'Register';
+
+  @override
+  String get registerPendingTitle => 'Awaiting Confirmation';
+
+  @override
+  String get registerPendingDesc =>
+      'Thank you for registering. A confirmation will be sent to your email once your registration is approved.';
+
+  @override
+  String get registerPendingOkBtn => 'Got it';
 }

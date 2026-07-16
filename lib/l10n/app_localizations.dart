@@ -1309,6 +1309,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Status'**
   String get filterAllStatus;
+
+  /// No description provided for @registerLinkPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get registerLinkPrefix;
+
+  /// No description provided for @registerLinkAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Register here'**
+  String get registerLinkAction;
+
+  /// No description provided for @registerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get registerTitle;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the details below to create a new account'**
+  String get registerSubtitle;
+
+  /// No description provided for @registerFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get registerFullName;
+
+  /// No description provided for @registerFullNamePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full name ...'**
+  String get registerFullNamePlaceholder;
+
+  /// No description provided for @registerPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get registerPhone;
+
+  /// No description provided for @registerPhonePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number ...'**
+  String get registerPhonePlaceholder;
+
+  /// No description provided for @registerPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number can only contain numbers'**
+  String get registerPhoneInvalid;
+
+  /// No description provided for @registerCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name (Optional)'**
+  String get registerCompanyName;
+
+  /// No description provided for @registerCompanyNamePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter company name ...'**
+  String get registerCompanyNamePlaceholder;
+
+  /// No description provided for @registerSubmitBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get registerSubmitBtn;
+
+  /// No description provided for @registerPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting Confirmation'**
+  String get registerPendingTitle;
+
+  /// No description provided for @registerPendingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for registering. A confirmation will be sent to your email once your registration is approved.'**
+  String get registerPendingDesc;
+
+  /// No description provided for @registerPendingOkBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get registerPendingOkBtn;
 }
 
 class _AppLocalizationsDelegate

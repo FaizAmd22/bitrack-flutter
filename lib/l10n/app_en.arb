@@ -261,5 +261,21 @@
   "noMedia": "No media available",
   "mapCoordinate": "Map Coordinate",
   "copyCoordinate": "Coordinate copied",
-  "filterAllStatus": "All Status"
+  "filterAllStatus": "All Status",
+
+  "registerLinkPrefix": "Don't have an account? ",
+  "registerLinkAction": "Register here",
+  "registerTitle": "Create Account",
+  "registerSubtitle": "Fill in the details below to create a new account",
+  "registerFullName": "Full Name",
+  "registerFullNamePlaceholder": "Enter full name ...",
+  "registerPhone": "Phone Number",
+  "registerPhonePlaceholder": "Enter phone number ...",
+  "registerPhoneInvalid": "Phone number can only contain numbers",
+  "registerCompanyName": "Company Name (Optional)",
+  "registerCompanyNamePlaceholder": "Enter company name ...",
+  "registerSubmitBtn": "Register",
+  "registerPendingTitle": "Awaiting Confirmation",
+  "registerPendingDesc": "Thank you for registering. A confirmation will be sent to your email once your registration is approved.",
+  "registerPendingOkBtn": "Got it"
 }

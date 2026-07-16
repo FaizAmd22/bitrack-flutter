@@ -1,5 +1,6 @@
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppInputField extends StatelessWidget {
   final String label;
@@ -14,6 +15,7 @@ class AppInputField extends StatelessWidget {
   final Color? suffixIconColor;
   final ValueChanged<String>? onChanged; // ← tambah
   final bool enabled; // ← tambah
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppInputField({
     super.key,
@@ -29,6 +31,7 @@ class AppInputField extends StatelessWidget {
     this.suffixIconColor,
     this.onChanged, // ← tambah
     this.enabled = true, // ← tambah
+    this.inputFormatters,
   });
 
   OutlineInputBorder _inputBorder(Color color) {
@@ -60,6 +63,7 @@ class AppInputField extends StatelessWidget {
               obscureText: obscureText,
               onChanged: onChanged,
               enabled: enabled,
+              inputFormatters: inputFormatters,
               decoration: InputDecoration(
                 hintText: placeholder,
                 prefixIcon: prefixIcon != null
