@@ -13,6 +13,18 @@ final Dio _geoDio = Dio(
   ),
 );
 
+// Beberapa hasil reverse-geocoding memuat aksara non-Latin (mis. aksara Jawa
+// atau Sunda) yang tidak terbaca oleh mayoritas pengguna. Sanitasi ini
+// menyamakan perilaku dengan sanitizeText di web: buang karakter di luar
+// ASCII cetak + Latin beraksen, lalu rapikan spasi/koma.
+String _sanitizeAddress(String value) {
+  return value
+      .replaceAll(RegExp(r'[^\x20-\x7EÀ-ɏ]'), '')
+      .replaceAll(RegExp(r'\s{2,}'), ' ')
+      .replaceAll(RegExp(r'\s+,'), ',')
+      .trim();
+}
+
 Future<String> getAddress(double lat, double lng) async {
   try {
     final url = dotenv.env['GEO_REVERSE'];
@@ -28,7 +40,7 @@ Future<String> getAddress(double lat, double lng) async {
     if (res.statusCode != 200 || res.data == null) return '-';
 
     final data = jsonDecode(res.data);
-    final name = (data['display_name'] ?? '').toString().trim();
+    final name = _sanitizeAddress((data['display_name'] ?? '').toString());
     return name.isNotEmpty ? name : '-';
   } catch (e, s) {
     debugPrint('GET ADDRESS ERROR: $e');

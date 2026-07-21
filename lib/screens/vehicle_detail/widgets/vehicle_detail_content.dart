@@ -17,7 +17,7 @@ class VehicleDetailContent extends StatelessWidget {
   final bool dashcamOnline;
   final bool isChiller;
   final bool loadingDashcam;
-  final Map<String, dynamic>? vehicleData; // ← tambahan
+  final Map<String, dynamic>? vehicleData;
 
   const VehicleDetailContent({
     super.key,
@@ -28,7 +28,7 @@ class VehicleDetailContent extends StatelessWidget {
     required this.dashcamOnline,
     required this.isChiller,
     required this.loadingDashcam,
-    this.vehicleData, // ← opsional, null saat masih loading dashcam
+    this.vehicleData,
   });
 
   static const _topRadius = BorderRadius.only(
@@ -64,7 +64,6 @@ class VehicleDetailContent extends StatelessWidget {
 
     List<IndicatorItemData> buildIndicators() {
       final ignition = safeIntFrom(detailData, 'ignition') == 1;
-      final fuel = safeDoubleFrom(detailData, 'fuel_consumed', fallback: 0);
 
       final dashcamLabel = !hasDashcam
           ? "N/A"
@@ -101,17 +100,9 @@ class VehicleDetailContent extends StatelessWidget {
         ),
         IndicatorItemData(
           icon: "fuel.svg",
-          label: "${fuel.toStringAsFixed(0)} %",
-          background: fuel <= 25
-              ? AppStyles.bgRedColor
-              : fuel <= 50
-              ? AppStyles.bgYellowColor
-              : AppStyles.bgGreenColor,
-          color: fuel <= 25
-              ? AppStyles.redColor
-              : fuel <= 50
-              ? AppStyles.yellowColor
-              : AppStyles.greenColor,
+          label: "-",
+          background: AppStyles.bgRedColor,
+          color: AppStyles.redColor,
         ),
         IndicatorItemData(
           icon: "webcam.svg",

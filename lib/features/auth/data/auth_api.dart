@@ -9,7 +9,7 @@ class AuthApi {
     try {
       final response = await ApiClient.dio.post(
         // '/login',
-        '/auth/login',
+        '/mobile/auth/login',
         data: {'email': email, 'password': password},
       );
 

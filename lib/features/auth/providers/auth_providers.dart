@@ -43,7 +43,8 @@ class AuthController extends StateNotifier<AuthState> {
           rawStatus == true ||
           rawStatus == 'true' ||
           rawStatus == 1 ||
-          rawStatus == '1';
+          rawStatus == '1' ||
+          rawStatus == 'success';
 
       if (!status) {
         final String errorMsg =

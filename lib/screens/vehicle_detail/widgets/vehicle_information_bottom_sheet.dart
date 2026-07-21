@@ -229,7 +229,8 @@ class _VehicleInformationBottomSheetState
         children: [
           RowText(
             text1: t.vehicleSensorFuel,
-            text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
+            // text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
+            text2: '-',
           ),
           SizedBox(height: 20),
           RowText(
@@ -237,16 +238,12 @@ class _VehicleInformationBottomSheetState
             text2: "${dataVehicle['direction'] ?? '-'}°",
           ),
           SizedBox(height: 20),
-          RowText(
-            text1: t.vehicleSensorHumidity,
-            text2: "${dataVehicle['humidity'] ?? 'NaN'} %",
-          ),
+          RowText(text1: t.vehicleSensorHumidity, text2: '-'),
           SizedBox(height: 20),
           RowText(
             text1: t.vehicleSensorLeftDoor,
             text2: "${dataVehicle['dleft'] ?? '-'}",
           ),
-          SizedBox(height: 20),
           SizedBox(height: 20),
           RowText(
             text1: t.vehicleSensorRightDoor,

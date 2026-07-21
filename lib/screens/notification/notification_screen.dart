@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/widgets/search_bar_base.dart';
+import 'package:ams/features/monitoring/providers/plate_suggestion_provider.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:ams/screens/notification/providers/alert_type_provider.dart';
@@ -147,6 +148,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     final state = ref.watch(notificationProvider);
+    final suggestionPlates = ref.watch(plateSuggestionProvider('allVehicle'));
 
     return Scaffold(
       backgroundColor: AppStyles.bgColor,
@@ -156,6 +158,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
             SearchBarBase(
               value: _search,
               onChanged: _onSearchChanged,
+              suggestionPlates: suggestionPlates,
               hintText: t.searchLicensePlate,
               onOpenFilter: (_) => _openFilter(),
             ),

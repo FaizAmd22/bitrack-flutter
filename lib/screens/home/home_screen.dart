@@ -284,7 +284,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onOpenFilter: (_) => _openFilterSheet(fleetGroupOptions),
               below: ActivityChips(
                 selectedActivity: _selectedActivity,
-                totalVehicle: rawVehicles.length,
+                totalVehicle: filteredVehicles.length,
                 onActivityChanged: (value) {
                   setState(() {
                     _selectedActivity = value;
