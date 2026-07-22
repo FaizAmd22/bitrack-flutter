@@ -22,6 +22,7 @@ Map<String, dynamic> flattenMonitoringDetail(
     'dleft': sensor['dleft'],
     'drear': sensor['drear'],
     'dright': sensor['dright'],
+    'temperature': sensor['temperature'],
     'fuel_consumed': latestFuel ?? 0,
     'livecam': data['livecam'],
   };
