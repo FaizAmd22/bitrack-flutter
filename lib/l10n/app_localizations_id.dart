@@ -72,7 +72,21 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get addFingerprintDesc =>
-      'Apakah Anda ingin menambahkan fingerprint untuk login selanjutnya?';
+      'Apakah Anda ingin menyimpan fingerprint untuk mempercepat login berikutnya?';
+
+  @override
+  String get addFaceId => 'Tambahkan Face ID';
+
+  @override
+  String get addFaceIdDesc =>
+      'Apakah Anda ingin menyimpan Face ID untuk mempercepat login berikutnya?';
+
+  @override
+  String get addBiometric => 'Tambahkan Biometrik';
+
+  @override
+  String get addBiometricDesc =>
+      'Apakah Anda ingin menyimpan autentikasi biometrik untuk mempercepat login berikutnya?';
 
   @override
   String get cancel => 'Batal';

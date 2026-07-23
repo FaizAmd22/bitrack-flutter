@@ -221,8 +221,32 @@ abstract class AppLocalizations {
   /// No description provided for @addFingerprintDesc.
   ///
   /// In en, this message translates to:
-  /// **'Do you want to add fingerprint for future login?'**
+  /// **'Do you want to save your fingerprint for faster login next time?'**
   String get addFingerprintDesc;
+
+  /// No description provided for @addFaceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Face ID'**
+  String get addFaceId;
+
+  /// No description provided for @addFaceIdDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to save Face ID for faster login next time?'**
+  String get addFaceIdDesc;
+
+  /// No description provided for @addBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Biometric'**
+  String get addBiometric;
+
+  /// No description provided for @addBiometricDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to save biometric authentication for faster login next time?'**
+  String get addBiometricDesc;
 
   /// No description provided for @cancel.
   ///

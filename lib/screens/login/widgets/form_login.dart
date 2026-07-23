@@ -7,6 +7,7 @@ import 'package:ams/screens/login/widgets/biometric_button.dart';
 import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:ams/features/auth/providers/auth_providers.dart';
 import 'package:ams/features/app_config/providers/app_config_providers.dart';
 import 'package:ams/features/monitoring/providers/monitoring_providers.dart';
@@ -27,11 +28,13 @@ class _FormLoginState extends ConsumerState<FormLogin> {
 
   bool _showPassword = false;
   bool _showBiometricButton = false;
+  BiometricType? _biometricType;
 
   @override
   void initState() {
     super.initState();
     _initBiometricFlag();
+    _detectBiometricType();
   }
 
   Future<void> _initBiometricFlag() async {
@@ -45,6 +48,36 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     if (_showBiometricButton != hasCreds) {
       setState(() => _showBiometricButton = hasCreds);
     }
+  }
+
+  Future<void> _detectBiometricType() async {
+    try {
+      final available = await LocalAuthentication().getAvailableBiometrics();
+      if (!mounted) return;
+      BiometricType? detected;
+      if (available.contains(BiometricType.face)) {
+        detected = BiometricType.face;
+      } else if (available.contains(BiometricType.fingerprint)) {
+        detected = BiometricType.fingerprint;
+      } else if (available.isNotEmpty) {
+        detected = available.first;
+      }
+      if (_biometricType != detected) {
+        setState(() => _biometricType = detected);
+      }
+    } catch (_) {}
+  }
+
+  String _biometricTitle(AppLocalizations t) {
+    if (_biometricType == BiometricType.face) return t.addFaceId;
+    if (_biometricType == BiometricType.fingerprint) return t.addFingerprint;
+    return t.addBiometric;
+  }
+
+  String _biometricDesc(AppLocalizations t) {
+    if (_biometricType == BiometricType.face) return t.addFaceIdDesc;
+    if (_biometricType == BiometricType.fingerprint) return t.addFingerprintDesc;
+    return t.addBiometricDesc;
   }
 
   @override
@@ -95,8 +128,8 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     await showDialog(
       context: context,
       builder: (_) => ConfirmDialog(
-        title: translate.addFingerprint,
-        desc: translate.addFingerprintDesc,
+        title: _biometricTitle(translate),
+        desc: _biometricDesc(translate),
         textCancel: translate.cancel,
         textSubmit: translate.save,
         funcCancel: () async {

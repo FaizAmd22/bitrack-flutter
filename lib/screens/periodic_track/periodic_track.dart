@@ -239,7 +239,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final topPad = MediaQuery.of(context).padding.top;
-    final topPlayer = topPad + size.height * 0.35;
+    final topPlayer = topPad + size.height * 0.36;
 
     final canSpeedUp = _speedIndex > 0;
     final canSpeedDown = _speedIndex < _speeds.length - 1;

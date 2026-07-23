@@ -25,7 +25,11 @@
   "fieldRequired": "{name} cannot be empty",
 
   "addFingerprint": "Add Fingerprint",
-  "addFingerprintDesc": "Do you want to add fingerprint for future login?",
+  "addFingerprintDesc": "Do you want to save your fingerprint for faster login next time?",
+  "addFaceId": "Add Face ID",
+  "addFaceIdDesc": "Do you want to save Face ID for faster login next time?",
+  "addBiometric": "Add Biometric",
+  "addBiometricDesc": "Do you want to save biometric authentication for faster login next time?",
   "cancel": "Cancel",
   "save": "Save",
 

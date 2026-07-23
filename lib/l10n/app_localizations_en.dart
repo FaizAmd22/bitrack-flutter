@@ -72,7 +72,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addFingerprintDesc =>
-      'Do you want to add fingerprint for future login?';
+      'Do you want to save your fingerprint for faster login next time?';
+
+  @override
+  String get addFaceId => 'Add Face ID';
+
+  @override
+  String get addFaceIdDesc =>
+      'Do you want to save Face ID for faster login next time?';
+
+  @override
+  String get addBiometric => 'Add Biometric';
+
+  @override
+  String get addBiometricDesc =>
+      'Do you want to save biometric authentication for faster login next time?';
 
   @override
   String get cancel => 'Cancel';

@@ -95,6 +95,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               _notifKey.currentState?.refreshFromOutside();
             }
           },
+          type: BottomNavigationBarType.fixed,
           selectedItemColor: AppStyles.primaryColor,
           unselectedItemColor: const Color.fromARGB(255, 189, 189, 189),
           showSelectedLabels: true,

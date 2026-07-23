@@ -25,7 +25,11 @@
   "fieldRequired": "{name} tidak boleh kosong",
 
   "addFingerprint": "Tambahkan Fingerprint",
-  "addFingerprintDesc": "Apakah Anda ingin menambahkan fingerprint untuk login selanjutnya?",
+  "addFingerprintDesc": "Apakah Anda ingin menyimpan fingerprint untuk mempercepat login berikutnya?",
+  "addFaceId": "Tambahkan Face ID",
+  "addFaceIdDesc": "Apakah Anda ingin menyimpan Face ID untuk mempercepat login berikutnya?",
+  "addBiometric": "Tambahkan Biometrik",
+  "addBiometricDesc": "Apakah Anda ingin menyimpan autentikasi biometrik untuk mempercepat login berikutnya?",
   "cancel": "Batalkan",
   "save": "Simpan",
 

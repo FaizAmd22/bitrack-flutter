@@ -45,15 +45,26 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
   DateTime? _start;
   DateTime? _end;
 
-  static const _maxRange = Duration(days: 3);
+  static const _maxRangeDays = 2;
 
-  // Maksimal End Date: 3 hari dari Start Date, tapi tidak boleh melebihi
-  // sekarang (tidak ada data masa depan).
+  // Batas End Date: tanggal start + 2 hari kalender = 3 hari total (inklusif start).
+  // Jam pada hari maksimal bebas dipilih (hingga 23:59:59).
+  // Jika batas range melewati hari ini, gunakan akhir hari ini.
   DateTime get _maxEndDate {
     final now = DateTime.now();
-    if (_start == null) return now;
-    final byRange = _start!.add(_maxRange);
-    return byRange.isBefore(now) ? byRange : now;
+    if (_start == null) {
+      return DateTime(now.year, now.month, now.day, 23, 59, 59);
+    }
+    final byRange = DateTime(
+      _start!.year,
+      _start!.month,
+      _start!.day + _maxRangeDays,
+      23,
+      59,
+      59,
+    );
+    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    return byRange.isBefore(todayEnd) ? byRange : todayEnd;
   }
 
   void _submit() {
