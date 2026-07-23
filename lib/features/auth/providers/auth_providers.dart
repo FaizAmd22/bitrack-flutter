@@ -38,24 +38,24 @@ class AuthController extends StateNotifier<AuthState> {
     try {
       final result = await AuthApi.login(email: email, password: password);
 
-      final rawStatus = result['status'];
-      final bool status =
-          rawStatus == true ||
-          rawStatus == 'true' ||
-          rawStatus == 1 ||
-          rawStatus == '1' ||
-          rawStatus == 'success';
+      // final rawStatus = result['status'];
+      // final bool status =
+      //     rawStatus == true ||
+      //     rawStatus == 'true' ||
+      //     rawStatus == 1 ||
+      //     rawStatus == '1' ||
+      //     rawStatus == 'success';
 
-      if (!status) {
-        final String errorMsg =
-            (result['message'] ??
-                    result['error_msg'] ??
-                    'Login gagal, coba lagi')
-                .toString();
+      // if (!status) {
+      //   final String errorMsg =
+      //       (result['message'] ??
+      //               result['error_msg'] ??
+      //               'Login gagal, coba lagi')
+      //           .toString();
 
-        state = state.copyWith(isLoading: false, errorMessage: errorMsg);
-        return null;
-      }
+      //   state = state.copyWith(isLoading: false, errorMessage: errorMsg);
+      //   return null;
+      // }
 
       final data = result['data'] as Map<String, dynamic>?;
       final token = data?['token']?.toString();

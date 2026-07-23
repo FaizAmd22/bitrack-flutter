@@ -190,6 +190,7 @@ class _VehicleInformationBottomSheetState
     Map<String, dynamic> dataVehicle,
   ) {
     final t = AppLocalizations.of(context);
+    debugPrint('dataVehicle : $dataVehicle');
     return TabContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,8 +230,8 @@ class _VehicleInformationBottomSheetState
         children: [
           RowText(
             text1: t.vehicleSensorFuel,
-            // text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
-            text2: '-',
+            text2: "${dataVehicle['fuel_consumed'] ?? '-'} %",
+            // text2: '-',
           ),
           SizedBox(height: 20),
           RowText(
@@ -239,6 +240,11 @@ class _VehicleInformationBottomSheetState
           ),
           SizedBox(height: 20),
           RowText(text1: t.vehicleSensorHumidity, text2: '-'),
+          SizedBox(height: 20),
+          RowText(
+            text1: 'Temperature',
+            text2: "${dataVehicle['temperature'] ?? '-'}°C",
+          ),
           SizedBox(height: 20),
           RowText(
             text1: t.vehicleSensorLeftDoor,
