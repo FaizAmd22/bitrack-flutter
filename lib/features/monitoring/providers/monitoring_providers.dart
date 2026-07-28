@@ -38,26 +38,12 @@ final monitoringProvider = FutureProvider.family<List<Vehicle>, MonitoringQuery>
     limit: _monitoringFetchLimit,
   );
 
-  if (statusResult['status']?.toString() != 'true') {
-    final msg = (statusResult['message'] ?? statusResult['error_msg'])
-            ?.toString() ??
-        'Gagal memuat data';
-    throw Exception(msg);
-  }
-
   // /monitoring/position mendukung filter server-side by license_plate
   // (search plat) dan fleet_group_id (filter fleet group).
   final positionResult = await MonitoringApi.fetchPosition(
     licensePlate: query.licensePlate,
     fleetGroupId: query.fleetGroupId,
   );
-
-  if (positionResult['status']?.toString() != 'true') {
-    final msg = (positionResult['message'] ?? positionResult['error_msg'])
-            ?.toString() ??
-        'Gagal memuat posisi kendaraan';
-    throw Exception(msg);
-  }
 
   final List<dynamic> statusList = (statusResult['data'] as List?) ?? [];
   final List<dynamic> positionList = (positionResult['data'] as List?) ?? [];
