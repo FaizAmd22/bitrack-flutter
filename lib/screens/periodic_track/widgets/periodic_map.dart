@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:ams/base/constants/map_urls.dart';
 import 'package:ams/base/res/media.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/screens/periodic_track/services/periodic_playback_controller.dart';
@@ -341,9 +342,8 @@ class _PeriodicMapState extends State<PeriodicMap>
       ),
       children: [
         TileLayer(
-          urlTemplate: widget.isSatellite
-              ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-              : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: widget.isSatellite ? googleSatelliteMapUrl : googleMapUrl,
+          subdomains: googleMapSubdomains,
           userAgentPackageName: 'fixtrack.treffix.id',
         ),
         PolylineLayer(

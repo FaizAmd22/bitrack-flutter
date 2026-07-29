@@ -68,7 +68,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     final screens = [
       HomeScreen(isActive: _selectedIndex == 0),
       NotificationScreen(key: _notifKey),
-      const VehicleScreen(),
+      // const VehicleScreen(),
       const ProfileScreen(),
     ];
 
@@ -129,23 +129,23 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               ),
               label: translate.navNotification,
             ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppMedia.truckRegulerIcon,
-                width: 24,
-                height: 24,
-              ),
-              activeIcon: SvgPicture.asset(
-                AppMedia.truckFilledIcon,
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(
-                  AppStyles.primaryColor,
-                  BlendMode.srcIn,
-                ),
-              ),
-              label: translate.navVehicle,
-            ),
+            // BottomNavigationBarItem(
+            //   icon: SvgPicture.asset(
+            //     AppMedia.truckRegulerIcon,
+            //     width: 24,
+            //     height: 24,
+            //   ),
+            //   activeIcon: SvgPicture.asset(
+            //     AppMedia.truckFilledIcon,
+            //     width: 24,
+            //     height: 24,
+            //     colorFilter: ColorFilter.mode(
+            //       AppStyles.primaryColor,
+            //       BlendMode.srcIn,
+            //     ),
+            //   ),
+            //   label: translate.navVehicle,
+            // ),
             BottomNavigationBarItem(
               icon: const Icon(FluentSystemIcons.ic_fluent_person_regular),
               activeIcon: const Icon(FluentSystemIcons.ic_fluent_person_filled),

@@ -5,6 +5,7 @@ import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:ams/base/constants/map_urls.dart';
 
 import 'package:ams/base/res/media.dart';
 
@@ -233,7 +234,8 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: googleMapUrl,
+          subdomains: googleMapSubdomains,
           userAgentPackageName: 'fixtrack.treffix.id',
         ),
         if (pos != null)

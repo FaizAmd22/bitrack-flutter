@@ -1,4 +1,5 @@
 // lib/screens/notification/map_coordinate/map_coordinate_screen.dart
+import 'package:ams/base/constants/map_urls.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/notification/models/alert_model.dart';
@@ -60,8 +61,8 @@ class _MapCoordinateScreenState extends State<MapCoordinateScreen> {
               options: MapOptions(initialCenter: point, initialZoom: 18),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate: googleMapUrl,
+                  subdomains: googleMapSubdomains,
                   userAgentPackageName: 'fixtrack.treffix.id',
                 ),
                 MarkerLayer(

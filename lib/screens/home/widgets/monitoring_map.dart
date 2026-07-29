@@ -9,6 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ams/screens/home/models/vehicle.dart';
+import 'package:ams/base/constants/map_urls.dart';
 
 class MonitoringMapController {
   void Function(List<Vehicle> vehicles)? _fit;
@@ -206,8 +207,11 @@ class _MonitoringMapState extends State<MonitoringMap> {
       ),
       children: [
         TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          // urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'fixtrack.treffix.id',
+          // key: '',
+          urlTemplate: googleMapUrl,
+          subdomains: googleMapSubdomains,
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
