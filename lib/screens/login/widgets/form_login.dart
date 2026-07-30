@@ -1,5 +1,6 @@
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:ams/base/widgets/app_input_field.dart';
 import 'package:ams/base/widgets/confirm_dialog.dart';
 import 'package:ams/l10n/app_localizations.dart';
@@ -35,6 +36,14 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     super.initState();
     _initBiometricFlag();
     _detectBiometricType();
+    // Sinkronkan ulang flag banner demo tiap kali layar login tampil lagi
+    // (mis. setelah logout), karena demoModeProvider adalah StateProvider
+    // global yang tidak auto-reset saat DemoMode.clearOnLogout() dipanggil
+    // dari ApiClient (kode statis, tidak punya akses ke ref).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(demoModeProvider.notifier).state = DemoMode.isActive;
+    });
   }
 
   Future<void> _initBiometricFlag() async {
@@ -76,7 +85,8 @@ class _FormLoginState extends ConsumerState<FormLogin> {
 
   String _biometricDesc(AppLocalizations t) {
     if (_biometricType == BiometricType.face) return t.addFaceIdDesc;
-    if (_biometricType == BiometricType.fingerprint) return t.addFingerprintDesc;
+    if (_biometricType == BiometricType.fingerprint)
+      return t.addFingerprintDesc;
     return t.addBiometricDesc;
   }
 
@@ -149,6 +159,18 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     );
   }
 
+  Future<void> _handleDemoLogin() async {
+    await DemoMode.activate();
+    if (!mounted) return;
+
+    ref.read(demoModeProvider.notifier).state = true;
+    ref.invalidate(notificationProvider);
+    ref.invalidate(notificationServiceProvider);
+    ref.invalidate(monitoringProvider);
+
+    await _goHome();
+  }
+
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context);
@@ -159,7 +181,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     final errorMessage = ref.watch(
       authControllerProvider.select((s) => s.errorMessage),
     );
-    final showRegisterLink = ref.watch(showRegisterLinkProvider).value ?? false;
+    final showDemoButton = ref.watch(showRegisterLinkProvider).value ?? false;
 
     return Form(
       key: _formKey,
@@ -241,27 +263,26 @@ class _FormLoginState extends ConsumerState<FormLogin> {
 
           if (_showBiometricButton) const BiometricButton(),
 
-          if (showRegisterLink) ...[
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  translate.registerLinkPrefix,
-                  style: AppStyles.textMd.copyWith(color: Colors.black54),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.pushNamed(context, AppRoutes.registerScreen),
-                  child: Text(
-                    translate.registerLinkAction,
-                    style: AppStyles.textMd.copyWith(
-                      color: AppStyles.primaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
+          if (showDemoButton) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppStyles.primaryColor),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ],
+                onPressed: isLoading ? null : _handleDemoLogin,
+                child: Text(
+                  'Continue with Demo',
+                  style: AppStyles.textSmBold.copyWith(
+                    color: AppStyles.primaryColor,
+                  ),
+                ),
+              ),
             ),
           ],
         ],

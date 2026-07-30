@@ -1,4 +1,6 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:ams/screens/notification/models/alert_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -35,6 +37,16 @@ class NotificationService {
     String? status,
     String? licensePlate,
   }) async {
+    if (DemoMode.isActive) {
+      final items = DemoData.notificationAlerts();
+      return AlertPageResult(
+        items: items,
+        page: page,
+        totalPages: 1,
+        total: items.length,
+      );
+    }
+
     try {
       final now = DateTime.now();
       final start =
@@ -92,6 +104,15 @@ class NotificationService {
   }
 
   Future<AlertModel?> fetchAlertDetail(String id) async {
+    if (DemoMode.isActive) {
+      final items = DemoData.notificationAlerts();
+      final match = items.firstWhere(
+        (e) => e['id'] == id,
+        orElse: () => items.first,
+      );
+      return AlertModel.fromJson(match);
+    }
+
     try {
       final res = await ApiClient.dio.get('/transaction-alert/$id');
       final body = res.data;
@@ -107,6 +128,8 @@ class NotificationService {
   }
 
   Future<void> markAllAsRead() async {
+    if (DemoMode.isActive) return;
+
     try {
       final userId = await _storage.read(key: 'user_id') ?? '';
       await ApiClient.dio.post(

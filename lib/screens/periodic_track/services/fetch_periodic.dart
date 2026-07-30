@@ -1,3 +1,5 @@
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../models/periodic_point.dart';
@@ -15,6 +17,17 @@ class PeriodicApi {
     required String licensePlate,
     void Function(List<PeriodicPoint> page)? onPage,
   }) async {
+    if (DemoMode.isActive) {
+      final demoPoints = DemoData.periodicPoints(
+        licensePlate: licensePlate,
+        startDate: startDate,
+        endDate: endDate,
+      ).map(PeriodicPoint.fromJson).toList();
+
+      onPage?.call(demoPoints);
+      return demoPoints;
+    }
+
     final points = <PeriodicPoint>[];
     String? cursor;
 

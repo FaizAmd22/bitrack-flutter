@@ -1,4 +1,5 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_mode.dart';
 
 class UpdatePasswordResult {
   final bool success;
@@ -14,6 +15,8 @@ class UpdatePasswordService {
     required String id,
     required String password,
   }) async {
+    if (DemoMode.isActive) return const UpdatePasswordResult(success: true);
+
     final res = await ApiClient.dio.put(
       '/users/update-password/$id',
       data: {'password': password},

@@ -2,6 +2,8 @@ import 'package:ams/base/bottom_nav_bar.dart';
 import 'package:ams/base/network/api_client.dart';
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/base/routes/navigation_service.dart';
+import 'package:ams/base/services/demo_mode.dart';
+import 'package:ams/base/widgets/demo_banner.dart';
 import 'package:ams/base/widgets/guest_guard.dart';
 import 'package:ams/screens/add_vehicle/add_vehicle.dart';
 import 'package:ams/screens/change_password/change_password.dart';
@@ -32,6 +34,7 @@ Future<void> main() async {
   // from ever being called, leaving the native splash screen frozen.
   try {
     await ApiClient.loadTokenFromStorage();
+    await DemoMode.loadFromStorage();
   } catch (e) {
     debugPrint('Token load skipped: $e');
   }
@@ -58,6 +61,8 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
+      builder: (context, child) =>
+          DemoBanner(child: child ?? const SizedBox.shrink()),
       initialRoute: AppRoutes.splashScreen,
       routes: {
         AppRoutes.splashScreen: (_) => const SplashScreen(),

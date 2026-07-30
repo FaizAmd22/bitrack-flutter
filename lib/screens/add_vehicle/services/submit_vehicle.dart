@@ -1,5 +1,6 @@
 // lib/screens/add_vehicle/services/submit_vehicle.dart
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:ams/screens/add_vehicle/models/add_vehicle_form_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
@@ -55,6 +56,8 @@ class SubmitVehicleService {
   }
 
   Future<SubmitVehicleResult> create(AddVehicleFormData data) async {
+    if (DemoMode.isActive) return const SubmitVehicleResult(success: true);
+
     final payload = _buildPayload(data);
     debugPrint('>>> create vehicle payload: $payload');
     final res = await ApiClient.dio.post('/master-vehicle/', data: payload);
@@ -65,6 +68,8 @@ class SubmitVehicleService {
     AddVehicleFormData data, {
     required String id,
   }) async {
+    if (DemoMode.isActive) return const SubmitVehicleResult(success: true);
+
     final payload = _buildPayload(data);
     debugPrint('>>> update vehicle payload: $payload');
     final res = await ApiClient.dio.put('/master-vehicle/$id', data: payload);

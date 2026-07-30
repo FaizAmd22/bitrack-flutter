@@ -1,10 +1,14 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 
 class FetchFleetGroup {
   static const _pageLimit = 100;
   static const _maxPages = 50;
 
   Future<List<Map<String, dynamic>>> fetch({String? search}) async {
+    if (DemoMode.isActive) return DemoData.fleetGroupList();
+
     final result = <Map<String, dynamic>>[];
     String? cursor;
 

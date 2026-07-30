@@ -1,4 +1,6 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 
 class FetchMonitoringDetail {
@@ -8,6 +10,8 @@ class FetchMonitoringDetail {
     String id, {
     String tab = 'DASHBOARD',
   }) async {
+    if (DemoMode.isActive) return DemoData.vehicleDetail(id);
+
     try {
       final res = await ApiClient.dio.get(
         '/monitoring/$id',

@@ -2,6 +2,7 @@
 
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/base/routes/navigation_service.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -53,6 +54,7 @@ class ApiClient {
       _storage.delete(key: 'user_email'),
       _storage.delete(key: 'user_role'),
       _storage.delete(key: 'user_role_permission'),
+      DemoMode.clearOnLogout(),
     ]);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {

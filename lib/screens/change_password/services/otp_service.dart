@@ -1,3 +1,4 @@
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,6 +32,8 @@ class OtpApi {
 
   /// POST /otp/send  { email }
   Future<OtpSendResult> sendOtp(String email) async {
+    if (DemoMode.isActive) return const OtpSendResult(ok: true);
+
     final res = await _dio.post('/otp/send', data: {'email': email});
     final data = (res.data as Map?)?.cast<String, dynamic>() ?? {};
 
@@ -49,6 +52,8 @@ class OtpApi {
 
   /// POST /otp/verify  { email, otp }
   Future<OtpVerifyResult> verifyOtp(String email, String otp) async {
+    if (DemoMode.isActive) return const OtpVerifyResult(ok: true);
+
     final res = await _dio.post(
       '/otp/verify',
       data: {'email': email, 'otp': otp},

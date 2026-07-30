@@ -1,4 +1,6 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:flutter/foundation.dart';
 
 class MonitoringApi {
@@ -30,9 +32,13 @@ class MonitoringApi {
     String? cursor,
     int? limit,
   }) async {
-    try {
-      final activity = _activityParam(status);
+    final activity = _activityParam(status);
 
+    if (DemoMode.isActive) {
+      return DemoData.monitoringStatusList(activity: activity);
+    }
+
+    try {
       final response = await ApiClient.dio.get(
         '/monitoring/',
         queryParameters: {
@@ -56,6 +62,13 @@ class MonitoringApi {
     String? licensePlate,
     String? fleetGroupId,
   }) async {
+    if (DemoMode.isActive) {
+      return DemoData.monitoringPositionList(
+        licensePlate: licensePlate,
+        fleetGroupId: fleetGroupId,
+      );
+    }
+
     try {
       final response = await ApiClient.dio.get(
         '/monitoring/position',

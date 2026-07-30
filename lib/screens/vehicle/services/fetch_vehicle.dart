@@ -1,4 +1,6 @@
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:ams/screens/vehicle/models/vehicle_page.dart';
 
 class FetchVehicle {
@@ -9,6 +11,10 @@ class FetchVehicle {
     String? fleetGroupId,
     int limit = 20,
   }) async {
+    if (DemoMode.isActive) {
+      return VehiclePage.fromResponse(DemoData.vehicleList());
+    }
+
     final res = await ApiClient.dio.get(
       '/master-vehicle/',
       queryParameters: {

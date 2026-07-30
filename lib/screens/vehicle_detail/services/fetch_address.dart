@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:ams/base/services/demo_data.dart';
+import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -26,6 +28,8 @@ String _sanitizeAddress(String value) {
 }
 
 Future<String> getAddress(double lat, double lng) async {
+  if (DemoMode.isActive) return DemoData.address();
+
   try {
     final url = dotenv.env['GEO_REVERSE'];
     if (url == null || url.isEmpty) {
