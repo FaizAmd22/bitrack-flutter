@@ -785,7 +785,7 @@ abstract class AppLocalizations {
   /// No description provided for @odometer.
   ///
   /// In en, this message translates to:
-  /// **'Odometer (M)'**
+  /// **'Odometer (KM)'**
   String get odometer;
 
   /// No description provided for @odometerHint.

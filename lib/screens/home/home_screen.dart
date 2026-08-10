@@ -86,7 +86,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _startPolling() {
     _polling?.cancel();
-    _polling = Timer.periodic(const Duration(seconds: 20), (_) {
+    _polling = Timer.periodic(const Duration(seconds: 10), (_) {
       if (!mounted) return;
       ref.invalidate(monitoringProvider);
     });

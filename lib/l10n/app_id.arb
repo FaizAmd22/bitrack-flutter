@@ -151,7 +151,7 @@
   "vehicleCategory": "Kategori Kendaraan",
   "selectVehicleCategoryHint": "Pilih kategori kendaraan ...",
 
-  "odometer": "Odometer (M)",
+  "odometer": "Odometer (KM)",
   "odometerHint": "Masukkan odometer kendaraan ...",
 
   "vin": "VIN",

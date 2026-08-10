@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ams/base/constants/map_urls.dart';
-
-import 'package:ams/base/res/media.dart';
+import 'package:ams/base/utils/truck_asset.dart';
 
 class VehicleRealtimeMap extends StatefulWidget {
   const VehicleRealtimeMap({
@@ -16,8 +15,6 @@ class VehicleRealtimeMap extends StatefulWidget {
     required this.direction,
     required this.speed,
     required this.vehicleActivity,
-    required this.deviceTime,
-    required this.vehicleIgnition,
     this.initialZoom = 15,
     this.followMarker = true,
   });
@@ -26,8 +23,6 @@ class VehicleRealtimeMap extends StatefulWidget {
   final double direction;
   final double speed;
   final String? vehicleActivity;
-  final String deviceTime;
-  final int vehicleIgnition;
   final double initialZoom;
   final bool followMarker;
 
@@ -183,34 +178,6 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
     return (from + diff * t + 360) % 360;
   }
 
-  String _registeredEvent() {
-    final base = (widget.vehicleActivity ?? '').toUpperCase();
-
-    DateTime? device;
-    try {
-      device = DateTime.parse(widget.deviceTime);
-    } catch (_) {
-      device = null;
-    }
-
-    if (device != null && widget.vehicleIgnition == 0) {
-      final now = DateTime.now();
-      final diffHours = now.difference(device).inMinutes / 60.0;
-      if (diffHours >= 4) return 'SILENCE';
-    }
-
-    if (base.isEmpty) return 'STOP';
-    return base;
-  }
-
-  String _truckAsset() {
-    final ev = _registeredEvent();
-    if (ev == 'IDLE') return AppMedia.truckIdle;
-    if (ev == 'MOVING') return AppMedia.truckMoving;
-    if (ev == 'STOP') return AppMedia.truckStop;
-    return AppMedia.truckSilence;
-  }
-
   @override
   Widget build(BuildContext context) {
     final pos = _renderPos;
@@ -247,7 +214,7 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
                 height: 120,
                 alignment: Alignment.center,
                 child: _TruckMarkerWithTooltip(
-                  asset: _truckAsset(),
+                  asset: resolveTruckAsset(widget.vehicleActivity),
                   directionDeg: _currentRot,
                   speed: widget.speed,
                 ),

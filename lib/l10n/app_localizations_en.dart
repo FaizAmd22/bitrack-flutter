@@ -362,7 +362,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectVehicleCategoryHint => 'Select vehicle category ...';
 
   @override
-  String get odometer => 'Odometer (M)';
+  String get odometer => 'Odometer (KM)';
 
   @override
   String get odometerHint => 'Enter vehicle odometer ...';

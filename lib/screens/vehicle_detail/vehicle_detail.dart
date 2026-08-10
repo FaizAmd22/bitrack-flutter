@@ -181,8 +181,6 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
 
     final speed = _toDouble(_detailData['speed']) ?? 0.0;
     final activity = _detailData['vehicle_activity']?.toString();
-    final deviceTime = _detailData['device_time']?.toString() ?? '';
-    final ignition = int.tryParse('${_detailData['ignition']}') ?? 0;
 
     final livecam = _detailData['livecam'];
     final hasDashcam = livecam is Map;
@@ -201,8 +199,6 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
                 direction: _direction,
                 speed: speed,
                 vehicleActivity: activity,
-                deviceTime: deviceTime,
-                vehicleIgnition: ignition,
                 initialZoom: 15,
                 followMarker: true,
               ),

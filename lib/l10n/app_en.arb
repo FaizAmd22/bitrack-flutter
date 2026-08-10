@@ -150,7 +150,7 @@
   "vehicleCategory": "Vehicle Category",
   "selectVehicleCategoryHint": "Select vehicle category ...",
 
-  "odometer": "Odometer (M)",
+  "odometer": "Odometer (KM)",
   "odometerHint": "Enter vehicle odometer ...",
 
   "vin": "VIN",

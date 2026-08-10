@@ -202,7 +202,7 @@ class _VehicleInformationBottomSheetState
           SizedBox(height: 20),
           RowText(
             text1: t.vehicleStatusTotalOdometer,
-            text2: "${dataVehicle['total_odometer'] ?? '-'} M",
+            text2: "${_odometerInKm(dataVehicle['total_odometer'])} KM",
           ),
           SizedBox(height: 20),
           RowText(
@@ -217,6 +217,14 @@ class _VehicleInformationBottomSheetState
         ],
       ),
     );
+  }
+
+  // total_odometer dari API dalam satuan meter, ditampilkan dalam KM.
+  String _odometerInKm(dynamic meters) {
+    if (meters == null) return '-';
+    final m = meters is num ? meters : double.tryParse(meters.toString());
+    if (m == null) return '-';
+    return (m / 1000).toStringAsFixed(1);
   }
 
   Widget _buildSensorTab(

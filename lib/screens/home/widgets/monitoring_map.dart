@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math' as math;
-import 'package:ams/base/res/media.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/base/utils/truck_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -116,11 +116,9 @@ class _MonitoringMapState extends State<MonitoringMap> {
     if (key == _cacheKey) return;
     _cacheKey = key;
 
-    final now = DateTime.now();
-
     _cachedMarkers = vehicles
         .map((v) {
-          final asset = _resolveTruckAsset(v, now);
+          final asset = resolveTruckAsset(v.activity);
           final angleRad = roundedBearing(v.bearing) * math.pi / 180;
           debugPrint('data vehicle : "$v"');
 
@@ -161,35 +159,6 @@ class _MonitoringMapState extends State<MonitoringMap> {
   void dispose() {
     widget.controller?._fit = null;
     super.dispose();
-  }
-
-  String _resolveTruckAsset(Vehicle v, DateTime now) {
-    final isSilence = _isSilence(v, now);
-
-    if (isSilence) return AppMedia.truckSilence;
-
-    switch (v.activity) {
-      case 'IDLE':
-        return AppMedia.truckIdle;
-      case 'MOVING':
-        return AppMedia.truckMoving;
-      case 'STOP':
-        return AppMedia.truckStop;
-      default:
-        return AppMedia.truckSilence;
-    }
-  }
-
-  bool _isSilence(Vehicle v, DateTime now) {
-    if (v.ignition != 0) return false;
-    final dt = v.deviceTime;
-    if (dt.isEmpty) return false;
-
-    final parsed = DateTime.tryParse(dt.replaceFirst(' ', 'T'));
-    if (parsed == null) return false;
-
-    final diffHours = now.difference(parsed).inMinutes / 60;
-    return diffHours >= 4;
   }
 
   @override
