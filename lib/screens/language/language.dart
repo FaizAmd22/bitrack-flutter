@@ -53,6 +53,9 @@ class LanguageScreen extends ConsumerWidget {
           const SizedBox(height: 6),
           item(translate.english, 'en'),
           item(translate.indonesian, 'id'),
+          item(translate.chinese, 'zh'),
+          item(translate.japanese, 'ja'),
+          item(translate.korean, 'ko'),
         ],
       ),
     );

@@ -1,0 +1,282 @@
+{
+  "@@locale": "ko",
+  "appTitle": "FixTrack",
+  "language": "언어",
+  "english": "영어",
+  "indonesian": "인도네시아어",
+  "chinese": "중국어",
+  "japanese": "일본어",
+  "korean": "한국어",
+
+  "navTracker": "트래커",
+  "navVehicle": "차량",
+  "navNotification": "알림",
+  "navProfile": "프로필",
+
+  "notifUrgent": "긴급",
+  "notifSummary": "요약",
+  "notifNoData": "알림 데이터가 없습니다",
+
+  "login": "로그인",
+  "email": "이메일",
+  "password": "비밀번호",
+  "emailPlaceholder": "이메일을 입력하세요 ...",
+  "passwordPlaceholder": "비밀번호를 입력하세요 ...",
+
+  "emailRequired": "이메일을 입력해 주세요",
+  "emailInvalid": "이메일 형식이 올바르지 않습니다",
+  "fieldRequired": "{name}을(를) 입력해 주세요",
+
+  "addFingerprint": "지문 추가",
+  "addFingerprintDesc": "다음 로그인을 빠르게 하기 위해 지문을 저장하시겠습니까?",
+  "addFaceId": "Face ID 추가",
+  "addFaceIdDesc": "다음 로그인을 빠르게 하기 위해 Face ID를 저장하시겠습니까?",
+  "addBiometric": "생체 인증 추가",
+  "addBiometricDesc": "다음 로그인을 빠르게 하기 위해 생체 인증을 저장하시겠습니까?",
+  "cancel": "취소",
+  "save": "저장",
+
+  "biometricLoginLabel": "생체 인증으로 로그인",
+  "faceIdLoginLabel": "Face ID로 로그인",
+  "biometricNotSupported": "이 기기는 생체 인증 로그인을 지원하지 않습니다",
+  "biometricReason": "생체 인증을 사용하여 로그인하세요",
+  "biometricCredNotFound": "생체 인증 로그인 정보를 찾을 수 없습니다",
+  "loginFailedTryAgain": "로그인에 실패했습니다. 다시 시도해 주세요",
+  "errorPrefix": "오류가 발생했습니다: {message}",
+
+  "notificationSettings": "알림 설정",
+  "alert": "알림",
+  "softwareUpdate": "소프트웨어 업데이트",
+
+  "profileChangePassword": "비밀번호 변경",
+  "profileNotificationSetting": "알림 설정",
+  "profileLanguage": "언어",
+
+  "signOut": "로그아웃",
+  "signOutTitle": "계정 로그아웃",
+  "signOutDesc": "정말 로그아웃하시겠습니까?",
+  "logout": "로그아웃",
+
+  "searchLicensePlate": "차량 번호판 검색 ...",
+  "noVehicleYet": "아직 차량 데이터가 없습니다",
+  "dataNotFound": "데이터를 찾을 수 없습니다",
+
+  "showPlate": "번호판 표시",
+  "hidePlate": "번호판 숨기기",
+
+  "vehicleDataCantLoaded": "차량 데이터를 불러올 수 없습니다.",
+  "pleaseTryAgain": "다시 시도해 주세요.",
+  "tryAgain": "다시 시도하세요.",
+
+  "vehicleInformation": "차량 정보",
+  "deviceInformation": "기기 정보",
+  "review": "검토",
+
+  "tabInformation": "정보",
+  "tabStatus": "상태",
+  "tabSensor": "센서",
+
+  "vehicleIdNotAvailableDesc": "vehicle_id를 사용할 수 없습니다.\n이 모달을 닫고 차량 상세 정보에서 다시 열어주세요.",
+
+  "failedLoadData": "데이터 로드에 실패했습니다",
+  "retry": "재시도",
+
+  "vehicleInfoGpsDate": "GPS 날짜",
+  "vehicleInfoFleetGroup": "차량 그룹",
+  "vehicleInfoLicensePlate": "번호판",
+  "vehicleInfoImei": "IMEI",
+  "vehicleInfoLatitude": "위도",
+  "vehicleInfoLongitude": "경도",
+  "vehicleInfoGoogleMap": "구글 지도",
+  "vehicleInfoStreetView": "스트리트 뷰",
+
+  "showGoogleMap": "구글 지도 표시",
+  "showStreetView": "스트리트 뷰 표시",
+
+  "vehicleStatusSpeed": "속도",
+  "vehicleStatusTotalOdometer": "총 주행거리",
+  "vehicleStatusInternalBattery": "내부 배터리",
+  "vehicleStatusExternalBattery": "외부 배터리",
+
+  "vehicleSensorFuel": "연료",
+  "vehicleSensorDirection": "방향",
+  "vehicleSensorHumidity": "습도",
+  "vehicleSensorLeftDoor": "왼쪽 문",
+  "vehicleSensorRightDoor": "오른쪽 문",
+  "vehicleSensorBackDoor": "뒷문",
+
+  "active": "활성",
+  "inactive": "비활성",
+  "createdAt": "생성일",
+
+  "addNewVehicleTitle": "새 차량 추가",
+  "updateVehicleTitle": "차량 업데이트",
+
+  "addVehicleCta": "차량 추가",
+  "updateVehicleCta": "차량 업데이트",
+
+  "confirm": "확인",
+
+  "addVehicleConfirmAddTitle": "이 차량을 추가하시겠습니까?",
+  "addVehicleConfirmAddDesc": "세부 정보를 확인해 주세요. 제출하면 이 차량이 차량 목록에 추가됩니다.",
+
+  "addVehicleConfirmUpdateTitle": "이 차량을 업데이트하시겠습니까?",
+  "addVehicleConfirmUpdateDesc": "변경 사항을 확인해 주세요. 제출하면 차량 목록의 이 차량 정보가 업데이트됩니다.",
+
+  "createTodo": "추가 (TODO)",
+  "updateTodo": "업데이트 (TODO)",
+
+  "plateNumber": "번호판",
+  "plateNumberHint": "차량 번호판을 입력하세요 ...",
+
+  "fieldCantEmpty": "이 필드는 비워둘 수 없습니다",
+  "brand": "브랜드",
+  "model": "모델",
+
+  "selectBrandHint": "브랜드를 선택하세요 ...",
+  "selectModelHint": "모델을 선택하세요 ...",
+  "selectBrandFirst": "먼저 브랜드를 선택하세요",
+  "selectModelFirst": "먼저 모델을 선택하세요",
+  "selectTypeHint": "유형을 선택하세요 ...",
+  "noTypeAvailable": "사용 가능한 유형이 없습니다",
+
+  "vehicleType": "유형",
+  "vehicleTypeHint": "차량 유형을 입력하세요 ...",
+
+  "vehicleYear": "연식",
+  "vehicleYearHint": "차량 연식을 입력하세요 ...",
+
+  "vehicleColor": "색상",
+  "vehicleColorHint": "차량 색상을 입력하세요 ...",
+
+  "vehicleCategory": "차량 카테고리",
+  "selectVehicleCategoryHint": "차량 카테고리를 선택하세요 ...",
+
+  "odometer": "주행거리 (KM)",
+  "odometerHint": "차량 주행거리를 입력하세요 ...",
+
+  "vin": "차대번호(VIN)",
+  "vinHint": "차량 VIN을 입력하세요 ...",
+
+  "engineNumber": "엔진 번호",
+  "engineNumberHint": "차량 엔진 번호를 입력하세요 ...",
+
+  "next": "다음",
+  "previous": "이전",
+
+  "installationDate": "설치일",
+  "installationDateHint": "설치일을 선택하세요 ...",
+
+  "deviceType": "기기 유형",
+  "deviceTypeHint": "기기 유형을 선택하세요",
+
+  "deviceModel": "기기 모델",
+  "deviceModelHint": "기기 모델을 선택하세요 ...",
+
+  "simCardNumber": "SIM 카드 번호",
+  "simCardNumberHint": "SIM 카드 번호를 입력하세요 ...",
+
+  "imeiObdNumber": "IMEI OBD 번호",
+  "imeiObdNumberHint": "IMEI OBD 번호를 입력하세요 ...",
+
+  "otpEnterVerificationCodeTitle": "인증 코드 입력",
+  "otpSentToEmail": "인증 코드가\n{email}(으)로 전송되었습니다",
+  "otpEnter5Digits": "5자리 코드를 입력해 주세요.",
+  "otpInvalidTryAgain": "인증 코드가 올바르지 않습니다. 다시 시도해 주세요.",
+
+  "otpNotReceivedEmailPrefix": "이메일을 받지 못하셨나요? ",
+  "otpTryAgain": "코드 재전송.",
+  "otpTryAgainCountdown": "코드 재전송. ({seconds}초)",
+  "otpCodeResentDummy": "코드가 재전송되었습니다.",
+  "otpVerifyCodeBtn": "코드 확인",
+
+  "passwordNewTitle": "새 비밀번호",
+  "passwordNewHint": "새 비밀번호를 입력하세요 ...",
+  "passwordReEnterTitle": "새 비밀번호 재입력",
+  "passwordReEnterHint": "새 비밀번호를 다시 입력하세요 ...",
+
+  "passwordRuleMin8": "최소 8자 이상이어야 합니다",
+  "passwordRuleUpper": "대문자(A-Z)를 1자 이상 포함해야 합니다",
+  "passwordRuleNumber": "숫자(0-9)를 1자 이상 포함해야 합니다",
+  "passwordRuleSymbol": "특수문자(!, @, # 등)를 1자 이상 포함해야 합니다",
+
+  "passwordFillAllFields": "모든 항목을 입력해 주세요.",
+  "passwordNotMeetRequirements": "비밀번호가 요구 사항을 충족하지 않습니다.",
+  "passwordNotMatch": "비밀번호가 일치하지 않습니다.",
+  "passwordUpdatedDummy": "비밀번호가 성공적으로 업데이트되었습니다.",
+  "passwordUpdateFailed": "비밀번호 업데이트에 실패했습니다. 다시 시도해 주세요.",
+
+  "passwordChangeSaveBtn": "새 비밀번호 변경 및 저장",
+
+  "filterTitle": "필터",
+  "filterStartDate": "시작일",
+  "filterEndDate": "종료일",
+  "filterFleetGroup": "차량 그룹",
+  "filterVerifStatus": "인증 상태",
+  "filterAlertType": "알림 유형",
+  "filterApply": "필터 적용",
+  "filterClear": "필터 지우기",
+  "filterChooseStartDate": "시작일 선택",
+  "filterChooseEndDate": "종료일 선택",
+  "filterChooseFleetGroup": "차량 그룹 선택",
+  "filterChooseVerifStatus": "인증 상태 선택",
+  "filterChooseAlertType": "알림 유형 선택",
+  "filterVerified": "인증됨",
+  "filterNotYetVerified": "미인증",
+  "filterUnverified": "인증되지 않음",
+  "filterNeedVerifications": "인증 필요",
+  "filterNeedValidations": "검증 필요",
+  "filterValidated": "검증됨",
+  "filterSearch": "검색",
+  "filterNoOptions": "옵션을 찾을 수 없습니다",
+  "filterAllFleetGroup": "모든 차량 그룹",
+  "filterAllAlertType": "모든 알림 유형",
+
+  "gpsDate": "GPS 날짜",
+  "alertType": "알림 유형",
+  "speed": "속도",
+
+  "addVehicleTitle": "차량 추가",
+  "addVehicleIdentifierTitle": "번호판",
+  "addVehicleIdentifierPlaceholder": "번호판을 입력하세요",
+  "addVehicleRequiredError": "번호판은 필수입니다",
+  "addVehiclePlateExistsError": "이미 등록된 번호판입니다",
+  "addVehicleCheckFailedError": "번호판 확인에 실패했습니다. 다시 시도해 주세요",
+  "addVehicleContinue": "계속",
+  "addVehicleChecking": "확인 중 ...",
+
+  "successAddVehicle": "차량이 성공적으로 추가되었습니다",
+  "successUpdateVehicle": "차량이 성공적으로 업데이트되었습니다",
+  "errFailedAdd": "차량 추가에 실패했습니다. 다시 시도해 주세요",
+  "errFailedUpdate": "차량 업데이트에 실패했습니다. 다시 시도해 주세요",
+  "errVinUnique": "이미 존재하는 VIN입니다. 다른 VIN을 입력해 주세요",
+  "selectFleetGroupHint": "차량 그룹 선택",
+  "loading": "로딩 중 ...",
+
+  "seeNotesVerification": "인증 메모 보기",
+  "seeNotesValidation": "검증 메모 보기",
+  "showMapCoordinate": "지도 좌표 표시",
+  "alertNotes": "알림 메모",
+  "notes": "메모",
+  "noNotes": "메모가 없습니다",
+  "noMedia": "미디어가 없습니다",
+  "mapCoordinate": "지도 좌표",
+  "copyCoordinate": "좌표가 복사되었습니다",
+  "filterAllStatus": "모든 상태",
+
+  "registerLinkPrefix": "계정이 없으신가요? ",
+  "registerLinkAction": "여기서 등록하세요",
+  "registerTitle": "계정 생성",
+  "registerSubtitle": "새 계정을 만들려면 아래 정보를 입력하세요",
+  "registerFullName": "이름",
+  "registerFullNamePlaceholder": "이름을 입력하세요 ...",
+  "registerPhone": "전화번호",
+  "registerPhonePlaceholder": "전화번호를 입력하세요 ...",
+  "registerPhoneInvalid": "전화번호는 숫자만 입력할 수 있습니다",
+  "registerCompanyName": "회사명 (선택 사항)",
+  "registerCompanyNamePlaceholder": "회사명을 입력하세요 ...",
+  "registerSubmitBtn": "등록",
+  "registerPendingTitle": "확인 대기 중",
+  "registerPendingDesc": "등록해 주셔서 감사합니다. 등록이 승인되면 이메일로 확인 메일을 보내드립니다.",
+  "registerPendingOkBtn": "확인했습니다"
+}

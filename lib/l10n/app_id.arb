@@ -4,6 +4,9 @@
   "language": "Bahasa",
   "english": "Inggris",
   "indonesian": "Bahasa Indonesia",
+  "chinese": "Mandarin",
+  "japanese": "Jepang",
+  "korean": "Korea",
 
   "navTracker": "Tracker",
   "navVehicle": "Kendaraan",

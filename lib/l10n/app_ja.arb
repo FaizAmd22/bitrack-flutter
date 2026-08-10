@@ -1,0 +1,282 @@
+{
+  "@@locale": "ja",
+  "appTitle": "FixTrack",
+  "language": "言語",
+  "english": "英語",
+  "indonesian": "インドネシア語",
+  "chinese": "中国語",
+  "japanese": "日本語",
+  "korean": "韓国語",
+
+  "navTracker": "トラッカー",
+  "navVehicle": "車両",
+  "navNotification": "通知",
+  "navProfile": "プロフィール",
+
+  "notifUrgent": "緊急",
+  "notifSummary": "概要",
+  "notifNoData": "アラートデータがありません",
+
+  "login": "ログイン",
+  "email": "メールアドレス",
+  "password": "パスワード",
+  "emailPlaceholder": "メールアドレスを入力してください…",
+  "passwordPlaceholder": "パスワードを入力してください…",
+
+  "emailRequired": "メールアドレスを入力してください",
+  "emailInvalid": "メールアドレスの形式が正しくありません",
+  "fieldRequired": "{name}を入力してください",
+
+  "addFingerprint": "指紋を追加",
+  "addFingerprintDesc": "次回のログインを簡単にするため、指紋を保存しますか？",
+  "addFaceId": "Face IDを追加",
+  "addFaceIdDesc": "次回のログインを簡単にするため、Face IDを保存しますか？",
+  "addBiometric": "生体認証を追加",
+  "addBiometricDesc": "次回のログインを簡単にするため、生体認証を保存しますか？",
+  "cancel": "キャンセル",
+  "save": "保存",
+
+  "biometricLoginLabel": "生体認証でログイン",
+  "faceIdLoginLabel": "Face IDでログイン",
+  "biometricNotSupported": "この端末は生体認証ログインに対応していません",
+  "biometricReason": "生体認証でログインしてください",
+  "biometricCredNotFound": "生体認証のログイン情報が見つかりません",
+  "loginFailedTryAgain": "ログインに失敗しました。もう一度お試しください",
+  "errorPrefix": "エラーが発生しました：{message}",
+
+  "notificationSettings": "通知設定",
+  "alert": "アラート",
+  "softwareUpdate": "ソフトウェアアップデート",
+
+  "profileChangePassword": "パスワードの変更",
+  "profileNotificationSetting": "通知設定",
+  "profileLanguage": "言語",
+
+  "signOut": "サインアウト",
+  "signOutTitle": "アカウントからサインアウト",
+  "signOutDesc": "本当にサインアウトしますか？",
+  "logout": "ログアウト",
+
+  "searchLicensePlate": "車両ナンバーを検索…",
+  "noVehicleYet": "車両データがまだありません",
+  "dataNotFound": "データが見つかりません",
+
+  "showPlate": "ナンバープレートを表示",
+  "hidePlate": "ナンバープレートを非表示",
+
+  "vehicleDataCantLoaded": "車両データを読み込めませんでした。",
+  "pleaseTryAgain": "もう一度お試しください。",
+  "tryAgain": "再試行してください。",
+
+  "vehicleInformation": "車両情報",
+  "deviceInformation": "デバイス情報",
+  "review": "確認",
+
+  "tabInformation": "情報",
+  "tabStatus": "ステータス",
+  "tabSensor": "センサー",
+
+  "vehicleIdNotAvailableDesc": "vehicle_idが利用できません。\nこのモーダルを閉じて、車両詳細から再度開いてください。",
+
+  "failedLoadData": "データの読み込みに失敗しました",
+  "retry": "再試行",
+
+  "vehicleInfoGpsDate": "GPS日時",
+  "vehicleInfoFleetGroup": "フリートグループ",
+  "vehicleInfoLicensePlate": "ナンバープレート",
+  "vehicleInfoImei": "IMEI",
+  "vehicleInfoLatitude": "緯度",
+  "vehicleInfoLongitude": "経度",
+  "vehicleInfoGoogleMap": "Googleマップ",
+  "vehicleInfoStreetView": "ストリートビュー",
+
+  "showGoogleMap": "Googleマップを表示",
+  "showStreetView": "ストリートビューを表示",
+
+  "vehicleStatusSpeed": "速度",
+  "vehicleStatusTotalOdometer": "総走行距離",
+  "vehicleStatusInternalBattery": "内部バッテリー",
+  "vehicleStatusExternalBattery": "外部バッテリー",
+
+  "vehicleSensorFuel": "燃料",
+  "vehicleSensorDirection": "方向",
+  "vehicleSensorHumidity": "湿度",
+  "vehicleSensorLeftDoor": "左ドア",
+  "vehicleSensorRightDoor": "右ドア",
+  "vehicleSensorBackDoor": "後部ドア",
+
+  "active": "有効",
+  "inactive": "無効",
+  "createdAt": "作成日",
+
+  "addNewVehicleTitle": "新しい車両を追加",
+  "updateVehicleTitle": "車両を更新",
+
+  "addVehicleCta": "車両を追加",
+  "updateVehicleCta": "車両を更新",
+
+  "confirm": "確認",
+
+  "addVehicleConfirmAddTitle": "この車両を追加しますか？",
+  "addVehicleConfirmAddDesc": "内容をよくご確認ください。送信すると、この車両がフリートリストに追加されます。",
+
+  "addVehicleConfirmUpdateTitle": "この車両を更新しますか？",
+  "addVehicleConfirmUpdateDesc": "変更内容をよくご確認ください。送信すると、フリートリスト内のこの車両の情報が更新されます。",
+
+  "createTodo": "追加（TODO）",
+  "updateTodo": "更新（TODO）",
+
+  "plateNumber": "ナンバープレート",
+  "plateNumberHint": "車両のナンバープレートを入力…",
+
+  "fieldCantEmpty": "このフィールドは空にできません",
+  "brand": "ブランド",
+  "model": "モデル",
+
+  "selectBrandHint": "ブランドを選択…",
+  "selectModelHint": "モデルを選択…",
+  "selectBrandFirst": "先にブランドを選択してください",
+  "selectModelFirst": "先にモデルを選択してください",
+  "selectTypeHint": "タイプを選択…",
+  "noTypeAvailable": "利用可能なタイプがありません",
+
+  "vehicleType": "タイプ",
+  "vehicleTypeHint": "車両タイプを入力…",
+
+  "vehicleYear": "年式",
+  "vehicleYearHint": "車両の年式を入力…",
+
+  "vehicleColor": "色",
+  "vehicleColorHint": "車両の色を入力…",
+
+  "vehicleCategory": "車両カテゴリ",
+  "selectVehicleCategoryHint": "車両カテゴリを選択…",
+
+  "odometer": "走行距離（KM）",
+  "odometerHint": "車両の走行距離を入力…",
+
+  "vin": "車台番号（VIN）",
+  "vinHint": "車両のVINを入力…",
+
+  "engineNumber": "エンジン番号",
+  "engineNumberHint": "車両のエンジン番号を入力…",
+
+  "next": "次へ",
+  "previous": "戻る",
+
+  "installationDate": "設置日",
+  "installationDateHint": "設置日を選択…",
+
+  "deviceType": "デバイスタイプ",
+  "deviceTypeHint": "デバイスタイプを選択",
+
+  "deviceModel": "デバイスモデル",
+  "deviceModelHint": "デバイスモデルを選択…",
+
+  "simCardNumber": "SIMカード番号",
+  "simCardNumberHint": "SIMカード番号を入力…",
+
+  "imeiObdNumber": "IMEI OBD番号",
+  "imeiObdNumberHint": "IMEI OBD番号を入力…",
+
+  "otpEnterVerificationCodeTitle": "認証コードを入力",
+  "otpSentToEmail": "認証コードを\n{email}宛に送信しました",
+  "otpEnter5Digits": "5桁のコードを入力してください。",
+  "otpInvalidTryAgain": "認証コードが無効です。もう一度お試しください。",
+
+  "otpNotReceivedEmailPrefix": "メールが届きませんか？",
+  "otpTryAgain": "コードを再送信。",
+  "otpTryAgainCountdown": "コードを再送信。（{seconds}秒）",
+  "otpCodeResentDummy": "コードを再送信しました。",
+  "otpVerifyCodeBtn": "コードを確認",
+
+  "passwordNewTitle": "新しいパスワード",
+  "passwordNewHint": "新しいパスワードを入力…",
+  "passwordReEnterTitle": "新しいパスワードを再入力",
+  "passwordReEnterHint": "新しいパスワードをもう一度入力…",
+
+  "passwordRuleMin8": "8文字以上で入力してください",
+  "passwordRuleUpper": "大文字（A-Z）を1文字以上含めてください",
+  "passwordRuleNumber": "数字（0-9）を1文字以上含めてください",
+  "passwordRuleSymbol": "記号（!、@、#など）を1文字以上含めてください",
+
+  "passwordFillAllFields": "すべての項目を入力してください。",
+  "passwordNotMeetRequirements": "パスワードが要件を満たしていません。",
+  "passwordNotMatch": "パスワードが一致しません。",
+  "passwordUpdatedDummy": "パスワードを更新しました。",
+  "passwordUpdateFailed": "パスワードの更新に失敗しました。もう一度お試しください。",
+
+  "passwordChangeSaveBtn": "変更して新しいパスワードを保存",
+
+  "filterTitle": "フィルター",
+  "filterStartDate": "開始日",
+  "filterEndDate": "終了日",
+  "filterFleetGroup": "フリートグループ",
+  "filterVerifStatus": "検証ステータス",
+  "filterAlertType": "アラートタイプ",
+  "filterApply": "フィルターを適用",
+  "filterClear": "フィルターをクリア",
+  "filterChooseStartDate": "開始日を選択",
+  "filterChooseEndDate": "終了日を選択",
+  "filterChooseFleetGroup": "フリートグループを選択",
+  "filterChooseVerifStatus": "検証ステータスを選択",
+  "filterChooseAlertType": "アラートタイプを選択",
+  "filterVerified": "検証済み",
+  "filterNotYetVerified": "未検証",
+  "filterUnverified": "未検証",
+  "filterNeedVerifications": "要検証",
+  "filterNeedValidations": "要承認",
+  "filterValidated": "承認済み",
+  "filterSearch": "検索",
+  "filterNoOptions": "オプションが見つかりません",
+  "filterAllFleetGroup": "すべてのフリートグループ",
+  "filterAllAlertType": "すべてのアラートタイプ",
+
+  "gpsDate": "GPS日時",
+  "alertType": "アラートタイプ",
+  "speed": "速度",
+
+  "addVehicleTitle": "車両を追加",
+  "addVehicleIdentifierTitle": "ナンバープレート",
+  "addVehicleIdentifierPlaceholder": "ナンバープレートを入力",
+  "addVehicleRequiredError": "ナンバープレートは必須です",
+  "addVehiclePlateExistsError": "このナンバープレートはすでに登録されています",
+  "addVehicleCheckFailedError": "ナンバープレートの確認に失敗しました。もう一度お試しください",
+  "addVehicleContinue": "続ける",
+  "addVehicleChecking": "確認中…",
+
+  "successAddVehicle": "車両を追加しました",
+  "successUpdateVehicle": "車両を更新しました",
+  "errFailedAdd": "車両の追加に失敗しました。もう一度お試しください",
+  "errFailedUpdate": "車両の更新に失敗しました。もう一度お試しください",
+  "errVinUnique": "このVINはすでに存在します。別のVINを入力してください",
+  "selectFleetGroupHint": "フリートグループを選択",
+  "loading": "読み込み中…",
+
+  "seeNotesVerification": "検証メモを見る",
+  "seeNotesValidation": "承認メモを見る",
+  "showMapCoordinate": "地図座標を表示",
+  "alertNotes": "アラートメモ",
+  "notes": "メモ",
+  "noNotes": "メモがありません",
+  "noMedia": "メディアがありません",
+  "mapCoordinate": "地図座標",
+  "copyCoordinate": "座標をコピーしました",
+  "filterAllStatus": "すべてのステータス",
+
+  "registerLinkPrefix": "アカウントをお持ちでないですか？",
+  "registerLinkAction": "こちらから登録",
+  "registerTitle": "アカウントを作成",
+  "registerSubtitle": "新しいアカウントを作成するために以下の情報を入力してください",
+  "registerFullName": "氏名",
+  "registerFullNamePlaceholder": "氏名を入力…",
+  "registerPhone": "電話番号",
+  "registerPhonePlaceholder": "電話番号を入力…",
+  "registerPhoneInvalid": "電話番号は数字のみ入力できます",
+  "registerCompanyName": "会社名（任意）",
+  "registerCompanyNamePlaceholder": "会社名を入力…",
+  "registerSubmitBtn": "登録",
+  "registerPendingTitle": "確認待ち",
+  "registerPendingDesc": "ご登録ありがとうございます。登録が承認されると、メールアドレス宛に確認のご案内をお送りします。",
+  "registerPendingOkBtn": "了解しました"
+}

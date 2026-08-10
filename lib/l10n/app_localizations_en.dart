@@ -21,6 +21,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get indonesian => 'Bahasa Indonesia';
 
   @override
+  String get chinese => 'Chinese';
+
+  @override
+  String get japanese => 'Japanese';
+
+  @override
+  String get korean => 'Korean';
+
+  @override
   String get navTracker => 'Tracker';
 
   @override

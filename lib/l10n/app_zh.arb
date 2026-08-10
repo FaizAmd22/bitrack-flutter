@@ -1,0 +1,282 @@
+{
+  "@@locale": "zh",
+  "appTitle": "FixTrack",
+  "language": "语言",
+  "english": "英语",
+  "indonesian": "印尼语",
+  "chinese": "中文",
+  "japanese": "日语",
+  "korean": "韩语",
+
+  "navTracker": "追踪",
+  "navVehicle": "车辆",
+  "navNotification": "通知",
+  "navProfile": "个人资料",
+
+  "notifUrgent": "紧急",
+  "notifSummary": "摘要",
+  "notifNoData": "暂无提醒数据",
+
+  "login": "登录",
+  "email": "邮箱",
+  "password": "密码",
+  "emailPlaceholder": "请输入邮箱……",
+  "passwordPlaceholder": "请输入密码……",
+
+  "emailRequired": "邮箱不能为空",
+  "emailInvalid": "邮箱格式无效",
+  "fieldRequired": "{name}不能为空",
+
+  "addFingerprint": "添加指纹",
+  "addFingerprintDesc": "是否保存指纹以便下次快速登录？",
+  "addFaceId": "添加面容ID",
+  "addFaceIdDesc": "是否保存面容ID以便下次快速登录？",
+  "addBiometric": "添加生物识别",
+  "addBiometricDesc": "是否保存生物识别认证以便下次快速登录？",
+  "cancel": "取消",
+  "save": "保存",
+
+  "biometricLoginLabel": "使用生物识别方式登录",
+  "faceIdLoginLabel": "使用面容ID登录",
+  "biometricNotSupported": "此设备不支持生物识别登录",
+  "biometricReason": "使用生物识别登录",
+  "biometricCredNotFound": "未找到生物识别登录数据",
+  "loginFailedTryAgain": "登录失败，请重试",
+  "errorPrefix": "发生错误：{message}",
+
+  "notificationSettings": "通知设置",
+  "alert": "提醒",
+  "softwareUpdate": "软件更新",
+
+  "profileChangePassword": "修改密码",
+  "profileNotificationSetting": "通知设置",
+  "profileLanguage": "语言",
+
+  "signOut": "退出登录",
+  "signOutTitle": "退出账户",
+  "signOutDesc": "确定要退出登录吗？",
+  "logout": "退出登录",
+
+  "searchLicensePlate": "搜索车牌号……",
+  "noVehicleYet": "暂无车辆数据",
+  "dataNotFound": "未找到数据",
+
+  "showPlate": "显示车牌",
+  "hidePlate": "隐藏车牌",
+
+  "vehicleDataCantLoaded": "无法加载车辆数据。",
+  "pleaseTryAgain": "请重试。",
+  "tryAgain": "重试。",
+
+  "vehicleInformation": "车辆信息",
+  "deviceInformation": "设备信息",
+  "review": "审核",
+
+  "tabInformation": "信息",
+  "tabStatus": "状态",
+  "tabSensor": "传感器",
+
+  "vehicleIdNotAvailableDesc": "vehicle_id 不可用。\n请关闭此弹窗，然后从车辆详情重新打开。",
+
+  "failedLoadData": "加载数据失败",
+  "retry": "重试",
+
+  "vehicleInfoGpsDate": "GPS日期",
+  "vehicleInfoFleetGroup": "车队组",
+  "vehicleInfoLicensePlate": "车牌号",
+  "vehicleInfoImei": "IMEI",
+  "vehicleInfoLatitude": "纬度",
+  "vehicleInfoLongitude": "经度",
+  "vehicleInfoGoogleMap": "谷歌地图",
+  "vehicleInfoStreetView": "街景视图",
+
+  "showGoogleMap": "显示谷歌地图",
+  "showStreetView": "显示街景视图",
+
+  "vehicleStatusSpeed": "速度",
+  "vehicleStatusTotalOdometer": "总里程表",
+  "vehicleStatusInternalBattery": "内部电池",
+  "vehicleStatusExternalBattery": "外部电池",
+
+  "vehicleSensorFuel": "燃油",
+  "vehicleSensorDirection": "方向",
+  "vehicleSensorHumidity": "湿度",
+  "vehicleSensorLeftDoor": "左门",
+  "vehicleSensorRightDoor": "右门",
+  "vehicleSensorBackDoor": "后门",
+
+  "active": "启用",
+  "inactive": "停用",
+  "createdAt": "创建时间",
+
+  "addNewVehicleTitle": "添加新车辆",
+  "updateVehicleTitle": "更新车辆",
+
+  "addVehicleCta": "添加车辆",
+  "updateVehicleCta": "更新车辆",
+
+  "confirm": "确认",
+
+  "addVehicleConfirmAddTitle": "确定添加此车辆？",
+  "addVehicleConfirmAddDesc": "请花点时间确认详细信息。提交后，此车辆将添加到您的车队列表中。",
+
+  "addVehicleConfirmUpdateTitle": "确定更新此车辆？",
+  "addVehicleConfirmUpdateDesc": "请花点时间核实这些更改。提交后将更新车队列表中此车辆的信息。",
+
+  "createTodo": "添加（待办）",
+  "updateTodo": "更新（待办）",
+
+  "plateNumber": "车牌号",
+  "plateNumberHint": "请输入车辆车牌号……",
+
+  "fieldCantEmpty": "此字段不能为空",
+  "brand": "品牌",
+  "model": "型号",
+
+  "selectBrandHint": "选择品牌……",
+  "selectModelHint": "选择型号……",
+  "selectBrandFirst": "请先选择品牌",
+  "selectModelFirst": "请先选择型号",
+  "selectTypeHint": "选择类型……",
+  "noTypeAvailable": "暂无可用类型",
+
+  "vehicleType": "类型",
+  "vehicleTypeHint": "请输入车辆类型……",
+
+  "vehicleYear": "年份",
+  "vehicleYearHint": "请输入车辆年份……",
+
+  "vehicleColor": "颜色",
+  "vehicleColorHint": "请输入车辆颜色……",
+
+  "vehicleCategory": "车辆类别",
+  "selectVehicleCategoryHint": "选择车辆类别……",
+
+  "odometer": "里程表（公里）",
+  "odometerHint": "请输入车辆里程……",
+
+  "vin": "车架号（VIN）",
+  "vinHint": "请输入车辆VIN……",
+
+  "engineNumber": "发动机号",
+  "engineNumberHint": "请输入车辆发动机号……",
+
+  "next": "下一步",
+  "previous": "上一步",
+
+  "installationDate": "安装日期",
+  "installationDateHint": "选择安装日期……",
+
+  "deviceType": "设备类型",
+  "deviceTypeHint": "选择设备类型",
+
+  "deviceModel": "设备型号",
+  "deviceModelHint": "选择设备型号……",
+
+  "simCardNumber": "SIM卡号",
+  "simCardNumberHint": "请输入SIM卡号……",
+
+  "imeiObdNumber": "IMEI OBD编号",
+  "imeiObdNumberHint": "请输入IMEI OBD编号……",
+
+  "otpEnterVerificationCodeTitle": "输入验证码",
+  "otpSentToEmail": "验证码已发送至\n{email}",
+  "otpEnter5Digits": "请输入5位验证码。",
+  "otpInvalidTryAgain": "验证码无效，请重试。",
+
+  "otpNotReceivedEmailPrefix": "没有收到邮件？",
+  "otpTryAgain": "重新发送验证码。",
+  "otpTryAgainCountdown": "重新发送验证码。（{seconds}秒）",
+  "otpCodeResentDummy": "验证码已重新发送。",
+  "otpVerifyCodeBtn": "验证验证码",
+
+  "passwordNewTitle": "新密码",
+  "passwordNewHint": "请输入新密码……",
+  "passwordReEnterTitle": "重新输入新密码",
+  "passwordReEnterHint": "请再次输入新密码……",
+
+  "passwordRuleMin8": "至少需要8个字符",
+  "passwordRuleUpper": "至少包含1个大写字母（A-Z）",
+  "passwordRuleNumber": "至少包含1个数字（0-9）",
+  "passwordRuleSymbol": "至少包含1个符号（!、@、# 等）",
+
+  "passwordFillAllFields": "请填写所有字段。",
+  "passwordNotMeetRequirements": "密码不符合要求。",
+  "passwordNotMatch": "两次密码不一致。",
+  "passwordUpdatedDummy": "密码更新成功。",
+  "passwordUpdateFailed": "密码更新失败，请重试。",
+
+  "passwordChangeSaveBtn": "修改并保存新密码",
+
+  "filterTitle": "筛选",
+  "filterStartDate": "开始日期",
+  "filterEndDate": "结束日期",
+  "filterFleetGroup": "车队组",
+  "filterVerifStatus": "验证状态",
+  "filterAlertType": "提醒类型",
+  "filterApply": "应用筛选",
+  "filterClear": "清除筛选",
+  "filterChooseStartDate": "选择开始日期",
+  "filterChooseEndDate": "选择结束日期",
+  "filterChooseFleetGroup": "选择车队组",
+  "filterChooseVerifStatus": "选择验证状态",
+  "filterChooseAlertType": "选择提醒类型",
+  "filterVerified": "已验证",
+  "filterNotYetVerified": "尚未验证",
+  "filterUnverified": "未验证",
+  "filterNeedVerifications": "需要验证",
+  "filterNeedValidations": "需要审核",
+  "filterValidated": "已审核",
+  "filterSearch": "搜索",
+  "filterNoOptions": "未找到选项",
+  "filterAllFleetGroup": "所有车队组",
+  "filterAllAlertType": "所有提醒类型",
+
+  "gpsDate": "GPS日期",
+  "alertType": "提醒类型",
+  "speed": "速度",
+
+  "addVehicleTitle": "添加车辆",
+  "addVehicleIdentifierTitle": "车牌号",
+  "addVehicleIdentifierPlaceholder": "请输入车牌号",
+  "addVehicleRequiredError": "车牌号为必填项",
+  "addVehiclePlateExistsError": "该车牌号已被注册",
+  "addVehicleCheckFailedError": "检查车牌号失败，请重试",
+  "addVehicleContinue": "继续",
+  "addVehicleChecking": "正在检查……",
+
+  "successAddVehicle": "车辆添加成功",
+  "successUpdateVehicle": "车辆更新成功",
+  "errFailedAdd": "添加车辆失败，请重试",
+  "errFailedUpdate": "更新车辆失败，请重试",
+  "errVinUnique": "该VIN已存在，请输入其他VIN",
+  "selectFleetGroupHint": "选择车队组",
+  "loading": "加载中……",
+
+  "seeNotesVerification": "查看验证备注",
+  "seeNotesValidation": "查看审核备注",
+  "showMapCoordinate": "显示地图坐标",
+  "alertNotes": "提醒备注",
+  "notes": "备注",
+  "noNotes": "暂无备注",
+  "noMedia": "暂无媒体",
+  "mapCoordinate": "地图坐标",
+  "copyCoordinate": "坐标已复制",
+  "filterAllStatus": "所有状态",
+
+  "registerLinkPrefix": "还没有账户？",
+  "registerLinkAction": "在此注册",
+  "registerTitle": "创建账户",
+  "registerSubtitle": "填写以下信息以创建新账户",
+  "registerFullName": "姓名",
+  "registerFullNamePlaceholder": "请输入姓名……",
+  "registerPhone": "电话号码",
+  "registerPhonePlaceholder": "请输入电话号码……",
+  "registerPhoneInvalid": "电话号码只能包含数字",
+  "registerCompanyName": "公司名称（选填）",
+  "registerCompanyNamePlaceholder": "请输入公司名称……",
+  "registerSubmitBtn": "注册",
+  "registerPendingTitle": "等待确认",
+  "registerPendingDesc": "感谢您的注册。注册通过后，确认信息将发送至您的邮箱。",
+  "registerPendingOkBtn": "知道了"
+}

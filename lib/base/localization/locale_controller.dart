@@ -5,7 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 const String kPrefLocaleCode = 'app_language_code';
 
 class LocaleNotifier extends Notifier<Locale> {
-  static const supportedLocales = <Locale>[Locale('en'), Locale('id')];
+  static const supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('id'),
+    Locale('zh'),
+    Locale('ja'),
+    Locale('ko'),
+  ];
 
   @override
   Locale build() {

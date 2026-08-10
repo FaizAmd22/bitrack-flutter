@@ -21,6 +21,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get indonesian => 'Bahasa Indonesia';
 
   @override
+  String get chinese => 'Mandarin';
+
+  @override
+  String get japanese => 'Jepang';
+
+  @override
+  String get korean => 'Korea';
+
+  @override
   String get navTracker => 'Tracker';
 
   @override
