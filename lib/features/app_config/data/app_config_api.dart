@@ -1,3 +1,4 @@
+import 'package:ams/base/network/api_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,7 +22,10 @@ class AppConfigApi {
     }
 
     try {
-      final response = await Dio().get(
+      final dio = Dio();
+      attachApiLogger(dio);
+
+      final response = await dio.get(
         '$url/rest/v1/$_table',
         queryParameters: {'key': 'eq.$key', 'select': 'value'},
         options: Options(

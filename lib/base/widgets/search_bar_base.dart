@@ -42,7 +42,7 @@ class SearchBarBase extends StatelessWidget {
                   value: value,
                   onChanged: onChanged,
                   suggestionPlates: suggestionPlates,
-                  hintText: hintText ?? 'Search...',
+                  hintText: hintText,
                 ),
               ),
               if (showFilter) ...[

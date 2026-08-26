@@ -24,16 +24,8 @@ class UpdatePasswordService {
     return _parse(res.data);
   }
 
-  UpdatePasswordResult _parse(dynamic body) {
-    final status = body is Map ? body['status'] : null;
-    final isFalse = status == false || status == 'false';
-
-    if (isFalse) {
-      final msg = body is Map
-          ? (body['message'] ?? body['error_msg'])?.toString()
-          : null;
-      return UpdatePasswordResult(success: false, errorMsg: msg);
-    }
-    return const UpdatePasswordResult(success: true);
-  }
+  /// HTTP 2xx = berhasil. Kegagalan datang sebagai DioException dan
+  /// ditangani di change_password.dart.
+  UpdatePasswordResult _parse(dynamic body) =>
+      const UpdatePasswordResult(success: true);
 }

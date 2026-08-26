@@ -1,5 +1,6 @@
 // lib/base/widgets/option_picker_sheet.dart
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class PickerOption {
@@ -15,8 +16,8 @@ class OptionPickerSheet {
     required List<PickerOption> options,
     PickerOption? selected,
     bool searchable = false,
-    String searchHint = 'Cari...',
-    String emptyLabel = 'Tidak ada pilihan',
+    String? searchHint,
+    String? emptyLabel,
   }) {
     return showModalBottomSheet<PickerOption>(
       context: context,
@@ -42,8 +43,8 @@ class _PickerBody extends StatefulWidget {
   final List<PickerOption> options;
   final PickerOption? selected;
   final bool searchable;
-  final String searchHint;
-  final String emptyLabel;
+  final String? searchHint;
+  final String? emptyLabel;
 
   const _PickerBody({
     required this.title,
@@ -63,6 +64,9 @@ class _PickerBodyState extends State<_PickerBody> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final searchHint = widget.searchHint ?? t.filterSearchHint;
+    final emptyLabel = widget.emptyLabel ?? t.filterNoOptions;
     final q = _query.trim().toLowerCase();
     final filtered = q.isEmpty
         ? widget.options
@@ -112,7 +116,7 @@ class _PickerBodyState extends State<_PickerBody> {
                   child: TextField(
                     onChanged: (v) => setState(() => _query = v),
                     decoration: InputDecoration(
-                      hintText: widget.searchHint,
+                      hintText: searchHint,
                       prefixIcon: const Icon(
                         Icons.search,
                         color: AppStyles.primaryColor,
@@ -139,7 +143,7 @@ class _PickerBodyState extends State<_PickerBody> {
                     ? Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          widget.emptyLabel,
+                          emptyLabel,
                           style: AppStyles.textSm.copyWith(
                             color: AppStyles.textDarkGrayColor,
                           ),

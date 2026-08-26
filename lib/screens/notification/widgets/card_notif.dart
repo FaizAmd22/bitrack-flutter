@@ -2,6 +2,7 @@
 
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/utils/string_utils.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/notification/models/alert_model.dart';
 import 'package:ams/screens/notification/widgets/card_notif_popup.dart';
 import 'package:flutter/material.dart';
@@ -30,25 +31,29 @@ class _StatusStyle {
   const _StatusStyle({required this.bg, required this.fg, required this.label});
 }
 
-_StatusStyle _styleFor(_CardStatus status, AlertModel item) {
+_StatusStyle _styleFor(
+  _CardStatus status,
+  AlertModel item,
+  AppLocalizations t,
+) {
   switch (status) {
     case _CardStatus.needVerify:
       return _StatusStyle(
         bg: AppStyles.bgYellowColor,
         fg: AppStyles.yellowColor,
-        label: item.statusText ?? 'Not yet verified',
+        label: item.statusText ?? t.filterNotYetVerified,
       );
     case _CardStatus.needValidate:
       return _StatusStyle(
         bg: const Color(0xFFE3F2FD),
         fg: const Color(0xFF2196F3),
-        label: item.statusValidationText ?? 'Not yet validated',
+        label: item.statusValidationText ?? t.notifNotYetValidated,
       );
     case _CardStatus.validated:
       return _StatusStyle(
         bg: AppStyles.bgGreenColor,
         fg: AppStyles.greenColor,
-        label: item.statusValidationText ?? 'Validated',
+        label: item.statusValidationText ?? t.filterValidated,
       );
   }
 }
@@ -103,8 +108,9 @@ class CardNotif extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final status = _getStatus(item);
-    final style = _styleFor(status, item);
+    final style = _styleFor(status, item, t);
     final muted = AppStyles.darkGrayColor.withOpacity(0.6);
 
     final rightCell = _isOverstay(item.eventType)

@@ -1,3 +1,5 @@
+import 'package:ams/base/localization/locale_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class StonkamStreamService {
@@ -6,7 +8,8 @@ class StonkamStreamService {
   String _must(String key) {
     final v = dotenv.env[key];
     if (v == null || v.trim().isEmpty) {
-      throw Exception('ENV "$key" belum di-set');
+      debugPrint('ENV "$key" belum di-set');
+      throw Exception(currentL10n().dashcamServiceUnavailable);
     }
     return v.trim();
   }

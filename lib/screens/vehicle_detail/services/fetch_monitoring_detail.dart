@@ -1,3 +1,5 @@
+import 'package:ams/base/localization/locale_controller.dart';
+import 'package:ams/base/network/api_response.dart';
 import 'package:ams/base/network/api_client.dart';
 import 'package:ams/base/services/demo_data.dart';
 import 'package:ams/base/services/demo_mode.dart';
@@ -20,7 +22,7 @@ class FetchMonitoringDetail {
 
       final body = res.data;
       if (body is! Map) {
-        throw Exception('Response bukan JSON object');
+        throw Exception(currentL10n().errInvalidResponse);
       }
 
       final data = body['data'];
@@ -28,18 +30,7 @@ class FetchMonitoringDetail {
 
       return <String, dynamic>{};
     } on DioException catch (e) {
-      final status = e.response?.statusCode;
-      final data = e.response?.data;
-
-      if (data is Map && (data['message'] ?? data['error_msg']) != null) {
-        throw Exception(
-          'Request failed ($status): ${data['message'] ?? data['error_msg']}',
-        );
-      }
-
-      throw Exception(
-        'Request failed ($status): ${data?.toString() ?? e.message}',
-      );
+      throw Exception(apiErrorText(e, currentL10n().failedLoadData));
     }
   }
 }

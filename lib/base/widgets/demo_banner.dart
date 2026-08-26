@@ -1,4 +1,5 @@
 import 'package:ams/base/services/demo_mode.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,9 +31,9 @@ class DemoBanner extends ConsumerWidget {
                 height: 26,
                 color: Colors.orange.shade700,
                 alignment: Alignment.center,
-                child: const Text(
-                  'DEMO VERSION — Sample Data',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations.of(context).demoVersionBanner,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,

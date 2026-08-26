@@ -1447,6 +1447,1326 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get registerPendingOkBtn;
+
+  /// No description provided for @navWorkOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Order'**
+  String get navWorkOrder;
+
+  /// No description provided for @woSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Fleet Group ...'**
+  String get woSearchPlaceholder;
+
+  /// No description provided for @woNoDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Work Orders Yet'**
+  String get woNoDataTitle;
+
+  /// No description provided for @woNoDataMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any work orders at the moment.\nCreate a new one to get started.'**
+  String get woNoDataMessage;
+
+  /// No description provided for @woOptionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'See Work Details'**
+  String get woOptionDetails;
+
+  /// No description provided for @woOptionDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Work'**
+  String get woOptionDelete;
+
+  /// No description provided for @woDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Work Order'**
+  String get woDeleteTitle;
+
+  /// No description provided for @woDeleteSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this work order? This action cannot be undone.'**
+  String get woDeleteSubtitle;
+
+  /// No description provided for @woDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get woDeleteConfirm;
+
+  /// No description provided for @woDeleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Success!'**
+  String get woDeleteSuccess;
+
+  /// No description provided for @woDeleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Failed!'**
+  String get woDeleteFailed;
+
+  /// No description provided for @woDetailDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Work'**
+  String get woDetailDeleteTitle;
+
+  /// No description provided for @woDetailDeleteSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this work? This action cannot be undone.'**
+  String get woDetailDeleteSubtitle;
+
+  /// No description provided for @woFleetGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Fleet Group'**
+  String get woFleetGroup;
+
+  /// No description provided for @woFleetGroupPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Fleet Group'**
+  String get woFleetGroupPlaceholder;
+
+  /// No description provided for @woTechnician.
+  ///
+  /// In en, this message translates to:
+  /// **'Technician'**
+  String get woTechnician;
+
+  /// No description provided for @woTechnicianPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Technician'**
+  String get woTechnicianPlaceholder;
+
+  /// No description provided for @woDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get woDate;
+
+  /// No description provided for @woDatePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get woDatePlaceholder;
+
+  /// No description provided for @woCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Work Order'**
+  String get woCreateTitle;
+
+  /// No description provided for @woCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get woCreate;
+
+  /// No description provided for @woCreateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create work order'**
+  String get woCreateFailed;
+
+  /// No description provided for @woWorkListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Work List'**
+  String get woWorkListTitle;
+
+  /// No description provided for @woWorkListEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Work Orders Yet'**
+  String get woWorkListEmptyTitle;
+
+  /// No description provided for @woWorkListEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any work orders at the moment.\nCreate a new one to get started.'**
+  String get woWorkListEmptyMessage;
+
+  /// No description provided for @woAssignButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Work'**
+  String get woAssignButton;
+
+  /// No description provided for @woAssignTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Work Order'**
+  String get woAssignTitle;
+
+  /// No description provided for @woWorkCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Category'**
+  String get woWorkCategory;
+
+  /// No description provided for @woWorkCategoryPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Work Order Category'**
+  String get woWorkCategoryPlaceholder;
+
+  /// No description provided for @woWorkType.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Type'**
+  String get woWorkType;
+
+  /// No description provided for @woWorkTypePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Work Order Type'**
+  String get woWorkTypePlaceholder;
+
+  /// No description provided for @woWorkDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Date'**
+  String get woWorkDate;
+
+  /// No description provided for @woEvidenceNotUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence is not uploaded yet.'**
+  String get woEvidenceNotUploaded;
+
+  /// No description provided for @woOdometerNotFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer is not filled yet.'**
+  String get woOdometerNotFilled;
+
+  /// No description provided for @woGpsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS is active.'**
+  String get woGpsActive;
+
+  /// No description provided for @woGpsNotActive.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS is not active yet.'**
+  String get woGpsNotActive;
+
+  /// No description provided for @woDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Details'**
+  String get woDetailsTitle;
+
+  /// No description provided for @woTabDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get woTabDetails;
+
+  /// No description provided for @woTabEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence'**
+  String get woTabEvidence;
+
+  /// No description provided for @woTabNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get woTabNotes;
+
+  /// No description provided for @woDetailsEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Work Details'**
+  String get woDetailsEdit;
+
+  /// No description provided for @woDetailsSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get woDetailsSave;
+
+  /// No description provided for @woSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Data saved successfully'**
+  String get woSavedSuccess;
+
+  /// No description provided for @woSavedFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save data'**
+  String get woSavedFailed;
+
+  /// No description provided for @woCompleteSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Work marked as complete'**
+  String get woCompleteSuccess;
+
+  /// No description provided for @woCompleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete work'**
+  String get woCompleteFailed;
+
+  /// No description provided for @woLeaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave this page?'**
+  String get woLeaveTitle;
+
+  /// No description provided for @woLeaveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved data will be lost'**
+  String get woLeaveMessage;
+
+  /// No description provided for @woErrorBeforeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Before Installation Evidence is required'**
+  String get woErrorBeforeImage;
+
+  /// No description provided for @woErrorAfterImage.
+  ///
+  /// In en, this message translates to:
+  /// **'After Installation Evidence is required'**
+  String get woErrorAfterImage;
+
+  /// No description provided for @woErrorNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes are required'**
+  String get woErrorNotes;
+
+  /// No description provided for @woActionSaveDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Draft'**
+  String get woActionSaveDraft;
+
+  /// No description provided for @woActionMarkComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Complete'**
+  String get woActionMarkComplete;
+
+  /// No description provided for @woWorkInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Details Information'**
+  String get woWorkInformation;
+
+  /// No description provided for @woInspectionInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance Information'**
+  String get woInspectionInformation;
+
+  /// No description provided for @woDeviceInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Information'**
+  String get woDeviceInformation;
+
+  /// No description provided for @woEvidenceBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before Installation Evidence'**
+  String get woEvidenceBefore;
+
+  /// No description provided for @woEvidenceAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'After Installation Evidence'**
+  String get woEvidenceAfter;
+
+  /// No description provided for @woEvidenceTakeOrUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Take or Upload Photo'**
+  String get woEvidenceTakeOrUpload;
+
+  /// No description provided for @woEvidenceUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Evidence'**
+  String get woEvidenceUploadTitle;
+
+  /// No description provided for @woEvidenceProofTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence'**
+  String get woEvidenceProofTitle;
+
+  /// No description provided for @woEvidenceTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get woEvidenceTakePhoto;
+
+  /// No description provided for @woEvidenceFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get woEvidenceFromGallery;
+
+  /// No description provided for @woEvidenceView.
+  ///
+  /// In en, this message translates to:
+  /// **'View Photo'**
+  String get woEvidenceView;
+
+  /// No description provided for @woEvidenceReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace Photo'**
+  String get woEvidenceReplace;
+
+  /// No description provided for @woEvidenceDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Photo'**
+  String get woEvidenceDelete;
+
+  /// No description provided for @woEvidenceInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported file format. Please use JPG, JPEG or PNG.'**
+  String get woEvidenceInvalidFormat;
+
+  /// No description provided for @woEvidenceProcessFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to process image'**
+  String get woEvidenceProcessFailed;
+
+  /// No description provided for @woNotesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get woNotesTitle;
+
+  /// No description provided for @woNotesPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the work done...'**
+  String get woNotesPlaceholder;
+
+  /// No description provided for @woJobCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Category'**
+  String get woJobCategory;
+
+  /// No description provided for @woJobType.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Type'**
+  String get woJobType;
+
+  /// No description provided for @woLicensePlate.
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate'**
+  String get woLicensePlate;
+
+  /// No description provided for @woLicensePlatePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter License Plate ...'**
+  String get woLicensePlatePlaceholder;
+
+  /// No description provided for @woLicensePlateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate is required'**
+  String get woLicensePlateRequired;
+
+  /// No description provided for @woUseChassisNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Chassis Number'**
+  String get woUseChassisNumber;
+
+  /// No description provided for @woChassisNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Chassis Number'**
+  String get woChassisNumber;
+
+  /// No description provided for @woChassisNumberPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. MHFJB8BS0AK000000'**
+  String get woChassisNumberPlaceholder;
+
+  /// No description provided for @woOdometer.
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer'**
+  String get woOdometer;
+
+  /// No description provided for @woOdometerPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Odometer ...'**
+  String get woOdometerPlaceholder;
+
+  /// No description provided for @woOdometerNumeric.
+  ///
+  /// In en, this message translates to:
+  /// **'Odometer must be numeric'**
+  String get woOdometerNumeric;
+
+  /// No description provided for @woDeviceCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Condition'**
+  String get woDeviceCondition;
+
+  /// No description provided for @woDeviceConditionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Device Condition ...'**
+  String get woDeviceConditionPlaceholder;
+
+  /// No description provided for @woDeviceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Type'**
+  String get woDeviceType;
+
+  /// No description provided for @woDeviceModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Model'**
+  String get woDeviceModel;
+
+  /// No description provided for @woDeviceModelPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Device Model'**
+  String get woDeviceModelPlaceholder;
+
+  /// No description provided for @woDeviceModelRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Device model is required'**
+  String get woDeviceModelRequired;
+
+  /// No description provided for @woSimCardNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM Card Number'**
+  String get woSimCardNumber;
+
+  /// No description provided for @woSimCardNumberOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM Card Number (Optional)'**
+  String get woSimCardNumberOptional;
+
+  /// No description provided for @woSimCardNumberPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter SIM Card Number ...'**
+  String get woSimCardNumberPlaceholder;
+
+  /// No description provided for @woSimCardNumeric.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM card number must be numeric'**
+  String get woSimCardNumeric;
+
+  /// No description provided for @woImei.
+  ///
+  /// In en, this message translates to:
+  /// **'IMEI OBD Number'**
+  String get woImei;
+
+  /// No description provided for @woImeiPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter IMEI OBD Number ...'**
+  String get woImeiPlaceholder;
+
+  /// No description provided for @woImeiNumeric.
+  ///
+  /// In en, this message translates to:
+  /// **'IMEI must be numeric'**
+  String get woImeiNumeric;
+
+  /// No description provided for @woImeiMaxLength.
+  ///
+  /// In en, this message translates to:
+  /// **'IMEI must be at most 15 digits'**
+  String get woImeiMaxLength;
+
+  /// No description provided for @woDashcamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashcam Type'**
+  String get woDashcamType;
+
+  /// No description provided for @woDashcamTypePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Dashcam Type'**
+  String get woDashcamTypePlaceholder;
+
+  /// No description provided for @woDashcamTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashcam type is required'**
+  String get woDashcamTypeRequired;
+
+  /// No description provided for @woDashcamImei.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashcam IMEI'**
+  String get woDashcamImei;
+
+  /// No description provided for @woDashcamImeiPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Dashcam IMEI'**
+  String get woDashcamImeiPlaceholder;
+
+  /// No description provided for @woDashcamImeiNumeric.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashcam IMEI must be numeric'**
+  String get woDashcamImeiNumeric;
+
+  /// No description provided for @woCameraPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Position'**
+  String get woCameraPosition;
+
+  /// No description provided for @woCameraPositionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Camera Position'**
+  String get woCameraPositionPlaceholder;
+
+  /// No description provided for @woCameraPositionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera position is required'**
+  String get woCameraPositionRequired;
+
+  /// No description provided for @woSensorType.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Type'**
+  String get woSensorType;
+
+  /// No description provided for @woSensorTypePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Sensor Type'**
+  String get woSensorTypePlaceholder;
+
+  /// No description provided for @woSensorTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor type is required'**
+  String get woSensorTypeRequired;
+
+  /// No description provided for @woSensorSerialNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Serial Number'**
+  String get woSensorSerialNumber;
+
+  /// No description provided for @woSensorSerialNumberPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Serial Number'**
+  String get woSensorSerialNumberPlaceholder;
+
+  /// No description provided for @woSensorPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Position'**
+  String get woSensorPosition;
+
+  /// No description provided for @woSensorPositionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Sensor Position'**
+  String get woSensorPositionPlaceholder;
+
+  /// No description provided for @woSensorPositionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor position is required'**
+  String get woSensorPositionRequired;
+
+  /// No description provided for @woSimReplacementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New SIM Card Number'**
+  String get woSimReplacementTitle;
+
+  /// No description provided for @woSimReplacementPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter New SIM Card Number ...'**
+  String get woSimReplacementPlaceholder;
+
+  /// No description provided for @woInspectionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get woInspectionAction;
+
+  /// No description provided for @woInspectionActionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Action of Maintenance'**
+  String get woInspectionActionPlaceholder;
+
+  /// No description provided for @woInspectionResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance Result'**
+  String get woInspectionResult;
+
+  /// No description provided for @woInspectionResultPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide Details of The Maintenance ...'**
+  String get woInspectionResultPlaceholder;
+
+  /// No description provided for @woCurrentDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Device Information'**
+  String get woCurrentDeviceTitle;
+
+  /// No description provided for @woCurrentDeviceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Type'**
+  String get woCurrentDeviceType;
+
+  /// No description provided for @woCurrentDeviceModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Model'**
+  String get woCurrentDeviceModel;
+
+  /// No description provided for @woCurrentDeviceSimCard.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM Card Number'**
+  String get woCurrentDeviceSimCard;
+
+  /// No description provided for @woCurrentDeviceImei.
+  ///
+  /// In en, this message translates to:
+  /// **'IMEI OBD Number'**
+  String get woCurrentDeviceImei;
+
+  /// No description provided for @woReviewWorkDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Details Information'**
+  String get woReviewWorkDetails;
+
+  /// No description provided for @woStepDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Details Information'**
+  String get woStepDetails;
+
+  /// No description provided for @woStepInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Information'**
+  String get woStepInformation;
+
+  /// No description provided for @woStepInspection.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance Information'**
+  String get woStepInspection;
+
+  /// No description provided for @woStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get woStepReview;
+
+  /// No description provided for @woStepPrev.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get woStepPrev;
+
+  /// No description provided for @woStepNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get woStepNext;
+
+  /// No description provided for @woStepSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Work Order'**
+  String get woStepSubmit;
+
+  /// No description provided for @woCreateDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Work Order'**
+  String get woCreateDetailTitle;
+
+  /// No description provided for @woUpdateDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Work Order'**
+  String get woUpdateDetailTitle;
+
+  /// No description provided for @woSubmitConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Order Confirmation'**
+  String get woSubmitConfirmTitle;
+
+  /// No description provided for @woSubmitConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review the details carefully. Confirm that the work order information is correct and ready to proceed.'**
+  String get woSubmitConfirmMessage;
+
+  /// No description provided for @woCreateDetailSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully added detail!'**
+  String get woCreateDetailSuccess;
+
+  /// No description provided for @woCreateDetailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add detail!'**
+  String get woCreateDetailFailed;
+
+  /// No description provided for @woUpdateDetailSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Work order detail updated successfully'**
+  String get woUpdateDetailSuccess;
+
+  /// No description provided for @woUpdateDetailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update work order detail'**
+  String get woUpdateDetailFailed;
+
+  /// No description provided for @woVehicleInfoFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get vehicle information'**
+  String get woVehicleInfoFailed;
+
+  /// No description provided for @vehicleCategoryBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get vehicleCategoryBus;
+
+  /// No description provided for @vehicleCategoryPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger'**
+  String get vehicleCategoryPassenger;
+
+  /// No description provided for @vehicleCategoryTruck.
+  ///
+  /// In en, this message translates to:
+  /// **'Truck'**
+  String get vehicleCategoryTruck;
+
+  /// No description provided for @vehicleCategoryChiller.
+  ///
+  /// In en, this message translates to:
+  /// **'Chiller'**
+  String get vehicleCategoryChiller;
+
+  /// No description provided for @vehicleCategoryFreezer.
+  ///
+  /// In en, this message translates to:
+  /// **'Freezer'**
+  String get vehicleCategoryFreezer;
+
+  /// No description provided for @vehicleCategoryChillerFreezer.
+  ///
+  /// In en, this message translates to:
+  /// **'Chiller & Freezer'**
+  String get vehicleCategoryChillerFreezer;
+
+  /// No description provided for @vehicleCategoryFreezerChiller.
+  ///
+  /// In en, this message translates to:
+  /// **'Freezer & Chiller'**
+  String get vehicleCategoryFreezerChiller;
+
+  /// No description provided for @periodicMetricIgnition.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignition'**
+  String get periodicMetricIgnition;
+
+  /// No description provided for @periodicMetricAccuVoltage.
+  ///
+  /// In en, this message translates to:
+  /// **'Accu Voltage'**
+  String get periodicMetricAccuVoltage;
+
+  /// No description provided for @periodicMetricTemperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get periodicMetricTemperature;
+
+  /// No description provided for @periodicTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Periodic Track'**
+  String get periodicTrack;
+
+  /// No description provided for @noDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data'**
+  String get noDataAvailable;
+
+  /// No description provided for @periodicStartDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date is required'**
+  String get periodicStartDateRequired;
+
+  /// No description provided for @periodicEndDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date is required'**
+  String get periodicEndDateRequired;
+
+  /// No description provided for @periodicEndDateBeforeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date cannot be earlier than Start Date'**
+  String get periodicEndDateBeforeStart;
+
+  /// No description provided for @periodicMaxRangeExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum range is 3 days from Start Date'**
+  String get periodicMaxRangeExceeded;
+
+  /// No description provided for @activityAllVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'All Vehicle'**
+  String get activityAllVehicle;
+
+  /// No description provided for @activityInOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'In Operation'**
+  String get activityInOperation;
+
+  /// No description provided for @activityMoving.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get activityMoving;
+
+  /// No description provided for @activityIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get activityIdle;
+
+  /// No description provided for @activityStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get activityStop;
+
+  /// No description provided for @activitySilence.
+  ///
+  /// In en, this message translates to:
+  /// **'Silence'**
+  String get activitySilence;
+
+  /// No description provided for @activityInRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'In Repair'**
+  String get activityInRepair;
+
+  /// No description provided for @filterTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get filterTypeLabel;
+
+  /// No description provided for @filterChooseType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose filter type'**
+  String get filterChooseType;
+
+  /// No description provided for @filterTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Type'**
+  String get filterTypeTitle;
+
+  /// No description provided for @filterGeofence.
+  ///
+  /// In en, this message translates to:
+  /// **'Geofence'**
+  String get filterGeofence;
+
+  /// No description provided for @filterChooseGeofence.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose geofence'**
+  String get filterChooseGeofence;
+
+  /// No description provided for @filterAllGeofence.
+  ///
+  /// In en, this message translates to:
+  /// **'All Geofence'**
+  String get filterAllGeofence;
+
+  /// No description provided for @filterSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search...'**
+  String get filterSearchHint;
+
+  /// No description provided for @dashcam.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashcam'**
+  String get dashcam;
+
+  /// No description provided for @dashcamCameraOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera is offline right now.'**
+  String get dashcamCameraOffline;
+
+  /// No description provided for @dashcamDeviceBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Device is busy'**
+  String get dashcamDeviceBusy;
+
+  /// No description provided for @dashcamDeviceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Device error occurred'**
+  String get dashcamDeviceError;
+
+  /// No description provided for @dashcamWebsocketFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket connection failed'**
+  String get dashcamWebsocketFailed;
+
+  /// No description provided for @dashcamEnableSpeakerFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please turn on speaker first before using microphone'**
+  String get dashcamEnableSpeakerFirst;
+
+  /// No description provided for @dashcamNoChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'No dashcam channels available.'**
+  String get dashcamNoChannels;
+
+  /// No description provided for @dashcamSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker'**
+  String get dashcamSpeaker;
+
+  /// No description provided for @dashcamIntercom.
+  ///
+  /// In en, this message translates to:
+  /// **'Intercom'**
+  String get dashcamIntercom;
+
+  /// No description provided for @channelCameraOfflineFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera is offline.'**
+  String get channelCameraOfflineFallback;
+
+  /// No description provided for @channelCameraOffToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera is off. Toggle to view.'**
+  String get channelCameraOffToggle;
+
+  /// No description provided for @fullscreenMutedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted — use Speaker for audio'**
+  String get fullscreenMutedHint;
+
+  /// No description provided for @fullscreenExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Fullscreen'**
+  String get fullscreenExit;
+
+  /// No description provided for @statusOn.
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get statusOn;
+
+  /// No description provided for @statusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get statusOff;
+
+  /// No description provided for @statusNA.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get statusNA;
+
+  /// No description provided for @engineOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine ON'**
+  String get engineOn;
+
+  /// No description provided for @engineOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine OFF'**
+  String get engineOff;
+
+  /// No description provided for @chillerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Chiller Unit'**
+  String get chillerUnit;
+
+  /// No description provided for @demoVersionBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'DEMO VERSION — Sample Data'**
+  String get demoVersionBanner;
+
+  /// No description provided for @mediaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Media'**
+  String get mediaLabel;
+
+  /// No description provided for @notifNotYetValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet validated'**
+  String get notifNotYetValidated;
+
+  /// No description provided for @otpEmailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Email not found.'**
+  String get otpEmailNotFound;
+
+  /// No description provided for @otpWaitBeforeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait before requesting OTP again.'**
+  String get otpWaitBeforeResend;
+
+  /// No description provided for @otpSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send OTP.'**
+  String get otpSendFailed;
+
+  /// No description provided for @otpSendFailedCheckConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send OTP. Check your connection.'**
+  String get otpSendFailedCheckConnection;
+
+  /// No description provided for @continueWithDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Demo'**
+  String get continueWithDemo;
+
+  /// No description provided for @woLabelInspectionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspection Note'**
+  String get woLabelInspectionNote;
+
+  /// No description provided for @woLabelSensorSerialNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Serial Number'**
+  String get woLabelSensorSerialNumber;
+
+  /// No description provided for @woLabelTechnicianName.
+  ///
+  /// In en, this message translates to:
+  /// **'Technician Name'**
+  String get woLabelTechnicianName;
+
+  /// No description provided for @errInvalidResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid response format'**
+  String get errInvalidResponse;
+
+  /// No description provided for @errLoadAlertTypeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load alert type'**
+  String get errLoadAlertTypeFailed;
+
+  /// No description provided for @errLoadFleetGroupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load fleet group'**
+  String get errLoadFleetGroupFailed;
+
+  /// No description provided for @errLoadMonitoringFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while loading monitoring data'**
+  String get errLoadMonitoringFailed;
+
+  /// No description provided for @errLoadVehiclePositionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while loading vehicle position'**
+  String get errLoadVehiclePositionFailed;
+
+  /// No description provided for @errGenericTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred, please try again'**
+  String get errGenericTryAgain;
+
+  /// No description provided for @errConnectionTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection to server timed out. Check your internet connection and try again.'**
+  String get errConnectionTimeout;
+
+  /// No description provided for @errConnectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect to the server. Check your internet connection.'**
+  String get errConnectionFailed;
+
+  /// No description provided for @errInsecureConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection to the server is not secure. Contact admin.'**
+  String get errInsecureConnection;
+
+  /// No description provided for @errRequestCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled.'**
+  String get errRequestCancelled;
+
+  /// No description provided for @errNoInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your network and try again.'**
+  String get errNoInternetConnection;
+
+  /// No description provided for @errFieldsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'{fields} is required.'**
+  String errFieldsRequired(Object fields);
+
+  /// No description provided for @errFieldsJoiner.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get errFieldsJoiner;
+
+  /// No description provided for @errIncompleteData.
+  ///
+  /// In en, this message translates to:
+  /// **'The data entered is incomplete.'**
+  String get errIncompleteData;
+
+  /// No description provided for @errInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'The email or password you entered is incorrect.'**
+  String get errInvalidCredentials;
+
+  /// No description provided for @errServerProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'The server is having issues. Please try again in a moment.'**
+  String get errServerProblem;
+
+  /// No description provided for @errServiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature isn\'t available right now. Please try again later or contact your admin.'**
+  String get errServiceUnavailable;
+
+  /// No description provided for @errNoAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have access to this data.'**
+  String get errNoAccess;
+
+  /// No description provided for @errDuplicateData.
+  ///
+  /// In en, this message translates to:
+  /// **'This data is already registered. Please use a different one.'**
+  String get errDuplicateData;
+
+  /// No description provided for @dashcamServiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera service is unavailable right now. Please contact your admin.'**
+  String get dashcamServiceUnavailable;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:ams/base/widgets/tx_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 enum PeriodicFilterNavMode { push, replaceCurrent }
 
@@ -94,6 +95,7 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final maxH = MediaQuery.sizeOf(context).height * 0.8;
 
     return SafeArea(
@@ -125,7 +127,7 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'Periodic Track',
+                      t.periodicTrack,
                       style: AppStyles.textLBold.copyWith(fontSize: 18),
                     ),
                   ],
@@ -133,8 +135,8 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                 const SizedBox(height: 30),
 
                 TxInputDateTime(
-                  label: 'Start Date',
-                  hintText: 'Choose Start Date',
+                  label: t.filterStartDate,
+                  hintText: t.filterChooseStartDate,
                   value: _start,
                   lastDate: DateTime.now(),
                   displayFormat: 'd MMMM y HH:mm',
@@ -149,26 +151,26 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                     });
                   },
                   validator: (v) {
-                    if (v == null) return 'Start Date wajib diisi';
+                    if (v == null) return t.periodicStartDateRequired;
                     return null;
                   },
                 ),
 
                 TxInputDateTime(
-                  label: 'End Date',
-                  hintText: 'Choose End Date',
+                  label: t.filterEndDate,
+                  hintText: t.filterChooseEndDate,
                   value: _end,
                   firstDate: _start,
                   lastDate: _maxEndDate,
                   displayFormat: 'd MMMM y HH:mm',
                   onChanged: (v) => setState(() => _end = v),
                   validator: (v) {
-                    if (v == null) return 'End Date wajib diisi';
+                    if (v == null) return t.periodicEndDateRequired;
                     if (_start != null && v.isBefore(_start!)) {
-                      return 'End Date tidak boleh lebih kecil dari Start Date';
+                      return t.periodicEndDateBeforeStart;
                     }
                     if (v.isAfter(_maxEndDate)) {
-                      return 'Rentang maksimal 3 hari dari Start Date';
+                      return t.periodicMaxRangeExceeded;
                     }
                     return null;
                   },
@@ -190,7 +192,7 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                       ),
                     ),
                     child: Text(
-                      'Search',
+                      t.filterSearch,
                       style: AppStyles.textMdBold.copyWith(
                         color: AppStyles.whiteColor,
                       ),

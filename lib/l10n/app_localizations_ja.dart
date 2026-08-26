@@ -691,4 +691,672 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get registerPendingOkBtn => '了解しました';
+
+  @override
+  String get navWorkOrder => '作業指示書';
+
+  @override
+  String get woSearchPlaceholder => 'フリートグループを検索…';
+
+  @override
+  String get woNoDataTitle => '作業指示書がまだありません';
+
+  @override
+  String get woNoDataMessage => '現在、作業指示書はありません。\n新規作成して始めましょう。';
+
+  @override
+  String get woOptionDetails => '作業詳細を見る';
+
+  @override
+  String get woOptionDelete => '作業を削除';
+
+  @override
+  String get woDeleteTitle => '作業指示書を削除';
+
+  @override
+  String get woDeleteSubtitle => 'この作業指示書を削除してもよろしいですか？この操作は取り消せません。';
+
+  @override
+  String get woDeleteConfirm => '削除';
+
+  @override
+  String get woDeleteSuccess => '削除に成功しました！';
+
+  @override
+  String get woDeleteFailed => '削除に失敗しました！';
+
+  @override
+  String get woDetailDeleteTitle => '作業を削除';
+
+  @override
+  String get woDetailDeleteSubtitle => 'この作業を削除してもよろしいですか？この操作は取り消せません。';
+
+  @override
+  String get woFleetGroup => 'フリートグループ';
+
+  @override
+  String get woFleetGroupPlaceholder => 'フリートグループを選択';
+
+  @override
+  String get woTechnician => '技術者';
+
+  @override
+  String get woTechnicianPlaceholder => '技術者を選択';
+
+  @override
+  String get woDate => '日付';
+
+  @override
+  String get woDatePlaceholder => '日付を選択';
+
+  @override
+  String get woCreateTitle => '作業指示書を作成';
+
+  @override
+  String get woCreate => '作成';
+
+  @override
+  String get woCreateFailed => '作業指示書の作成に失敗しました';
+
+  @override
+  String get woWorkListTitle => '作業リスト';
+
+  @override
+  String get woWorkListEmptyTitle => '作業指示書がまだありません';
+
+  @override
+  String get woWorkListEmptyMessage => '現在、作業指示書はありません。\n新規作成して始めましょう。';
+
+  @override
+  String get woAssignButton => '作業を割り当てる';
+
+  @override
+  String get woAssignTitle => '作業指示書を作成';
+
+  @override
+  String get woWorkCategory => '作業カテゴリ';
+
+  @override
+  String get woWorkCategoryPlaceholder => '作業指示書のカテゴリを選択';
+
+  @override
+  String get woWorkType => '作業タイプ';
+
+  @override
+  String get woWorkTypePlaceholder => '作業指示書のタイプを選択';
+
+  @override
+  String get woWorkDate => '作業日';
+
+  @override
+  String get woEvidenceNotUploaded => '証拠写真がまだアップロードされていません。';
+
+  @override
+  String get woOdometerNotFilled => '走行距離が未入力です。';
+
+  @override
+  String get woGpsActive => 'GPSは有効です。';
+
+  @override
+  String get woGpsNotActive => 'GPSはまだ有効になっていません。';
+
+  @override
+  String get woDetailsTitle => '作業詳細';
+
+  @override
+  String get woTabDetails => '詳細';
+
+  @override
+  String get woTabEvidence => '証拠写真';
+
+  @override
+  String get woTabNotes => 'メモ';
+
+  @override
+  String get woDetailsEdit => '作業詳細を編集';
+
+  @override
+  String get woDetailsSave => '保存';
+
+  @override
+  String get woSavedSuccess => 'データを保存しました';
+
+  @override
+  String get woSavedFailed => 'データの保存に失敗しました';
+
+  @override
+  String get woCompleteSuccess => '作業を完了としてマークしました';
+
+  @override
+  String get woCompleteFailed => '作業の完了処理に失敗しました';
+
+  @override
+  String get woLeaveTitle => 'このページを離れてもよろしいですか？';
+
+  @override
+  String get woLeaveMessage => '保存されていないデータは失われます';
+
+  @override
+  String get woErrorBeforeImage => '設置前の証拠写真が必要です';
+
+  @override
+  String get woErrorAfterImage => '設置後の証拠写真が必要です';
+
+  @override
+  String get woErrorNotes => 'メモの入力が必要です';
+
+  @override
+  String get woActionSaveDraft => '下書きとして保存';
+
+  @override
+  String get woActionMarkComplete => '完了としてマーク';
+
+  @override
+  String get woWorkInformation => '作業詳細情報';
+
+  @override
+  String get woInspectionInformation => 'メンテナンス情報';
+
+  @override
+  String get woDeviceInformation => 'デバイス情報';
+
+  @override
+  String get woEvidenceBefore => '設置前の証拠写真';
+
+  @override
+  String get woEvidenceAfter => '設置後の証拠写真';
+
+  @override
+  String get woEvidenceTakeOrUpload => '写真を撮影またはアップロード';
+
+  @override
+  String get woEvidenceUploadTitle => '証拠写真をアップロード';
+
+  @override
+  String get woEvidenceProofTitle => '証拠写真';
+
+  @override
+  String get woEvidenceTakePhoto => '写真を撮影';
+
+  @override
+  String get woEvidenceFromGallery => 'ギャラリーから選択';
+
+  @override
+  String get woEvidenceView => '写真を見る';
+
+  @override
+  String get woEvidenceReplace => '写真を差し替える';
+
+  @override
+  String get woEvidenceDelete => '写真を削除';
+
+  @override
+  String get woEvidenceInvalidFormat =>
+      '対応していないファイル形式です。JPG、JPEG、PNGのいずれかをご使用ください。';
+
+  @override
+  String get woEvidenceProcessFailed => '画像の処理に失敗しました';
+
+  @override
+  String get woNotesTitle => 'メモ';
+
+  @override
+  String get woNotesPlaceholder => '実施した作業内容を記入してください…';
+
+  @override
+  String get woJobCategory => '作業カテゴリ';
+
+  @override
+  String get woJobType => '作業タイプ';
+
+  @override
+  String get woLicensePlate => 'ナンバープレート';
+
+  @override
+  String get woLicensePlatePlaceholder => 'ナンバープレートを入力…';
+
+  @override
+  String get woLicensePlateRequired => 'ナンバープレートは必須です';
+
+  @override
+  String get woUseChassisNumber => '車台番号を使用';
+
+  @override
+  String get woChassisNumber => '車台番号';
+
+  @override
+  String get woChassisNumberPlaceholder => '例：MHFJB8BS0AK000000';
+
+  @override
+  String get woOdometer => '走行距離';
+
+  @override
+  String get woOdometerPlaceholder => '走行距離を入力…';
+
+  @override
+  String get woOdometerNumeric => '走行距離は数字で入力してください';
+
+  @override
+  String get woDeviceCondition => 'デバイスの状態';
+
+  @override
+  String get woDeviceConditionPlaceholder => 'デバイスの状態を入力…';
+
+  @override
+  String get woDeviceType => 'デバイスタイプ';
+
+  @override
+  String get woDeviceModel => 'デバイスモデル';
+
+  @override
+  String get woDeviceModelPlaceholder => 'デバイスモデルを選択';
+
+  @override
+  String get woDeviceModelRequired => 'デバイスモデルは必須です';
+
+  @override
+  String get woSimCardNumber => 'SIMカード番号';
+
+  @override
+  String get woSimCardNumberOptional => 'SIMカード番号（任意）';
+
+  @override
+  String get woSimCardNumberPlaceholder => 'SIMカード番号を入力…';
+
+  @override
+  String get woSimCardNumeric => 'SIMカード番号は数字で入力してください';
+
+  @override
+  String get woImei => 'IMEI OBD番号';
+
+  @override
+  String get woImeiPlaceholder => 'IMEI OBD番号を入力…';
+
+  @override
+  String get woImeiNumeric => 'IMEIは数字で入力してください';
+
+  @override
+  String get woImeiMaxLength => 'IMEIは15桁以内で入力してください';
+
+  @override
+  String get woDashcamType => 'ドライブレコーダーの種類';
+
+  @override
+  String get woDashcamTypePlaceholder => 'ドライブレコーダーの種類を選択';
+
+  @override
+  String get woDashcamTypeRequired => 'ドライブレコーダーの種類は必須です';
+
+  @override
+  String get woDashcamImei => 'ドライブレコーダーIMEI';
+
+  @override
+  String get woDashcamImeiPlaceholder => 'ドライブレコーダーIMEIを入力';
+
+  @override
+  String get woDashcamImeiNumeric => 'ドライブレコーダーIMEIは数字で入力してください';
+
+  @override
+  String get woCameraPosition => 'カメラの位置';
+
+  @override
+  String get woCameraPositionPlaceholder => 'カメラの位置を選択';
+
+  @override
+  String get woCameraPositionRequired => 'カメラの位置は必須です';
+
+  @override
+  String get woSensorType => 'センサーの種類';
+
+  @override
+  String get woSensorTypePlaceholder => 'センサーの種類を選択';
+
+  @override
+  String get woSensorTypeRequired => 'センサーの種類は必須です';
+
+  @override
+  String get woSensorSerialNumber => 'シリアル番号';
+
+  @override
+  String get woSensorSerialNumberPlaceholder => 'シリアル番号を入力';
+
+  @override
+  String get woSensorPosition => 'センサーの位置';
+
+  @override
+  String get woSensorPositionPlaceholder => 'センサーの位置を選択';
+
+  @override
+  String get woSensorPositionRequired => 'センサーの位置は必須です';
+
+  @override
+  String get woSimReplacementTitle => '新しいSIMカード番号';
+
+  @override
+  String get woSimReplacementPlaceholder => '新しいSIMカード番号を入力…';
+
+  @override
+  String get woInspectionAction => '対応内容';
+
+  @override
+  String get woInspectionActionPlaceholder => 'メンテナンスの対応内容を選択';
+
+  @override
+  String get woInspectionResult => 'メンテナンス結果';
+
+  @override
+  String get woInspectionResultPlaceholder => 'メンテナンスの詳細を記入してください…';
+
+  @override
+  String get woCurrentDeviceTitle => '現在のデバイス情報';
+
+  @override
+  String get woCurrentDeviceType => 'デバイスタイプ';
+
+  @override
+  String get woCurrentDeviceModel => 'デバイスモデル';
+
+  @override
+  String get woCurrentDeviceSimCard => 'SIMカード番号';
+
+  @override
+  String get woCurrentDeviceImei => 'IMEI OBD番号';
+
+  @override
+  String get woReviewWorkDetails => '作業詳細情報';
+
+  @override
+  String get woStepDetails => '作業詳細情報';
+
+  @override
+  String get woStepInformation => 'デバイス情報';
+
+  @override
+  String get woStepInspection => 'メンテナンス情報';
+
+  @override
+  String get woStepReview => '確認';
+
+  @override
+  String get woStepPrev => '戻る';
+
+  @override
+  String get woStepNext => '次へ';
+
+  @override
+  String get woStepSubmit => '作業指示書を送信';
+
+  @override
+  String get woCreateDetailTitle => '作業指示書を作成';
+
+  @override
+  String get woUpdateDetailTitle => '作業指示書を更新';
+
+  @override
+  String get woSubmitConfirmTitle => '作業指示書の確認';
+
+  @override
+  String get woSubmitConfirmMessage =>
+      '内容をよくご確認ください。作業指示書の情報が正しいことを確認して送信してください。';
+
+  @override
+  String get woCreateDetailSuccess => '詳細を追加しました！';
+
+  @override
+  String get woCreateDetailFailed => '詳細の追加に失敗しました！';
+
+  @override
+  String get woUpdateDetailSuccess => '作業指示書の詳細を更新しました';
+
+  @override
+  String get woUpdateDetailFailed => '作業指示書の詳細の更新に失敗しました';
+
+  @override
+  String get woVehicleInfoFailed => '車両情報の取得に失敗しました';
+
+  @override
+  String get vehicleCategoryBus => 'バス';
+
+  @override
+  String get vehicleCategoryPassenger => '乗用車';
+
+  @override
+  String get vehicleCategoryTruck => 'トラック';
+
+  @override
+  String get vehicleCategoryChiller => 'チラー車';
+
+  @override
+  String get vehicleCategoryFreezer => 'フリーザー車';
+
+  @override
+  String get vehicleCategoryChillerFreezer => 'チラー＆フリーザー車';
+
+  @override
+  String get vehicleCategoryFreezerChiller => 'フリーザー＆チラー車';
+
+  @override
+  String get periodicMetricIgnition => 'イグニッション';
+
+  @override
+  String get periodicMetricAccuVoltage => 'バッテリー電圧';
+
+  @override
+  String get periodicMetricTemperature => '温度';
+
+  @override
+  String get periodicTrack => '定期トラッキング';
+
+  @override
+  String get noDataAvailable => 'データがありません';
+
+  @override
+  String get periodicStartDateRequired => '開始日を選択してください';
+
+  @override
+  String get periodicEndDateRequired => '終了日を選択してください';
+
+  @override
+  String get periodicEndDateBeforeStart => '終了日は開始日より前にできません';
+
+  @override
+  String get periodicMaxRangeExceeded => '開始日から最大3日間までの範囲を選択できます';
+
+  @override
+  String get activityAllVehicle => 'すべての車両';
+
+  @override
+  String get activityInOperation => '稼働中';
+
+  @override
+  String get activityMoving => '走行中';
+
+  @override
+  String get activityIdle => 'アイドリング';
+
+  @override
+  String get activityStop => '停止中';
+
+  @override
+  String get activitySilence => '無通信';
+
+  @override
+  String get activityInRepair => '修理中';
+
+  @override
+  String get filterTypeLabel => '種類';
+
+  @override
+  String get filterChooseType => 'フィルターの種類を選択';
+
+  @override
+  String get filterTypeTitle => 'フィルターの種類';
+
+  @override
+  String get filterGeofence => 'ジオフェンス';
+
+  @override
+  String get filterChooseGeofence => 'ジオフェンスを選択';
+
+  @override
+  String get filterAllGeofence => 'すべてのジオフェンス';
+
+  @override
+  String get filterSearchHint => '検索…';
+
+  @override
+  String get dashcam => 'ドライブレコーダー';
+
+  @override
+  String get dashcamCameraOffline => 'カメラは現在オフラインです。';
+
+  @override
+  String get dashcamDeviceBusy => 'デバイスが混雑しています';
+
+  @override
+  String get dashcamDeviceError => 'デバイスでエラーが発生しました';
+
+  @override
+  String get dashcamWebsocketFailed => 'WebSocket接続に失敗しました';
+
+  @override
+  String get dashcamEnableSpeakerFirst => 'マイクを使用する前にスピーカーをオンにしてください';
+
+  @override
+  String get dashcamNoChannels => '利用可能なドライブレコーダーのチャンネルがありません。';
+
+  @override
+  String get dashcamSpeaker => 'スピーカー';
+
+  @override
+  String get dashcamIntercom => 'インターホン';
+
+  @override
+  String get channelCameraOfflineFallback => 'カメラはオフラインです。';
+
+  @override
+  String get channelCameraOffToggle => 'カメラはオフです。タップして表示してください。';
+
+  @override
+  String get fullscreenMutedHint => 'ミュート中 — 音声にはスピーカーを使用してください';
+
+  @override
+  String get fullscreenExit => 'フルスクリーンを終了';
+
+  @override
+  String get statusOn => 'ON';
+
+  @override
+  String get statusOff => 'OFF';
+
+  @override
+  String get statusNA => '該当なし';
+
+  @override
+  String get engineOn => 'エンジン始動中';
+
+  @override
+  String get engineOff => 'エンジン停止中';
+
+  @override
+  String get chillerUnit => 'チラーユニット';
+
+  @override
+  String get demoVersionBanner => 'デモ版 — サンプルデータ';
+
+  @override
+  String get mediaLabel => 'メディア';
+
+  @override
+  String get notifNotYetValidated => '未承認';
+
+  @override
+  String get otpEmailNotFound => 'メールアドレスが見つかりません。';
+
+  @override
+  String get otpWaitBeforeResend => 'コードの再送信まで少々お待ちください。';
+
+  @override
+  String get otpSendFailed => 'コードの送信に失敗しました。';
+
+  @override
+  String get otpSendFailedCheckConnection => 'コードの送信に失敗しました。接続をご確認ください。';
+
+  @override
+  String get continueWithDemo => 'デモ版で続ける';
+
+  @override
+  String get woLabelInspectionNote => '点検メモ';
+
+  @override
+  String get woLabelSensorSerialNumber => 'センサーシリアル番号';
+
+  @override
+  String get woLabelTechnicianName => '技術者氏名';
+
+  @override
+  String get errInvalidResponse => 'レスポンスの形式が無効です';
+
+  @override
+  String get errLoadAlertTypeFailed => 'アラートタイプの読み込みに失敗しました';
+
+  @override
+  String get errLoadFleetGroupFailed => 'フリートグループの読み込みに失敗しました';
+
+  @override
+  String get errLoadMonitoringFailed => 'モニタリングデータの読み込み中にエラーが発生しました';
+
+  @override
+  String get errLoadVehiclePositionFailed => '車両位置の読み込み中にエラーが発生しました';
+
+  @override
+  String get errGenericTryAgain => 'エラーが発生しました。もう一度お試しください';
+
+  @override
+  String get errConnectionTimeout =>
+      'サーバーへの接続がタイムアウトしました。インターネット接続を確認して再度お試しください。';
+
+  @override
+  String get errConnectionFailed => 'サーバーに接続できません。インターネット接続を確認してください。';
+
+  @override
+  String get errInsecureConnection => 'サーバーへの接続が安全ではありません。管理者に連絡してください。';
+
+  @override
+  String get errRequestCancelled => 'リクエストがキャンセルされました。';
+
+  @override
+  String get errNoInternetConnection =>
+      'インターネットに接続されていません。ネットワークを確認して再度お試しください。';
+
+  @override
+  String errFieldsRequired(Object fields) {
+    return '$fieldsを入力してください。';
+  }
+
+  @override
+  String get errFieldsJoiner => 'および';
+
+  @override
+  String get errIncompleteData => '入力内容が不完全です。';
+
+  @override
+  String get errInvalidCredentials => '入力されたメールアドレスまたはパスワードが正しくありません。';
+
+  @override
+  String get errServerProblem => 'サーバーで問題が発生しています。しばらくしてから再度お試しください。';
+
+  @override
+  String get errServiceUnavailable =>
+      'この機能は現在ご利用いただけません。しばらくしてから再度お試しいただくか、管理者にお問い合わせください。';
+
+  @override
+  String get errNoAccess => 'このデータにアクセスする権限がありません。';
+
+  @override
+  String get errDuplicateData => 'このデータはすでに登録されています。別のデータを使用してください。';
+
+  @override
+  String get dashcamServiceUnavailable =>
+      'カメラサービスは現在ご利用いただけません。管理者にお問い合わせください。';
 }

@@ -1,3 +1,4 @@
+import 'package:ams/base/localization/locale_controller.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:dio/dio.dart';
 
@@ -10,7 +11,7 @@ class GeofenceRepo {
     final data = res.data;
 
     final out = <FilterOption>[
-      const FilterOption(value: null, label: 'All Geofence'),
+      FilterOption(value: null, label: currentL10n().filterAllGeofence),
     ];
 
     if (data is Map<String, dynamic>) {

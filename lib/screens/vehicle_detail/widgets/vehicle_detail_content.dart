@@ -6,6 +6,7 @@ import 'package:ams/base/widgets/periodic_track_filter_sheet.dart';
 import 'package:ams/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
 import 'package:ams/screens/vehicle_detail/widgets/indicator_card.dart';
 import 'package:ams/screens/vehicle_detail/widgets/button_card.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class VehicleDetailContent extends StatelessWidget {
@@ -46,6 +47,7 @@ class VehicleDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final size = MediaQuery.sizeOf(context);
 
     final plate = safeTextFrom(detailData, 'license_plate');
@@ -66,10 +68,10 @@ class VehicleDetailContent extends StatelessWidget {
       final ignition = safeIntFrom(detailData, 'ignition') == 1;
 
       final dashcamLabel = !hasDashcam
-          ? "N/A"
+          ? t.statusNA
           : loadingDashcam
-          ? "Dashcam..."
-          : (dashcamOnline ? "Dashcam" : "N/A");
+          ? '${t.dashcam}...'
+          : (dashcamOnline ? t.dashcam : t.statusNA);
 
       final dashcamBg = !hasDashcam
           ? AppStyles.bgGrayColor
@@ -86,13 +88,13 @@ class VehicleDetailContent extends StatelessWidget {
       return [
         IndicatorItemData(
           icon: "engine.svg",
-          label: ignition ? "Engine ON" : "Engine OFF",
+          label: ignition ? t.engineOn : t.engineOff,
           background: ignition ? AppStyles.bgGreenColor : AppStyles.bgGrayColor,
           color: ignition ? AppStyles.greenColor : AppStyles.darkGrayColor,
         ),
         IndicatorItemData(
           icon: "chiller.svg",
-          label: isChiller ? "Chiller Unit" : "N/A",
+          label: isChiller ? t.chillerUnit : t.statusNA,
           background: isChiller
               ? AppStyles.bgGreenColor
               : AppStyles.bgGrayColor,
@@ -160,7 +162,7 @@ class VehicleDetailContent extends StatelessWidget {
                               Text(fleet, style: AppStyles.textMd),
                               const SizedBox(height: 7),
                               Text(
-                                loadingAddress ? 'Loading...' : address,
+                                loadingAddress ? t.loading : address,
                                 style: AppStyles.textSm,
                               ),
                             ],

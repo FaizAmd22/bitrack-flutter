@@ -139,7 +139,7 @@ class _DeviceInfoStepState extends State<DeviceInfoStep> {
 
               TxInputNumber(
                 label: t.simCardNumber,
-                hintText: 'Enter SIM Card Number ...',
+                hintText: t.simCardNumberHint,
                 controller: _simCtrl,
                 validator: (v) => _requiredText(context, v, t.simCardNumber),
                 onChanged: (v) => widget.data.simCardNumber = v,
@@ -147,7 +147,7 @@ class _DeviceInfoStepState extends State<DeviceInfoStep> {
 
               TxInputNumber(
                 label: t.imeiObdNumber,
-                hintText: 'Enter IMEI OBD Number ...',
+                hintText: t.imeiObdNumberHint,
                 controller: _imeiCtrl,
                 validator: (v) => _requiredText(context, v, t.imeiObdNumber),
                 onChanged: (v) => widget.data.imeiObdNumber = v,

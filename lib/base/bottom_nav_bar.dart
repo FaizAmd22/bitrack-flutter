@@ -2,12 +2,14 @@
 
 import 'package:ams/base/res/media.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/base/services/app_users.dart';
 import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/home_screen.dart';
 import 'package:ams/screens/notification/notification_screen.dart';
 import 'package:ams/screens/notification/providers/notification_provider.dart';
 import 'package:ams/screens/profile/profile.dart';
 import 'package:ams/screens/vehicle/vehicle.dart';
+import 'package:ams/screens/work_order/work_order.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +27,10 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
 
   final GlobalKey<NotificationScreenState> _notifKey =
       GlobalKey<NotificationScreenState>();
+
+  /// Sama seperti layout.jsx di bitrack-mobile: tab Work Order & Vehicle
+  /// hanya ada pada build dengan VITE_APP_USERS="Teknisi".
+  bool get _isTechnicianApp => AppUsers.isTechnicianApp;
 
   String _badgeLabel(int count) => count > 99 ? '99+' : '$count';
 
@@ -58,6 +64,26 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     );
   }
 
+  BottomNavigationBarItem _svgItem({
+    required String icon,
+    required String activeIcon,
+    required String label,
+  }) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(icon, width: 23, height: 23),
+      activeIcon: SvgPicture.asset(
+        activeIcon,
+        width: 23,
+        height: 23,
+        colorFilter: const ColorFilter.mode(
+          AppStyles.primaryColor,
+          BlendMode.srcIn,
+        ),
+      ),
+      label: label,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context);
@@ -65,11 +91,47 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
       notificationProvider.select((s) => s.badgeTotal),
     );
 
-    final screens = [
+    final screens = <Widget>[
       HomeScreen(isActive: _selectedIndex == 0),
       NotificationScreen(key: _notifKey),
-      // const VehicleScreen(),
+      if (_isTechnicianApp) ...[const WorkOrderScreen(), const VehicleScreen()],
       const ProfileScreen(),
+    ];
+
+    final items = <BottomNavigationBarItem>[
+      _svgItem(
+        icon: AppMedia.routeRegulerIcon,
+        activeIcon: AppMedia.routeFilledIcon,
+        label: translate.navTracker,
+      ),
+      BottomNavigationBarItem(
+        icon: _notifBadge(
+          notifCount,
+          const Icon(FluentSystemIcons.ic_fluent_alert_regular),
+        ),
+        activeIcon: _notifBadge(
+          notifCount,
+          const Icon(FluentSystemIcons.ic_fluent_alert_filled),
+        ),
+        label: translate.navNotification,
+      ),
+      if (_isTechnicianApp) ...[
+        _svgItem(
+          icon: AppMedia.workOrderRegulerIcon,
+          activeIcon: AppMedia.workOrderFilledIcon,
+          label: translate.navWorkOrder,
+        ),
+        _svgItem(
+          icon: AppMedia.truckRegulerIcon,
+          activeIcon: AppMedia.truckFilledIcon,
+          label: translate.navVehicle,
+        ),
+      ],
+      BottomNavigationBarItem(
+        icon: const Icon(FluentSystemIcons.ic_fluent_person_regular),
+        activeIcon: const Icon(FluentSystemIcons.ic_fluent_person_filled),
+        label: translate.navProfile,
+      ),
     ];
 
     return Scaffold(
@@ -98,60 +160,11 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppStyles.primaryColor,
           unselectedItemColor: const Color.fromARGB(255, 189, 189, 189),
+          selectedFontSize: 11,
+          unselectedFontSize: 11,
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppMedia.routeRegulerIcon,
-                width: 23,
-                height: 23,
-              ),
-              activeIcon: SvgPicture.asset(
-                AppMedia.routeFilledIcon,
-                width: 23,
-                height: 23,
-                colorFilter: ColorFilter.mode(
-                  AppStyles.primaryColor,
-                  BlendMode.srcIn,
-                ),
-              ),
-              label: translate.navTracker,
-            ),
-            BottomNavigationBarItem(
-              icon: _notifBadge(
-                notifCount,
-                const Icon(FluentSystemIcons.ic_fluent_alert_regular),
-              ),
-              activeIcon: _notifBadge(
-                notifCount,
-                const Icon(FluentSystemIcons.ic_fluent_alert_filled),
-              ),
-              label: translate.navNotification,
-            ),
-            // BottomNavigationBarItem(
-            //   icon: SvgPicture.asset(
-            //     AppMedia.truckRegulerIcon,
-            //     width: 24,
-            //     height: 24,
-            //   ),
-            //   activeIcon: SvgPicture.asset(
-            //     AppMedia.truckFilledIcon,
-            //     width: 24,
-            //     height: 24,
-            //     colorFilter: ColorFilter.mode(
-            //       AppStyles.primaryColor,
-            //       BlendMode.srcIn,
-            //     ),
-            //   ),
-            //   label: translate.navVehicle,
-            // ),
-            BottomNavigationBarItem(
-              icon: const Icon(FluentSystemIcons.ic_fluent_person_regular),
-              activeIcon: const Icon(FluentSystemIcons.ic_fluent_person_filled),
-              label: translate.navProfile,
-            ),
-          ],
+          items: items,
         ),
       ),
     );

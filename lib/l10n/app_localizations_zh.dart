@@ -688,4 +688,666 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get registerPendingOkBtn => '知道了';
+
+  @override
+  String get navWorkOrder => '工单';
+
+  @override
+  String get woSearchPlaceholder => '搜索车队组……';
+
+  @override
+  String get woNoDataTitle => '暂无工单';
+
+  @override
+  String get woNoDataMessage => '您目前还没有任何工单。\n创建一个新工单以开始。';
+
+  @override
+  String get woOptionDetails => '查看工作详情';
+
+  @override
+  String get woOptionDelete => '删除工作';
+
+  @override
+  String get woDeleteTitle => '删除工单';
+
+  @override
+  String get woDeleteSubtitle => '确定要删除此工单吗？此操作无法撤销。';
+
+  @override
+  String get woDeleteConfirm => '删除';
+
+  @override
+  String get woDeleteSuccess => '删除成功！';
+
+  @override
+  String get woDeleteFailed => '删除失败！';
+
+  @override
+  String get woDetailDeleteTitle => '删除工作';
+
+  @override
+  String get woDetailDeleteSubtitle => '确定要删除此工作吗？此操作无法撤销。';
+
+  @override
+  String get woFleetGroup => '车队组';
+
+  @override
+  String get woFleetGroupPlaceholder => '选择车队组';
+
+  @override
+  String get woTechnician => '技术员';
+
+  @override
+  String get woTechnicianPlaceholder => '选择技术员';
+
+  @override
+  String get woDate => '日期';
+
+  @override
+  String get woDatePlaceholder => '选择日期';
+
+  @override
+  String get woCreateTitle => '创建工单';
+
+  @override
+  String get woCreate => '创建';
+
+  @override
+  String get woCreateFailed => '创建工单失败';
+
+  @override
+  String get woWorkListTitle => '工作列表';
+
+  @override
+  String get woWorkListEmptyTitle => '暂无工单';
+
+  @override
+  String get woWorkListEmptyMessage => '您目前还没有任何工单。\n创建一个新工单以开始。';
+
+  @override
+  String get woAssignButton => '分配工作';
+
+  @override
+  String get woAssignTitle => '创建工单';
+
+  @override
+  String get woWorkCategory => '工作类别';
+
+  @override
+  String get woWorkCategoryPlaceholder => '选择工单类别';
+
+  @override
+  String get woWorkType => '工作类型';
+
+  @override
+  String get woWorkTypePlaceholder => '选择工单类型';
+
+  @override
+  String get woWorkDate => '工作日期';
+
+  @override
+  String get woEvidenceNotUploaded => '尚未上传证明照片。';
+
+  @override
+  String get woOdometerNotFilled => '尚未填写里程表。';
+
+  @override
+  String get woGpsActive => 'GPS已启用。';
+
+  @override
+  String get woGpsNotActive => 'GPS尚未启用。';
+
+  @override
+  String get woDetailsTitle => '工作详情';
+
+  @override
+  String get woTabDetails => '详情';
+
+  @override
+  String get woTabEvidence => '证明照片';
+
+  @override
+  String get woTabNotes => '备注';
+
+  @override
+  String get woDetailsEdit => '编辑工作详情';
+
+  @override
+  String get woDetailsSave => '保存';
+
+  @override
+  String get woSavedSuccess => '数据保存成功';
+
+  @override
+  String get woSavedFailed => '保存数据失败';
+
+  @override
+  String get woCompleteSuccess => '工作已标记为完成';
+
+  @override
+  String get woCompleteFailed => '标记完成失败';
+
+  @override
+  String get woLeaveTitle => '确定要离开此页面吗？';
+
+  @override
+  String get woLeaveMessage => '未保存的数据将会丢失';
+
+  @override
+  String get woErrorBeforeImage => '需要提供安装前证明照片';
+
+  @override
+  String get woErrorAfterImage => '需要提供安装后证明照片';
+
+  @override
+  String get woErrorNotes => '需要填写备注';
+
+  @override
+  String get woActionSaveDraft => '保存为草稿';
+
+  @override
+  String get woActionMarkComplete => '标记为完成';
+
+  @override
+  String get woWorkInformation => '工作详情信息';
+
+  @override
+  String get woInspectionInformation => '维护信息';
+
+  @override
+  String get woDeviceInformation => '设备信息';
+
+  @override
+  String get woEvidenceBefore => '安装前证明照片';
+
+  @override
+  String get woEvidenceAfter => '安装后证明照片';
+
+  @override
+  String get woEvidenceTakeOrUpload => '拍照或上传照片';
+
+  @override
+  String get woEvidenceUploadTitle => '上传证明照片';
+
+  @override
+  String get woEvidenceProofTitle => '证明照片';
+
+  @override
+  String get woEvidenceTakePhoto => '拍照';
+
+  @override
+  String get woEvidenceFromGallery => '从相册选择';
+
+  @override
+  String get woEvidenceView => '查看照片';
+
+  @override
+  String get woEvidenceReplace => '更换照片';
+
+  @override
+  String get woEvidenceDelete => '删除照片';
+
+  @override
+  String get woEvidenceInvalidFormat => '不支持的文件格式。请使用JPG、JPEG或PNG格式。';
+
+  @override
+  String get woEvidenceProcessFailed => '处理图片失败';
+
+  @override
+  String get woNotesTitle => '备注';
+
+  @override
+  String get woNotesPlaceholder => '描述已完成的工作……';
+
+  @override
+  String get woJobCategory => '工作类别';
+
+  @override
+  String get woJobType => '工作类型';
+
+  @override
+  String get woLicensePlate => '车牌号';
+
+  @override
+  String get woLicensePlatePlaceholder => '请输入车牌号……';
+
+  @override
+  String get woLicensePlateRequired => '车牌号为必填项';
+
+  @override
+  String get woUseChassisNumber => '使用车架号';
+
+  @override
+  String get woChassisNumber => '车架号';
+
+  @override
+  String get woChassisNumberPlaceholder => '例如 MHFJB8BS0AK000000';
+
+  @override
+  String get woOdometer => '里程表';
+
+  @override
+  String get woOdometerPlaceholder => '请输入里程表……';
+
+  @override
+  String get woOdometerNumeric => '里程表必须为数字';
+
+  @override
+  String get woDeviceCondition => '设备状况';
+
+  @override
+  String get woDeviceConditionPlaceholder => '请输入设备状况……';
+
+  @override
+  String get woDeviceType => '设备类型';
+
+  @override
+  String get woDeviceModel => '设备型号';
+
+  @override
+  String get woDeviceModelPlaceholder => '选择设备型号';
+
+  @override
+  String get woDeviceModelRequired => '设备型号为必填项';
+
+  @override
+  String get woSimCardNumber => 'SIM卡号';
+
+  @override
+  String get woSimCardNumberOptional => 'SIM卡号（选填）';
+
+  @override
+  String get woSimCardNumberPlaceholder => '请输入SIM卡号……';
+
+  @override
+  String get woSimCardNumeric => 'SIM卡号必须为数字';
+
+  @override
+  String get woImei => 'IMEI OBD编号';
+
+  @override
+  String get woImeiPlaceholder => '请输入IMEI OBD编号……';
+
+  @override
+  String get woImeiNumeric => 'IMEI必须为数字';
+
+  @override
+  String get woImeiMaxLength => 'IMEI最多15位数字';
+
+  @override
+  String get woDashcamType => '行车记录仪类型';
+
+  @override
+  String get woDashcamTypePlaceholder => '选择行车记录仪类型';
+
+  @override
+  String get woDashcamTypeRequired => '行车记录仪类型为必填项';
+
+  @override
+  String get woDashcamImei => '行车记录仪IMEI';
+
+  @override
+  String get woDashcamImeiPlaceholder => '请输入行车记录仪IMEI';
+
+  @override
+  String get woDashcamImeiNumeric => '行车记录仪IMEI必须为数字';
+
+  @override
+  String get woCameraPosition => '摄像头位置';
+
+  @override
+  String get woCameraPositionPlaceholder => '选择摄像头位置';
+
+  @override
+  String get woCameraPositionRequired => '摄像头位置为必填项';
+
+  @override
+  String get woSensorType => '传感器类型';
+
+  @override
+  String get woSensorTypePlaceholder => '选择传感器类型';
+
+  @override
+  String get woSensorTypeRequired => '传感器类型为必填项';
+
+  @override
+  String get woSensorSerialNumber => '序列号';
+
+  @override
+  String get woSensorSerialNumberPlaceholder => '请输入序列号';
+
+  @override
+  String get woSensorPosition => '传感器位置';
+
+  @override
+  String get woSensorPositionPlaceholder => '选择传感器位置';
+
+  @override
+  String get woSensorPositionRequired => '传感器位置为必填项';
+
+  @override
+  String get woSimReplacementTitle => '新SIM卡号';
+
+  @override
+  String get woSimReplacementPlaceholder => '请输入新SIM卡号……';
+
+  @override
+  String get woInspectionAction => '操作';
+
+  @override
+  String get woInspectionActionPlaceholder => '选择维护操作';
+
+  @override
+  String get woInspectionResult => '维护结果';
+
+  @override
+  String get woInspectionResultPlaceholder => '请提供维护详情……';
+
+  @override
+  String get woCurrentDeviceTitle => '当前设备信息';
+
+  @override
+  String get woCurrentDeviceType => '设备类型';
+
+  @override
+  String get woCurrentDeviceModel => '设备型号';
+
+  @override
+  String get woCurrentDeviceSimCard => 'SIM卡号';
+
+  @override
+  String get woCurrentDeviceImei => 'IMEI OBD编号';
+
+  @override
+  String get woReviewWorkDetails => '工作详情信息';
+
+  @override
+  String get woStepDetails => '工作详情信息';
+
+  @override
+  String get woStepInformation => '设备信息';
+
+  @override
+  String get woStepInspection => '维护信息';
+
+  @override
+  String get woStepReview => '审核';
+
+  @override
+  String get woStepPrev => '上一步';
+
+  @override
+  String get woStepNext => '下一步';
+
+  @override
+  String get woStepSubmit => '提交工单';
+
+  @override
+  String get woCreateDetailTitle => '创建工单';
+
+  @override
+  String get woUpdateDetailTitle => '更新工单';
+
+  @override
+  String get woSubmitConfirmTitle => '工单确认';
+
+  @override
+  String get woSubmitConfirmMessage => '请仔细核对详情。确认工单信息正确并准备提交。';
+
+  @override
+  String get woCreateDetailSuccess => '成功添加详情！';
+
+  @override
+  String get woCreateDetailFailed => '添加详情失败！';
+
+  @override
+  String get woUpdateDetailSuccess => '工单详情更新成功';
+
+  @override
+  String get woUpdateDetailFailed => '更新工单详情失败';
+
+  @override
+  String get woVehicleInfoFailed => '获取车辆信息失败';
+
+  @override
+  String get vehicleCategoryBus => '巴士';
+
+  @override
+  String get vehicleCategoryPassenger => '乘用车';
+
+  @override
+  String get vehicleCategoryTruck => '卡车';
+
+  @override
+  String get vehicleCategoryChiller => '冷藏车';
+
+  @override
+  String get vehicleCategoryFreezer => '冷冻车';
+
+  @override
+  String get vehicleCategoryChillerFreezer => '冷藏冷冻两用车';
+
+  @override
+  String get vehicleCategoryFreezerChiller => '冷冻冷藏两用车';
+
+  @override
+  String get periodicMetricIgnition => '点火';
+
+  @override
+  String get periodicMetricAccuVoltage => '蓄电池电压';
+
+  @override
+  String get periodicMetricTemperature => '温度';
+
+  @override
+  String get periodicTrack => '周期追踪';
+
+  @override
+  String get noDataAvailable => '暂无数据';
+
+  @override
+  String get periodicStartDateRequired => '请选择开始日期';
+
+  @override
+  String get periodicEndDateRequired => '请选择结束日期';
+
+  @override
+  String get periodicEndDateBeforeStart => '结束日期不能早于开始日期';
+
+  @override
+  String get periodicMaxRangeExceeded => '距开始日期最长范围为3天';
+
+  @override
+  String get activityAllVehicle => '所有车辆';
+
+  @override
+  String get activityInOperation => '运营中';
+
+  @override
+  String get activityMoving => '行驶中';
+
+  @override
+  String get activityIdle => '怠速';
+
+  @override
+  String get activityStop => '停止';
+
+  @override
+  String get activitySilence => '静默';
+
+  @override
+  String get activityInRepair => '维修中';
+
+  @override
+  String get filterTypeLabel => '类型';
+
+  @override
+  String get filterChooseType => '选择筛选类型';
+
+  @override
+  String get filterTypeTitle => '筛选类型';
+
+  @override
+  String get filterGeofence => '地理围栏';
+
+  @override
+  String get filterChooseGeofence => '选择地理围栏';
+
+  @override
+  String get filterAllGeofence => '所有地理围栏';
+
+  @override
+  String get filterSearchHint => '搜索……';
+
+  @override
+  String get dashcam => '行车记录仪';
+
+  @override
+  String get dashcamCameraOffline => '摄像头当前处于离线状态。';
+
+  @override
+  String get dashcamDeviceBusy => '设备正忙';
+
+  @override
+  String get dashcamDeviceError => '设备发生错误';
+
+  @override
+  String get dashcamWebsocketFailed => 'WebSocket连接失败';
+
+  @override
+  String get dashcamEnableSpeakerFirst => '使用麦克风前请先开启扬声器';
+
+  @override
+  String get dashcamNoChannels => '没有可用的行车记录仪通道。';
+
+  @override
+  String get dashcamSpeaker => '扬声器';
+
+  @override
+  String get dashcamIntercom => '对讲';
+
+  @override
+  String get channelCameraOfflineFallback => '摄像头已离线。';
+
+  @override
+  String get channelCameraOffToggle => '摄像头已关闭，点击开启查看。';
+
+  @override
+  String get fullscreenMutedHint => '已静音 — 使用扬声器播放音频';
+
+  @override
+  String get fullscreenExit => '退出全屏';
+
+  @override
+  String get statusOn => '开启';
+
+  @override
+  String get statusOff => '关闭';
+
+  @override
+  String get statusNA => '无';
+
+  @override
+  String get engineOn => '引擎已启动';
+
+  @override
+  String get engineOff => '引擎已熄火';
+
+  @override
+  String get chillerUnit => '冷藏机组';
+
+  @override
+  String get demoVersionBanner => '演示版本 — 示例数据';
+
+  @override
+  String get mediaLabel => '媒体';
+
+  @override
+  String get notifNotYetValidated => '尚未审核';
+
+  @override
+  String get otpEmailNotFound => '未找到邮箱地址。';
+
+  @override
+  String get otpWaitBeforeResend => '请稍候再重新请求验证码。';
+
+  @override
+  String get otpSendFailed => '验证码发送失败。';
+
+  @override
+  String get otpSendFailedCheckConnection => '验证码发送失败，请检查网络连接。';
+
+  @override
+  String get continueWithDemo => '以演示模式继续';
+
+  @override
+  String get woLabelInspectionNote => '检查备注';
+
+  @override
+  String get woLabelSensorSerialNumber => '传感器序列号';
+
+  @override
+  String get woLabelTechnicianName => '技术员姓名';
+
+  @override
+  String get errInvalidResponse => '响应格式无效';
+
+  @override
+  String get errLoadAlertTypeFailed => '加载提醒类型失败';
+
+  @override
+  String get errLoadFleetGroupFailed => '加载车队组失败';
+
+  @override
+  String get errLoadMonitoringFailed => '加载监控数据时发生错误';
+
+  @override
+  String get errLoadVehiclePositionFailed => '加载车辆位置时发生错误';
+
+  @override
+  String get errGenericTryAgain => '发生错误，请重试';
+
+  @override
+  String get errConnectionTimeout => '连接服务器超时。请检查您的网络连接后重试。';
+
+  @override
+  String get errConnectionFailed => '无法连接到服务器。请检查您的网络连接。';
+
+  @override
+  String get errInsecureConnection => '与服务器的连接不安全，请联系管理员。';
+
+  @override
+  String get errRequestCancelled => '请求已取消。';
+
+  @override
+  String get errNoInternetConnection => '无网络连接。请检查您的网络后重试。';
+
+  @override
+  String errFieldsRequired(Object fields) {
+    return '$fields为必填项。';
+  }
+
+  @override
+  String get errFieldsJoiner => '和';
+
+  @override
+  String get errIncompleteData => '填写的信息不完整。';
+
+  @override
+  String get errInvalidCredentials => '您输入的邮箱或密码不正确。';
+
+  @override
+  String get errServerProblem => '服务器出现问题，请稍后再试。';
+
+  @override
+  String get errServiceUnavailable => '此功能当前不可用。请稍后再试或联系管理员。';
+
+  @override
+  String get errNoAccess => '您没有访问此数据的权限。';
+
+  @override
+  String get errDuplicateData => '该数据已注册。请使用其他数据。';
+
+  @override
+  String get dashcamServiceUnavailable => '摄像头服务当前不可用。请联系管理员。';
 }

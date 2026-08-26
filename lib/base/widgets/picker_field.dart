@@ -13,7 +13,7 @@ class PickerField extends StatelessWidget {
   final bool enabled;
   final bool searchable;
   final String pickerTitle;
-  final String searchHint;
+  final String? searchHint;
 
   const PickerField({
     super.key,
@@ -26,7 +26,7 @@ class PickerField extends StatelessWidget {
     this.enabled = true,
     this.searchable = false,
     String? pickerTitle,
-    this.searchHint = 'Cari...',
+    this.searchHint,
   }) : pickerTitle = pickerTitle ?? label;
 
   @override

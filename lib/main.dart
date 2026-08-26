@@ -16,6 +16,11 @@ import 'package:ams/screens/periodic_track/periodic_track.dart';
 import 'package:ams/screens/register/register_screen.dart';
 import 'package:ams/screens/splash_screen/splash_screen.dart';
 import 'package:ams/screens/vehicle_detail/vehicle_detail.dart';
+import 'package:ams/screens/work_order/models/work_order_args.dart';
+import 'package:ams/screens/work_order/pages/create_detail_wo/create_detail_wo.dart';
+import 'package:ams/screens/work_order/pages/create_work_order/create_work_order.dart';
+import 'package:ams/screens/work_order/pages/work_details/work_details.dart';
+import 'package:ams/screens/work_order/pages/work_list/work_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,10 +30,14 @@ import 'base/widgets/auth_guard.dart';
 import 'base/localization/locale_controller.dart';
 import 'package:ams/l10n/app_localizations.dart';
 
+/// Env file dipilih lewat `--dart-define=ENV_FILE=.env.prod` saat run/build.
+/// Tanpa flag ini (default), tetap pakai `.env` (dev).
+const _envFile = String.fromEnvironment('ENV_FILE', defaultValue: '.env');
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: _envFile);
   // Wrap in try-catch: on iOS, Keychain can throw when the device is locked
   // at launch time. Without this guard, any exception here prevents runApp()
   // from ever being called, leaving the native splash screen frozen.
@@ -86,6 +95,40 @@ class MyApp extends ConsumerWidget {
         AppRoutes.mapCoordinateScreen: (_) =>
             const AuthGuard(child: MapCoordinateScreen()),
       },
+      // Halaman work order butuh argumen, jadi dibuat lewat onGenerateRoute.
+      onGenerateRoute: _workOrderRoute,
+    );
+  }
+
+  Route<dynamic>? _workOrderRoute(RouteSettings settings) {
+    Widget? page;
+
+    switch (settings.name) {
+      case AppRoutes.createWorkOrderScreen:
+        page = const CreateWorkOrderScreen();
+        break;
+
+      case AppRoutes.workListScreen:
+        final args = settings.arguments;
+        if (args is WorkListArgs) page = WorkListScreen(args: args);
+        break;
+
+      case AppRoutes.workDetailsScreen:
+        final args = settings.arguments;
+        if (args is WorkDetailsArgs) page = WorkDetailsScreen(args: args);
+        break;
+
+      case AppRoutes.createDetailWoScreen:
+        final args = settings.arguments;
+        if (args is CreateDetailWoArgs) page = CreateDetailWoScreen(args: args);
+        break;
+    }
+
+    if (page == null) return null;
+
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (_) => AuthGuard(child: page!),
     );
   }
 }

@@ -703,4 +703,688 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerPendingOkBtn => 'Got it';
+
+  @override
+  String get navWorkOrder => 'Work Order';
+
+  @override
+  String get woSearchPlaceholder => 'Search Fleet Group ...';
+
+  @override
+  String get woNoDataTitle => 'No Work Orders Yet';
+
+  @override
+  String get woNoDataMessage =>
+      'You don\'t have any work orders at the moment.\nCreate a new one to get started.';
+
+  @override
+  String get woOptionDetails => 'See Work Details';
+
+  @override
+  String get woOptionDelete => 'Delete Work';
+
+  @override
+  String get woDeleteTitle => 'Delete Work Order';
+
+  @override
+  String get woDeleteSubtitle =>
+      'Are you sure you want to delete this work order? This action cannot be undone.';
+
+  @override
+  String get woDeleteConfirm => 'Delete';
+
+  @override
+  String get woDeleteSuccess => 'Delete Success!';
+
+  @override
+  String get woDeleteFailed => 'Delete Failed!';
+
+  @override
+  String get woDetailDeleteTitle => 'Delete Work';
+
+  @override
+  String get woDetailDeleteSubtitle =>
+      'Are you sure you want to delete this work? This action cannot be undone.';
+
+  @override
+  String get woFleetGroup => 'Fleet Group';
+
+  @override
+  String get woFleetGroupPlaceholder => 'Choose Fleet Group';
+
+  @override
+  String get woTechnician => 'Technician';
+
+  @override
+  String get woTechnicianPlaceholder => 'Choose Technician';
+
+  @override
+  String get woDate => 'Date';
+
+  @override
+  String get woDatePlaceholder => 'Select Date';
+
+  @override
+  String get woCreateTitle => 'Create Work Order';
+
+  @override
+  String get woCreate => 'Create';
+
+  @override
+  String get woCreateFailed => 'Failed to create work order';
+
+  @override
+  String get woWorkListTitle => 'Work List';
+
+  @override
+  String get woWorkListEmptyTitle => 'No Work Orders Yet';
+
+  @override
+  String get woWorkListEmptyMessage =>
+      'You don\'t have any work orders at the moment.\nCreate a new one to get started.';
+
+  @override
+  String get woAssignButton => 'Assign Work';
+
+  @override
+  String get woAssignTitle => 'Create Work Order';
+
+  @override
+  String get woWorkCategory => 'Work Category';
+
+  @override
+  String get woWorkCategoryPlaceholder => 'Choose Work Order Category';
+
+  @override
+  String get woWorkType => 'Work Type';
+
+  @override
+  String get woWorkTypePlaceholder => 'Choose Work Order Type';
+
+  @override
+  String get woWorkDate => 'Work Date';
+
+  @override
+  String get woEvidenceNotUploaded => 'Evidence is not uploaded yet.';
+
+  @override
+  String get woOdometerNotFilled => 'Odometer is not filled yet.';
+
+  @override
+  String get woGpsActive => 'GPS is active.';
+
+  @override
+  String get woGpsNotActive => 'GPS is not active yet.';
+
+  @override
+  String get woDetailsTitle => 'Work Details';
+
+  @override
+  String get woTabDetails => 'Details';
+
+  @override
+  String get woTabEvidence => 'Evidence';
+
+  @override
+  String get woTabNotes => 'Notes';
+
+  @override
+  String get woDetailsEdit => 'Edit Work Details';
+
+  @override
+  String get woDetailsSave => 'Save';
+
+  @override
+  String get woSavedSuccess => 'Data saved successfully';
+
+  @override
+  String get woSavedFailed => 'Failed to save data';
+
+  @override
+  String get woCompleteSuccess => 'Work marked as complete';
+
+  @override
+  String get woCompleteFailed => 'Failed to complete work';
+
+  @override
+  String get woLeaveTitle => 'Are you sure you want to leave this page?';
+
+  @override
+  String get woLeaveMessage => 'Unsaved data will be lost';
+
+  @override
+  String get woErrorBeforeImage => 'Before Installation Evidence is required';
+
+  @override
+  String get woErrorAfterImage => 'After Installation Evidence is required';
+
+  @override
+  String get woErrorNotes => 'Notes are required';
+
+  @override
+  String get woActionSaveDraft => 'Save as Draft';
+
+  @override
+  String get woActionMarkComplete => 'Mark as Complete';
+
+  @override
+  String get woWorkInformation => 'Work Details Information';
+
+  @override
+  String get woInspectionInformation => 'Maintenance Information';
+
+  @override
+  String get woDeviceInformation => 'Device Information';
+
+  @override
+  String get woEvidenceBefore => 'Before Installation Evidence';
+
+  @override
+  String get woEvidenceAfter => 'After Installation Evidence';
+
+  @override
+  String get woEvidenceTakeOrUpload => 'Take or Upload Photo';
+
+  @override
+  String get woEvidenceUploadTitle => 'Upload Evidence';
+
+  @override
+  String get woEvidenceProofTitle => 'Evidence';
+
+  @override
+  String get woEvidenceTakePhoto => 'Take Photo';
+
+  @override
+  String get woEvidenceFromGallery => 'Choose from Gallery';
+
+  @override
+  String get woEvidenceView => 'View Photo';
+
+  @override
+  String get woEvidenceReplace => 'Replace Photo';
+
+  @override
+  String get woEvidenceDelete => 'Delete Photo';
+
+  @override
+  String get woEvidenceInvalidFormat =>
+      'Unsupported file format. Please use JPG, JPEG or PNG.';
+
+  @override
+  String get woEvidenceProcessFailed => 'Failed to process image';
+
+  @override
+  String get woNotesTitle => 'Notes';
+
+  @override
+  String get woNotesPlaceholder => 'Describe the work done...';
+
+  @override
+  String get woJobCategory => 'Job Category';
+
+  @override
+  String get woJobType => 'Job Type';
+
+  @override
+  String get woLicensePlate => 'License Plate';
+
+  @override
+  String get woLicensePlatePlaceholder => 'Enter License Plate ...';
+
+  @override
+  String get woLicensePlateRequired => 'License plate is required';
+
+  @override
+  String get woUseChassisNumber => 'Use Chassis Number';
+
+  @override
+  String get woChassisNumber => 'Chassis Number';
+
+  @override
+  String get woChassisNumberPlaceholder => 'e.g. MHFJB8BS0AK000000';
+
+  @override
+  String get woOdometer => 'Odometer';
+
+  @override
+  String get woOdometerPlaceholder => 'Enter Odometer ...';
+
+  @override
+  String get woOdometerNumeric => 'Odometer must be numeric';
+
+  @override
+  String get woDeviceCondition => 'Device Condition';
+
+  @override
+  String get woDeviceConditionPlaceholder => 'Enter Device Condition ...';
+
+  @override
+  String get woDeviceType => 'Device Type';
+
+  @override
+  String get woDeviceModel => 'Device Model';
+
+  @override
+  String get woDeviceModelPlaceholder => 'Select Device Model';
+
+  @override
+  String get woDeviceModelRequired => 'Device model is required';
+
+  @override
+  String get woSimCardNumber => 'SIM Card Number';
+
+  @override
+  String get woSimCardNumberOptional => 'SIM Card Number (Optional)';
+
+  @override
+  String get woSimCardNumberPlaceholder => 'Enter SIM Card Number ...';
+
+  @override
+  String get woSimCardNumeric => 'SIM card number must be numeric';
+
+  @override
+  String get woImei => 'IMEI OBD Number';
+
+  @override
+  String get woImeiPlaceholder => 'Enter IMEI OBD Number ...';
+
+  @override
+  String get woImeiNumeric => 'IMEI must be numeric';
+
+  @override
+  String get woImeiMaxLength => 'IMEI must be at most 15 digits';
+
+  @override
+  String get woDashcamType => 'Dashcam Type';
+
+  @override
+  String get woDashcamTypePlaceholder => 'Select Dashcam Type';
+
+  @override
+  String get woDashcamTypeRequired => 'Dashcam type is required';
+
+  @override
+  String get woDashcamImei => 'Dashcam IMEI';
+
+  @override
+  String get woDashcamImeiPlaceholder => 'Enter Dashcam IMEI';
+
+  @override
+  String get woDashcamImeiNumeric => 'Dashcam IMEI must be numeric';
+
+  @override
+  String get woCameraPosition => 'Camera Position';
+
+  @override
+  String get woCameraPositionPlaceholder => 'Select Camera Position';
+
+  @override
+  String get woCameraPositionRequired => 'Camera position is required';
+
+  @override
+  String get woSensorType => 'Sensor Type';
+
+  @override
+  String get woSensorTypePlaceholder => 'Select Sensor Type';
+
+  @override
+  String get woSensorTypeRequired => 'Sensor type is required';
+
+  @override
+  String get woSensorSerialNumber => 'Serial Number';
+
+  @override
+  String get woSensorSerialNumberPlaceholder => 'Enter Serial Number';
+
+  @override
+  String get woSensorPosition => 'Sensor Position';
+
+  @override
+  String get woSensorPositionPlaceholder => 'Select Sensor Position';
+
+  @override
+  String get woSensorPositionRequired => 'Sensor position is required';
+
+  @override
+  String get woSimReplacementTitle => 'New SIM Card Number';
+
+  @override
+  String get woSimReplacementPlaceholder => 'Enter New SIM Card Number ...';
+
+  @override
+  String get woInspectionAction => 'Action';
+
+  @override
+  String get woInspectionActionPlaceholder => 'Select Action of Maintenance';
+
+  @override
+  String get woInspectionResult => 'Maintenance Result';
+
+  @override
+  String get woInspectionResultPlaceholder =>
+      'Provide Details of The Maintenance ...';
+
+  @override
+  String get woCurrentDeviceTitle => 'Current Device Information';
+
+  @override
+  String get woCurrentDeviceType => 'Device Type';
+
+  @override
+  String get woCurrentDeviceModel => 'Device Model';
+
+  @override
+  String get woCurrentDeviceSimCard => 'SIM Card Number';
+
+  @override
+  String get woCurrentDeviceImei => 'IMEI OBD Number';
+
+  @override
+  String get woReviewWorkDetails => 'Work Details Information';
+
+  @override
+  String get woStepDetails => 'Work Details Information';
+
+  @override
+  String get woStepInformation => 'Device Information';
+
+  @override
+  String get woStepInspection => 'Maintenance Information';
+
+  @override
+  String get woStepReview => 'Review';
+
+  @override
+  String get woStepPrev => 'Previous';
+
+  @override
+  String get woStepNext => 'Next';
+
+  @override
+  String get woStepSubmit => 'Submit Work Order';
+
+  @override
+  String get woCreateDetailTitle => 'Create Work Order';
+
+  @override
+  String get woUpdateDetailTitle => 'Update Work Order';
+
+  @override
+  String get woSubmitConfirmTitle => 'Work Order Confirmation';
+
+  @override
+  String get woSubmitConfirmMessage =>
+      'Please review the details carefully. Confirm that the work order information is correct and ready to proceed.';
+
+  @override
+  String get woCreateDetailSuccess => 'Successfully added detail!';
+
+  @override
+  String get woCreateDetailFailed => 'Failed to add detail!';
+
+  @override
+  String get woUpdateDetailSuccess => 'Work order detail updated successfully';
+
+  @override
+  String get woUpdateDetailFailed => 'Failed to update work order detail';
+
+  @override
+  String get woVehicleInfoFailed => 'Failed to get vehicle information';
+
+  @override
+  String get vehicleCategoryBus => 'Bus';
+
+  @override
+  String get vehicleCategoryPassenger => 'Passenger';
+
+  @override
+  String get vehicleCategoryTruck => 'Truck';
+
+  @override
+  String get vehicleCategoryChiller => 'Chiller';
+
+  @override
+  String get vehicleCategoryFreezer => 'Freezer';
+
+  @override
+  String get vehicleCategoryChillerFreezer => 'Chiller & Freezer';
+
+  @override
+  String get vehicleCategoryFreezerChiller => 'Freezer & Chiller';
+
+  @override
+  String get periodicMetricIgnition => 'Ignition';
+
+  @override
+  String get periodicMetricAccuVoltage => 'Accu Voltage';
+
+  @override
+  String get periodicMetricTemperature => 'Temperature';
+
+  @override
+  String get periodicTrack => 'Periodic Track';
+
+  @override
+  String get noDataAvailable => 'No Data';
+
+  @override
+  String get periodicStartDateRequired => 'Start Date is required';
+
+  @override
+  String get periodicEndDateRequired => 'End Date is required';
+
+  @override
+  String get periodicEndDateBeforeStart =>
+      'End Date cannot be earlier than Start Date';
+
+  @override
+  String get periodicMaxRangeExceeded =>
+      'Maximum range is 3 days from Start Date';
+
+  @override
+  String get activityAllVehicle => 'All Vehicle';
+
+  @override
+  String get activityInOperation => 'In Operation';
+
+  @override
+  String get activityMoving => 'Moving';
+
+  @override
+  String get activityIdle => 'Idle';
+
+  @override
+  String get activityStop => 'Stop';
+
+  @override
+  String get activitySilence => 'Silence';
+
+  @override
+  String get activityInRepair => 'In Repair';
+
+  @override
+  String get filterTypeLabel => 'Type';
+
+  @override
+  String get filterChooseType => 'Choose filter type';
+
+  @override
+  String get filterTypeTitle => 'Filter Type';
+
+  @override
+  String get filterGeofence => 'Geofence';
+
+  @override
+  String get filterChooseGeofence => 'Choose geofence';
+
+  @override
+  String get filterAllGeofence => 'All Geofence';
+
+  @override
+  String get filterSearchHint => 'Search...';
+
+  @override
+  String get dashcam => 'Dashcam';
+
+  @override
+  String get dashcamCameraOffline => 'Camera is offline right now.';
+
+  @override
+  String get dashcamDeviceBusy => 'Device is busy';
+
+  @override
+  String get dashcamDeviceError => 'Device error occurred';
+
+  @override
+  String get dashcamWebsocketFailed => 'WebSocket connection failed';
+
+  @override
+  String get dashcamEnableSpeakerFirst =>
+      'Please turn on speaker first before using microphone';
+
+  @override
+  String get dashcamNoChannels => 'No dashcam channels available.';
+
+  @override
+  String get dashcamSpeaker => 'Speaker';
+
+  @override
+  String get dashcamIntercom => 'Intercom';
+
+  @override
+  String get channelCameraOfflineFallback => 'Camera is offline.';
+
+  @override
+  String get channelCameraOffToggle => 'Camera is off. Toggle to view.';
+
+  @override
+  String get fullscreenMutedHint => 'Muted — use Speaker for audio';
+
+  @override
+  String get fullscreenExit => 'Exit Fullscreen';
+
+  @override
+  String get statusOn => 'ON';
+
+  @override
+  String get statusOff => 'OFF';
+
+  @override
+  String get statusNA => 'N/A';
+
+  @override
+  String get engineOn => 'Engine ON';
+
+  @override
+  String get engineOff => 'Engine OFF';
+
+  @override
+  String get chillerUnit => 'Chiller Unit';
+
+  @override
+  String get demoVersionBanner => 'DEMO VERSION — Sample Data';
+
+  @override
+  String get mediaLabel => 'Media';
+
+  @override
+  String get notifNotYetValidated => 'Not yet validated';
+
+  @override
+  String get otpEmailNotFound => 'Email not found.';
+
+  @override
+  String get otpWaitBeforeResend => 'Please wait before requesting OTP again.';
+
+  @override
+  String get otpSendFailed => 'Failed to send OTP.';
+
+  @override
+  String get otpSendFailedCheckConnection =>
+      'Failed to send OTP. Check your connection.';
+
+  @override
+  String get continueWithDemo => 'Continue with Demo';
+
+  @override
+  String get woLabelInspectionNote => 'Inspection Note';
+
+  @override
+  String get woLabelSensorSerialNumber => 'Sensor Serial Number';
+
+  @override
+  String get woLabelTechnicianName => 'Technician Name';
+
+  @override
+  String get errInvalidResponse => 'Invalid response format';
+
+  @override
+  String get errLoadAlertTypeFailed => 'Failed to load alert type';
+
+  @override
+  String get errLoadFleetGroupFailed => 'Failed to load fleet group';
+
+  @override
+  String get errLoadMonitoringFailed =>
+      'An error occurred while loading monitoring data';
+
+  @override
+  String get errLoadVehiclePositionFailed =>
+      'An error occurred while loading vehicle position';
+
+  @override
+  String get errGenericTryAgain => 'An error occurred, please try again';
+
+  @override
+  String get errConnectionTimeout =>
+      'Connection to server timed out. Check your internet connection and try again.';
+
+  @override
+  String get errConnectionFailed =>
+      'Could not connect to the server. Check your internet connection.';
+
+  @override
+  String get errInsecureConnection =>
+      'Connection to the server is not secure. Contact admin.';
+
+  @override
+  String get errRequestCancelled => 'Request cancelled.';
+
+  @override
+  String get errNoInternetConnection =>
+      'No internet connection. Check your network and try again.';
+
+  @override
+  String errFieldsRequired(Object fields) {
+    return '$fields is required.';
+  }
+
+  @override
+  String get errFieldsJoiner => 'and';
+
+  @override
+  String get errIncompleteData => 'The data entered is incomplete.';
+
+  @override
+  String get errInvalidCredentials =>
+      'The email or password you entered is incorrect.';
+
+  @override
+  String get errServerProblem =>
+      'The server is having issues. Please try again in a moment.';
+
+  @override
+  String get errServiceUnavailable =>
+      'This feature isn\'t available right now. Please try again later or contact your admin.';
+
+  @override
+  String get errNoAccess => 'You don\'t have access to this data.';
+
+  @override
+  String get errDuplicateData =>
+      'This data is already registered. Please use a different one.';
+
+  @override
+  String get dashcamServiceUnavailable =>
+      'Camera service is unavailable right now. Please contact your admin.';
 }

@@ -701,4 +701,690 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get registerPendingOkBtn => 'Oke, Mengerti';
+
+  @override
+  String get navWorkOrder => 'Work Order';
+
+  @override
+  String get woSearchPlaceholder => 'Cari Fleet Group ...';
+
+  @override
+  String get woNoDataTitle => 'Belum Ada Work Order';
+
+  @override
+  String get woNoDataMessage =>
+      'Anda belum memiliki work order saat ini.\nBuat yang baru untuk memulai.';
+
+  @override
+  String get woOptionDetails => 'Lihat Detail Pekerjaan';
+
+  @override
+  String get woOptionDelete => 'Hapus Pekerjaan';
+
+  @override
+  String get woDeleteTitle => 'Hapus Work Order';
+
+  @override
+  String get woDeleteSubtitle =>
+      'Apakah Anda yakin ingin menghapus work order ini? Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get woDeleteConfirm => 'Hapus';
+
+  @override
+  String get woDeleteSuccess => 'Berhasil Dihapus!';
+
+  @override
+  String get woDeleteFailed => 'Gagal Menghapus!';
+
+  @override
+  String get woDetailDeleteTitle => 'Hapus Pekerjaan';
+
+  @override
+  String get woDetailDeleteSubtitle =>
+      'Apakah Anda yakin ingin menghapus pekerjaan ini? Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get woFleetGroup => 'Fleet Group';
+
+  @override
+  String get woFleetGroupPlaceholder => 'Pilih Fleet Group';
+
+  @override
+  String get woTechnician => 'Nama Teknisi';
+
+  @override
+  String get woTechnicianPlaceholder => 'Pilih Nama Teknisi';
+
+  @override
+  String get woDate => 'Tanggal';
+
+  @override
+  String get woDatePlaceholder => 'Pilih tanggal';
+
+  @override
+  String get woCreateTitle => 'Buat Work Order';
+
+  @override
+  String get woCreate => 'Buat';
+
+  @override
+  String get woCreateFailed => 'Gagal membuat work order';
+
+  @override
+  String get woWorkListTitle => 'Daftar Pekerjaan';
+
+  @override
+  String get woWorkListEmptyTitle => 'Belum Ada Work Order';
+
+  @override
+  String get woWorkListEmptyMessage =>
+      'Anda belum memiliki work order saat ini.\nBuat yang baru untuk memulai.';
+
+  @override
+  String get woAssignButton => 'Tugaskan Pekerjaan';
+
+  @override
+  String get woAssignTitle => 'Buat Work Order';
+
+  @override
+  String get woWorkCategory => 'Kategori Pekerjaan';
+
+  @override
+  String get woWorkCategoryPlaceholder => 'Pilih Kategori Work Order';
+
+  @override
+  String get woWorkType => 'Tipe Pekerjaan';
+
+  @override
+  String get woWorkTypePlaceholder => 'Pilih Tipe Work Order';
+
+  @override
+  String get woWorkDate => 'Tanggal Pekerjaan';
+
+  @override
+  String get woEvidenceNotUploaded => 'Bukti belum diunggah.';
+
+  @override
+  String get woOdometerNotFilled => 'Odometer belum diisi.';
+
+  @override
+  String get woGpsActive => 'GPS aktif.';
+
+  @override
+  String get woGpsNotActive => 'GPS belum aktif.';
+
+  @override
+  String get woDetailsTitle => 'Detail Pekerjaan';
+
+  @override
+  String get woTabDetails => 'Detail';
+
+  @override
+  String get woTabEvidence => 'Bukti';
+
+  @override
+  String get woTabNotes => 'Catatan';
+
+  @override
+  String get woDetailsEdit => 'Edit Detail Pekerjaan';
+
+  @override
+  String get woDetailsSave => 'Simpan';
+
+  @override
+  String get woSavedSuccess => 'Data berhasil disimpan';
+
+  @override
+  String get woSavedFailed => 'Gagal menyimpan data';
+
+  @override
+  String get woCompleteSuccess => 'Pekerjaan berhasil diselesaikan';
+
+  @override
+  String get woCompleteFailed => 'Gagal menyelesaikan pekerjaan';
+
+  @override
+  String get woLeaveTitle => 'Apakah Anda yakin ingin keluar dari halaman ini?';
+
+  @override
+  String get woLeaveMessage => 'Data yang belum disimpan akan hilang';
+
+  @override
+  String get woErrorBeforeImage => 'Bukti Sebelum Instalasi wajib diisi';
+
+  @override
+  String get woErrorAfterImage => 'Bukti Setelah Instalasi wajib diisi';
+
+  @override
+  String get woErrorNotes => 'Catatan wajib diisi';
+
+  @override
+  String get woActionSaveDraft => 'Simpan sebagai Draft';
+
+  @override
+  String get woActionMarkComplete => 'Tandai sebagai Selesai';
+
+  @override
+  String get woWorkInformation => 'Informasi Detail Pekerjaan';
+
+  @override
+  String get woInspectionInformation => 'Informasi Maintenance';
+
+  @override
+  String get woDeviceInformation => 'Informasi Perangkat';
+
+  @override
+  String get woEvidenceBefore => 'Bukti Sebelum Instalasi';
+
+  @override
+  String get woEvidenceAfter => 'Bukti Setelah Instalasi';
+
+  @override
+  String get woEvidenceTakeOrUpload => 'Ambil atau Upload Foto';
+
+  @override
+  String get woEvidenceUploadTitle => 'Upload Bukti';
+
+  @override
+  String get woEvidenceProofTitle => 'Bukti';
+
+  @override
+  String get woEvidenceTakePhoto => 'Ambil Foto';
+
+  @override
+  String get woEvidenceFromGallery => 'Pilih dari Galeri';
+
+  @override
+  String get woEvidenceView => 'Lihat Foto';
+
+  @override
+  String get woEvidenceReplace => 'Ganti Foto';
+
+  @override
+  String get woEvidenceDelete => 'Hapus Foto';
+
+  @override
+  String get woEvidenceInvalidFormat =>
+      'Format file tidak didukung. Gunakan JPG, JPEG atau PNG.';
+
+  @override
+  String get woEvidenceProcessFailed => 'Gagal memproses gambar';
+
+  @override
+  String get woNotesTitle => 'Catatan';
+
+  @override
+  String get woNotesPlaceholder =>
+      'Deskripsikan pekerjaan yang telah dilakukan...';
+
+  @override
+  String get woJobCategory => 'Kategori Pekerjaan';
+
+  @override
+  String get woJobType => 'Tipe Pekerjaan';
+
+  @override
+  String get woLicensePlate => 'Plat Nomor';
+
+  @override
+  String get woLicensePlatePlaceholder => 'Masukkan Plat Nomor ...';
+
+  @override
+  String get woLicensePlateRequired => 'Plat nomor wajib diisi';
+
+  @override
+  String get woUseChassisNumber => 'Gunakan Nomor Rangka';
+
+  @override
+  String get woChassisNumber => 'Nomor Rangka';
+
+  @override
+  String get woChassisNumberPlaceholder => 'cth. MHFJB8BS0AK000000';
+
+  @override
+  String get woOdometer => 'Odometer';
+
+  @override
+  String get woOdometerPlaceholder => 'Masukkan Odometer ...';
+
+  @override
+  String get woOdometerNumeric => 'Odometer harus berupa angka';
+
+  @override
+  String get woDeviceCondition => 'Kondisi Perangkat';
+
+  @override
+  String get woDeviceConditionPlaceholder => 'Masukkan Kondisi Perangkat ...';
+
+  @override
+  String get woDeviceType => 'Tipe Perangkat';
+
+  @override
+  String get woDeviceModel => 'Model Perangkat';
+
+  @override
+  String get woDeviceModelPlaceholder => 'Pilih Model Perangkat';
+
+  @override
+  String get woDeviceModelRequired => 'Model perangkat wajib diisi';
+
+  @override
+  String get woSimCardNumber => 'Nomor SIM Card';
+
+  @override
+  String get woSimCardNumberOptional => 'Nomor SIM Card (Opsional)';
+
+  @override
+  String get woSimCardNumberPlaceholder => 'Masukkan Nomor SIM Card ...';
+
+  @override
+  String get woSimCardNumeric => 'Nomor SIM card harus berupa angka';
+
+  @override
+  String get woImei => 'Nomor IMEI OBD';
+
+  @override
+  String get woImeiPlaceholder => 'Masukkan Nomor IMEI OBD ...';
+
+  @override
+  String get woImeiNumeric => 'IMEI harus berupa angka';
+
+  @override
+  String get woImeiMaxLength => 'IMEI maksimal 15 digit';
+
+  @override
+  String get woDashcamType => 'Tipe Dashcam';
+
+  @override
+  String get woDashcamTypePlaceholder => 'Pilih Tipe Dashcam';
+
+  @override
+  String get woDashcamTypeRequired => 'Tipe dashcam wajib diisi';
+
+  @override
+  String get woDashcamImei => 'Dashcam IMEI';
+
+  @override
+  String get woDashcamImeiPlaceholder => 'Masukkan Nomor Dashcam IMEI';
+
+  @override
+  String get woDashcamImeiNumeric => 'Dashcam IMEI harus berupa angka';
+
+  @override
+  String get woCameraPosition => 'Posisi Kamera';
+
+  @override
+  String get woCameraPositionPlaceholder => 'Pilih Posisi Kamera';
+
+  @override
+  String get woCameraPositionRequired => 'Posisi kamera wajib diisi';
+
+  @override
+  String get woSensorType => 'Tipe Sensor';
+
+  @override
+  String get woSensorTypePlaceholder => 'Pilih Tipe Sensor';
+
+  @override
+  String get woSensorTypeRequired => 'Tipe sensor wajib diisi';
+
+  @override
+  String get woSensorSerialNumber => 'Nomor Seri';
+
+  @override
+  String get woSensorSerialNumberPlaceholder => 'Masukkan Nomor Seri';
+
+  @override
+  String get woSensorPosition => 'Posisi Sensor';
+
+  @override
+  String get woSensorPositionPlaceholder => 'Pilih Posisi Sensor';
+
+  @override
+  String get woSensorPositionRequired => 'Posisi sensor wajib diisi';
+
+  @override
+  String get woSimReplacementTitle => 'Nomor SIM Card Baru';
+
+  @override
+  String get woSimReplacementPlaceholder => 'Masukkan Nomor SIM Card Baru ...';
+
+  @override
+  String get woInspectionAction => 'Tindakan';
+
+  @override
+  String get woInspectionActionPlaceholder => 'Pilih Tindakan Maintenance';
+
+  @override
+  String get woInspectionResult => 'Hasil Maintenance';
+
+  @override
+  String get woInspectionResultPlaceholder =>
+      'Berikan Detail Hasil Maintenance ...';
+
+  @override
+  String get woCurrentDeviceTitle => 'Informasi Perangkat Saat Ini';
+
+  @override
+  String get woCurrentDeviceType => 'Tipe Perangkat';
+
+  @override
+  String get woCurrentDeviceModel => 'Model Perangkat';
+
+  @override
+  String get woCurrentDeviceSimCard => 'Nomor SIM Card';
+
+  @override
+  String get woCurrentDeviceImei => 'Nomor IMEI OBD';
+
+  @override
+  String get woReviewWorkDetails => 'Informasi Detail Pekerjaan';
+
+  @override
+  String get woStepDetails => 'Informasi Detail Pekerjaan';
+
+  @override
+  String get woStepInformation => 'Informasi Perangkat';
+
+  @override
+  String get woStepInspection => 'Informasi Maintenance';
+
+  @override
+  String get woStepReview => 'Tinjauan';
+
+  @override
+  String get woStepPrev => 'Sebelumnya';
+
+  @override
+  String get woStepNext => 'Lanjut';
+
+  @override
+  String get woStepSubmit => 'Kirim Work Order';
+
+  @override
+  String get woCreateDetailTitle => 'Buat Work Order';
+
+  @override
+  String get woUpdateDetailTitle => 'Edit Work Order';
+
+  @override
+  String get woSubmitConfirmTitle => 'Konfirmasi Work Order';
+
+  @override
+  String get woSubmitConfirmMessage =>
+      'Harap tinjau detail dengan cermat. Konfirmasi bahwa informasi work order sudah benar dan siap untuk diproses.';
+
+  @override
+  String get woCreateDetailSuccess => 'Berhasil menambahkan detail!';
+
+  @override
+  String get woCreateDetailFailed => 'Gagal menambahkan detail!';
+
+  @override
+  String get woUpdateDetailSuccess => 'Detail work order berhasil diperbarui';
+
+  @override
+  String get woUpdateDetailFailed => 'Gagal memperbarui detail work order';
+
+  @override
+  String get woVehicleInfoFailed => 'Gagal mengambil informasi kendaraan';
+
+  @override
+  String get vehicleCategoryBus => 'Bus';
+
+  @override
+  String get vehicleCategoryPassenger => 'Penumpang';
+
+  @override
+  String get vehicleCategoryTruck => 'Truk';
+
+  @override
+  String get vehicleCategoryChiller => 'Chiller';
+
+  @override
+  String get vehicleCategoryFreezer => 'Freezer';
+
+  @override
+  String get vehicleCategoryChillerFreezer => 'Chiller & Freezer';
+
+  @override
+  String get vehicleCategoryFreezerChiller => 'Freezer & Chiller';
+
+  @override
+  String get periodicMetricIgnition => 'Ignition';
+
+  @override
+  String get periodicMetricAccuVoltage => 'Tegangan Aki';
+
+  @override
+  String get periodicMetricTemperature => 'Suhu';
+
+  @override
+  String get periodicTrack => 'Periodic Track';
+
+  @override
+  String get noDataAvailable => 'Tidak Ada Data';
+
+  @override
+  String get periodicStartDateRequired => 'Start Date wajib diisi';
+
+  @override
+  String get periodicEndDateRequired => 'End Date wajib diisi';
+
+  @override
+  String get periodicEndDateBeforeStart =>
+      'End Date tidak boleh lebih kecil dari Start Date';
+
+  @override
+  String get periodicMaxRangeExceeded =>
+      'Rentang maksimal 3 hari dari Start Date';
+
+  @override
+  String get activityAllVehicle => 'Semua Kendaraan';
+
+  @override
+  String get activityInOperation => 'Beroperasi';
+
+  @override
+  String get activityMoving => 'Bergerak';
+
+  @override
+  String get activityIdle => 'Idle';
+
+  @override
+  String get activityStop => 'Berhenti';
+
+  @override
+  String get activitySilence => 'Silence';
+
+  @override
+  String get activityInRepair => 'Dalam Perbaikan';
+
+  @override
+  String get filterTypeLabel => 'Jenis';
+
+  @override
+  String get filterChooseType => 'Pilih jenis filter';
+
+  @override
+  String get filterTypeTitle => 'Jenis Filter';
+
+  @override
+  String get filterGeofence => 'Geofence';
+
+  @override
+  String get filterChooseGeofence => 'Pilih Geofence';
+
+  @override
+  String get filterAllGeofence => 'Semua Geofence';
+
+  @override
+  String get filterSearchHint => 'Cari...';
+
+  @override
+  String get dashcam => 'Dashcam';
+
+  @override
+  String get dashcamCameraOffline => 'Kamera sedang offline.';
+
+  @override
+  String get dashcamDeviceBusy => 'Perangkat sedang sibuk';
+
+  @override
+  String get dashcamDeviceError => 'Terjadi kesalahan pada perangkat';
+
+  @override
+  String get dashcamWebsocketFailed => 'Koneksi WebSocket gagal';
+
+  @override
+  String get dashcamEnableSpeakerFirst =>
+      'Nyalakan speaker terlebih dahulu sebelum menggunakan mikrofon';
+
+  @override
+  String get dashcamNoChannels => 'Tidak ada channel dashcam yang tersedia.';
+
+  @override
+  String get dashcamSpeaker => 'Speaker';
+
+  @override
+  String get dashcamIntercom => 'Intercom';
+
+  @override
+  String get channelCameraOfflineFallback => 'Kamera sedang offline.';
+
+  @override
+  String get channelCameraOffToggle =>
+      'Kamera nonaktif. Aktifkan untuk melihat.';
+
+  @override
+  String get fullscreenMutedHint => 'Senyap — gunakan Speaker untuk audio';
+
+  @override
+  String get fullscreenExit => 'Keluar Fullscreen';
+
+  @override
+  String get statusOn => 'ON';
+
+  @override
+  String get statusOff => 'OFF';
+
+  @override
+  String get statusNA => 'N/A';
+
+  @override
+  String get engineOn => 'Mesin Menyala';
+
+  @override
+  String get engineOff => 'Mesin Mati';
+
+  @override
+  String get chillerUnit => 'Unit Chiller';
+
+  @override
+  String get demoVersionBanner => 'VERSI DEMO — Data Contoh';
+
+  @override
+  String get mediaLabel => 'Media';
+
+  @override
+  String get notifNotYetValidated => 'Belum divalidasi';
+
+  @override
+  String get otpEmailNotFound => 'Email tidak ditemukan.';
+
+  @override
+  String get otpWaitBeforeResend => 'Tunggu sebelum minta OTP lagi.';
+
+  @override
+  String get otpSendFailed => 'Gagal mengirim OTP.';
+
+  @override
+  String get otpSendFailedCheckConnection =>
+      'Gagal mengirim OTP. Periksa koneksi.';
+
+  @override
+  String get continueWithDemo => 'Lanjutkan dengan Demo';
+
+  @override
+  String get woLabelInspectionNote => 'Catatan Inspeksi';
+
+  @override
+  String get woLabelSensorSerialNumber => 'Nomor Seri Sensor';
+
+  @override
+  String get woLabelTechnicianName => 'Nama Teknisi';
+
+  @override
+  String get errInvalidResponse => 'Format response tidak valid';
+
+  @override
+  String get errLoadAlertTypeFailed => 'Gagal memuat alert type';
+
+  @override
+  String get errLoadFleetGroupFailed => 'Gagal memuat fleet group';
+
+  @override
+  String get errLoadMonitoringFailed =>
+      'Terjadi kesalahan saat memuat monitoring';
+
+  @override
+  String get errLoadVehiclePositionFailed =>
+      'Terjadi kesalahan saat memuat posisi kendaraan';
+
+  @override
+  String get errGenericTryAgain => 'Terjadi kesalahan, coba lagi';
+
+  @override
+  String get errConnectionTimeout =>
+      'Koneksi ke server timeout. Periksa koneksi internet Anda dan coba lagi.';
+
+  @override
+  String get errConnectionFailed =>
+      'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+
+  @override
+  String get errInsecureConnection =>
+      'Koneksi ke server tidak aman. Hubungi admin.';
+
+  @override
+  String get errRequestCancelled => 'Permintaan dibatalkan.';
+
+  @override
+  String get errNoInternetConnection =>
+      'Tidak ada koneksi internet. Periksa jaringan Anda dan coba lagi.';
+
+  @override
+  String errFieldsRequired(Object fields) {
+    return '$fields wajib diisi.';
+  }
+
+  @override
+  String get errFieldsJoiner => 'dan';
+
+  @override
+  String get errIncompleteData => 'Data yang dimasukkan belum lengkap.';
+
+  @override
+  String get errInvalidCredentials =>
+      'Email atau password yang Anda masukkan salah.';
+
+  @override
+  String get errServerProblem =>
+      'Server sedang bermasalah. Coba lagi beberapa saat lagi.';
+
+  @override
+  String get errServiceUnavailable =>
+      'Fitur ini sedang tidak tersedia. Coba lagi nanti atau hubungi admin.';
+
+  @override
+  String get errNoAccess => 'Anda tidak memiliki akses ke data ini.';
+
+  @override
+  String get errDuplicateData =>
+      'Data ini sudah terdaftar. Gunakan data yang berbeda.';
+
+  @override
+  String get dashcamServiceUnavailable =>
+      'Layanan kamera sedang tidak tersedia. Silakan hubungi admin.';
 }

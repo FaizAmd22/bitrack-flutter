@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 import 'fullscreen_player.dart';
 
@@ -133,7 +134,7 @@ class _FlvPlayerState extends State<FlvPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    if (_error) return _buildError();
+    if (_error) return _buildError(context);
     if (_loading) return _buildLoading();
 
     return Stack(
@@ -166,16 +167,20 @@ class _FlvPlayerState extends State<FlvPlayer> {
     child: CircularProgressIndicator(color: AppStyles.primaryColor),
   );
 
-  Widget _buildError() => const Center(
+  Widget _buildError(BuildContext context) => Center(
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.videocam_off_outlined, color: AppStyles.redColor, size: 28),
-        SizedBox(height: 6),
+        const Icon(
+          Icons.videocam_off_outlined,
+          color: AppStyles.redColor,
+          size: 28,
+        ),
+        const SizedBox(height: 6),
         Text(
-          'Camera is offline right now.',
+          AppLocalizations.of(context).dashcamCameraOffline,
           textAlign: TextAlign.center,
-          style: TextStyle(color: AppStyles.redColor, fontSize: 12),
+          style: const TextStyle(color: AppStyles.redColor, fontSize: 12),
         ),
       ],
     ),

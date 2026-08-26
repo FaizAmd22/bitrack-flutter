@@ -52,10 +52,16 @@ class _AlertSheetBody extends StatelessWidget {
                   if (!isSampling)
                     _Row(label: t.alertType, value: point.eventName),
                   _Row(label: t.speed, value: '${point.speed} Km/h'),
-                  _Row(label: 'Latitude', value: '${point.latitude}'),
-                  _Row(label: 'Longitude', value: '${point.longitude}'),
+                  _Row(
+                    label: t.vehicleInfoLatitude,
+                    value: '${point.latitude}',
+                  ),
+                  _Row(
+                    label: t.vehicleInfoLongitude,
+                    value: '${point.longitude}',
+                  ),
                   _GoogleMapRow(
-                    label: 'Google Map',
+                    label: t.vehicleInfoGoogleMap,
                     text: t.showGoogleMap,
                     lat: point.latitude,
                     lng: point.longitude,

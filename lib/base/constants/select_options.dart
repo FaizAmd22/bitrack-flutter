@@ -1,17 +1,25 @@
+import 'package:ams/l10n/app_localizations.dart';
+
 class SelectOptions {
   final String label;
   final String value;
   const SelectOptions({required this.label, required this.value});
 }
 
-const vehicleCategoryOptions = <SelectOptions>[
-  SelectOptions(label: 'Bus', value: 'Bus'),
-  SelectOptions(label: 'Passanger', value: 'Passanger'),
-  SelectOptions(label: 'Truck', value: 'Truck'),
-  SelectOptions(label: 'Chiller', value: 'Chiller'),
-  SelectOptions(label: 'Freezer', value: 'Freezer'),
-  SelectOptions(label: 'Chiller & Freezer', value: 'Chiller & Freezer'),
-  SelectOptions(label: 'Freezer & Chiller', value: 'Freezer & Chiller'),
+List<SelectOptions> vehicleCategoryOptions(AppLocalizations t) => [
+  SelectOptions(label: t.vehicleCategoryBus, value: 'Bus'),
+  SelectOptions(label: t.vehicleCategoryPassenger, value: 'Passanger'),
+  SelectOptions(label: t.vehicleCategoryTruck, value: 'Truck'),
+  SelectOptions(label: t.vehicleCategoryChiller, value: 'Chiller'),
+  SelectOptions(label: t.vehicleCategoryFreezer, value: 'Freezer'),
+  SelectOptions(
+    label: t.vehicleCategoryChillerFreezer,
+    value: 'Chiller & Freezer',
+  ),
+  SelectOptions(
+    label: t.vehicleCategoryFreezerChiller,
+    value: 'Freezer & Chiller',
+  ),
 ];
 
 const deviceTypeOptions = <SelectOptions>[

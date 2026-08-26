@@ -1,19 +1,26 @@
 import 'dart:convert';
+import 'package:ams/base/network/api_logger.dart';
 import 'package:ams/base/services/demo_data.dart';
 import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-final Dio _geoDio = Dio(
-  BaseOptions(
-    connectTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 10),
-    headers: {'Accept': '*/*'},
-    validateStatus: (status) => status != null && status < 500,
-    responseType: ResponseType.plain,
-  ),
-);
+final Dio _geoDio = _createGeoDio();
+
+Dio _createGeoDio() {
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {'Accept': '*/*'},
+      validateStatus: (status) => status != null && status < 500,
+      responseType: ResponseType.plain,
+    ),
+  );
+  attachApiLogger(dio);
+  return dio;
+}
 
 // Beberapa hasil reverse-geocoding memuat aksara non-Latin (mis. aksara Jawa
 // atau Sunda) yang tidak terbaca oleh mayoritas pengguna. Sanitasi ini

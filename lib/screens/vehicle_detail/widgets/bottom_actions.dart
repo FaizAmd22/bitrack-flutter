@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 class BottomActions extends StatelessWidget {
   final bool isSpeaker;
@@ -21,6 +22,7 @@ class BottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.fromLTRB(16, 10, 16, 14 + bottomInset),
       decoration: const BoxDecoration(
@@ -34,7 +36,7 @@ class BottomActions extends StatelessWidget {
               icon: isSpeaker
                   ? Icons.volume_up_outlined
                   : Icons.volume_off_outlined,
-              label: 'Speaker',
+              label: t.dashcamSpeaker,
               isOn: isSpeaker,
               isLoading: isSpeakerLoading,
               onTap: onSpeakerTap,
@@ -44,7 +46,7 @@ class BottomActions extends StatelessWidget {
           Expanded(
             child: _ActionButton(
               icon: isMicrophone ? Icons.mic_outlined : Icons.mic_off_outlined,
-              label: 'Intercom',
+              label: t.dashcamIntercom,
               isOn: isMicrophone,
               onTap: onMicrophoneTap,
             ),
@@ -72,6 +74,7 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Material(
       color: AppStyles.whiteColor,
       borderRadius: BorderRadius.circular(14),
@@ -100,7 +103,7 @@ class _ActionButton extends StatelessWidget {
                 )
               else
                 Text(
-                  isOn ? 'ON' : 'OFF',
+                  isOn ? t.statusOn : t.statusOff,
                   style: AppStyles.textMdBold.copyWith(
                     color: isOn ? AppStyles.greenColor : AppStyles.redColor,
                   ),

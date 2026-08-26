@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 import '../state/channel_state.dart';
 import 'flv_player.dart';
@@ -31,19 +32,20 @@ class ChannelCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(isActive, isLoading),
+          _buildHeader(context, isActive, isLoading),
           const SizedBox(height: 6),
-          _buildVideoContainer(isActive, isLoading, isError),
+          _buildVideoContainer(context, isActive, isLoading, isError),
         ],
       ),
     );
   }
 
-  Widget _buildHeader(bool isActive, bool isLoading) {
+  Widget _buildHeader(BuildContext context, bool isActive, bool isLoading) {
+    final t = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
-          child: Text('Dashcam ${index + 1}', style: AppStyles.textMdBold),
+          child: Text('${t.dashcam} ${index + 1}', style: AppStyles.textMdBold),
         ),
         Text(
           formatTimer(state.timer),
@@ -75,7 +77,12 @@ class ChannelCard extends StatelessWidget {
     );
   }
 
-  Widget _buildVideoContainer(bool isActive, bool isLoading, bool isError) {
+  Widget _buildVideoContainer(
+    BuildContext context,
+    bool isActive,
+    bool isLoading,
+    bool isError,
+  ) {
     return Container(
       height: 120,
       width: double.infinity,
@@ -84,11 +91,17 @@ class ChannelCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       clipBehavior: Clip.antiAlias,
-      child: _buildVideoContent(isActive, isLoading, isError),
+      child: _buildVideoContent(context, isActive, isLoading, isError),
     );
   }
 
-  Widget _buildVideoContent(bool isActive, bool isLoading, bool isError) {
+  Widget _buildVideoContent(
+    BuildContext context,
+    bool isActive,
+    bool isLoading,
+    bool isError,
+  ) {
+    final t = AppLocalizations.of(context);
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppStyles.primaryColor),
@@ -106,7 +119,7 @@ class ChannelCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              state.errorMessage ?? 'Camera is offline.',
+              state.errorMessage ?? t.channelCameraOfflineFallback,
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppStyles.redColor, fontSize: 12),
             ),
@@ -117,11 +130,11 @@ class ChannelCard extends StatelessWidget {
     if (isActive && state.streamUrl != null) {
       return FlvPlayer(streamUrl: state.streamUrl!);
     }
-    return const Center(
+    return Center(
       child: Text(
-        'Camera is off. Toggle to view.',
+        t.channelCameraOffToggle,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black45, fontSize: 12),
+        style: const TextStyle(color: Colors.black45, fontSize: 12),
       ),
     );
   }

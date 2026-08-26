@@ -11,4 +11,10 @@ class AppRoutes {
   static const periodicTrackScreen = '/periodic-track';
   static const notesScreen = '/notes';
   static const mapCoordinateScreen = '/map-coordinate';
+
+  // Work order (hanya dipakai pada build Teknisi)
+  static const createWorkOrderScreen = '/create-work-order';
+  static const workListScreen = '/work-list';
+  static const workDetailsScreen = '/work-details';
+  static const createDetailWoScreen = '/create-detail-wo';
 }

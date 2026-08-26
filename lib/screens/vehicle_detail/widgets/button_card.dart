@@ -64,7 +64,7 @@ class ButtonCard extends StatelessWidget {
                   width: itemWidth,
                   child: _MenuCard(
                     icon: 'route-regular.svg',
-                    label: 'Periodic Track',
+                    label: translate.periodicTrack,
                     onTap: onPeriodicTrack,
                   ),
                 ),
@@ -73,7 +73,7 @@ class ButtonCard extends StatelessWidget {
                   width: itemWidth,
                   child: _MenuCard(
                     icon: 'webcam.svg',
-                    label: 'Dashcam',
+                    label: translate.dashcam,
                     enabled: dashcamEnabled,
                     onTap: dashcamEnabled
                         ? () => _showSheet(

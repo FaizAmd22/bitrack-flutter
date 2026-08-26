@@ -9,6 +9,7 @@ import 'package:ams/base/widgets/tx_inputs.dart';
 import 'package:ams/screens/periodic_track/services/fetch_periodic.dart';
 import 'package:ams/screens/periodic_track/widgets/circle_button.dart';
 import 'package:ams/screens/periodic_track/widgets/player_card.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -237,6 +238,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final topPad = MediaQuery.of(context).padding.top;
     final topPlayer = topPad + size.height * 0.36;
@@ -332,7 +334,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Text(
-                      'Periodic Track',
+                      t.periodicTrack,
                       style: AppStyles.textLBold.copyWith(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
@@ -344,7 +346,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
                           .map(
                             (m) => DropdownMenuItem(
                               value: m,
-                              child: Text(m.label()),
+                              child: Text(m.label(context)),
                             ),
                           )
                           .toList(),
@@ -370,7 +372,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
               ),
 
             if (!_isLoading && _data.isEmpty)
-              const Center(child: Text('No Data')),
+              Center(child: Text(t.noDataAvailable)),
           ],
         ),
       ),

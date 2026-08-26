@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:ams/base/network/api_response.dart';
 import 'dart:async';
 
 import 'package:ams/base/network/api_client.dart';
@@ -125,8 +126,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       final email = await ref.read(userEmailProvider.future);
       if (email.isEmpty) {
         if (!mounted) return;
-        // TODO: ganti dengan key lokalisasi yang sesuai jika tersedia.
-        setState(() => _otpError = 'Email tidak ditemukan.');
+        setState(() => _otpError = t.otpEmailNotFound);
         return;
       }
 
@@ -145,21 +145,19 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         // Backend masih cooldown → mulai hitung mundur lokal.
         _startResendCountdown(resendCooldown);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.reason ?? 'Tunggu sebelum minta OTP lagi.'),
-          ),
+          SnackBar(content: Text(result.reason ?? t.otpWaitBeforeResend)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result.reason ?? 'Gagal mengirim OTP.')),
+          SnackBar(content: Text(result.reason ?? t.otpSendFailed)),
         );
       }
     } catch (_) {
       if (!mounted) return;
       // Timeout / connection refused / dll.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal mengirim OTP. Periksa koneksi.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.otpSendFailedCheckConnection)));
     } finally {
       if (mounted) setState(() => _sending = false);
     }
@@ -308,7 +306,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       // biometric_password lama sudah tidak valid begitu password berganti;
       // hapus dulu sebelum logout supaya tidak ada percobaan biometric login
       // yang diam-diam gagal pakai password basi.
-      await ref.read(authControllerProvider.notifier).clearBiometricCredential();
+      await ref
+          .read(authControllerProvider.notifier)
+          .clearBiometricCredential();
 
       // Samakan dengan logout supaya tidak ada token/cache lama yang
       // nyangkut. Pakai ApiClient.logout() (bukan deleteAll()) supaya kalau
@@ -317,13 +317,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       await ApiClient.logout();
     } on DioException catch (e) {
       if (!mounted) return;
-      final data = e.response?.data;
-      final msg = data is Map
-          ? (data['message'] ?? data['error_msg'])?.toString()
-          : null;
       setState(() {
         _updating = false;
-        _passError = msg ?? t.passwordUpdateFailed;
+        _passError = apiErrorText(e, t.passwordUpdateFailed);
       });
     } catch (_) {
       if (!mounted) return;

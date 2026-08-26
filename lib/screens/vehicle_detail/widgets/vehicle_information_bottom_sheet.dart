@@ -1,5 +1,6 @@
 // ignore_for_file: sort_child_properties_last
 
+import 'package:ams/base/network/api_response.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/widgets/app_draggable_sheet.dart';
 import 'package:ams/base/widgets/segmented_tab_bar.dart';
@@ -92,8 +93,10 @@ class _VehicleInformationBottomSheetState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(t.failedLoadData, style: AppStyles.textSm),
-                      Text(e.toString(), style: AppStyles.textSm),
+                      Text(
+                        apiErrorText(e, t.failedLoadData),
+                        style: AppStyles.textSm,
+                      ),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () {
@@ -141,7 +144,7 @@ class _VehicleInformationBottomSheetState
           ),
           SizedBox(height: 20),
           RowText(
-            text1: 'Fleet Group',
+            text1: t.vehicleInfoFleetGroup,
             text2: "${dataVehicle['fleet_group_name'] ?? '-'}",
           ),
           SizedBox(height: 20),
@@ -250,7 +253,7 @@ class _VehicleInformationBottomSheetState
           RowText(text1: t.vehicleSensorHumidity, text2: '-'),
           SizedBox(height: 20),
           RowText(
-            text1: 'Temperature',
+            text1: t.periodicMetricTemperature,
             text2: "${dataVehicle['temperature'] ?? '-'}°C",
           ),
           SizedBox(height: 20),

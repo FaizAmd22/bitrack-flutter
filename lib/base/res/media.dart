@@ -13,6 +13,8 @@ class AppMedia {
   static const routeFilledIcon = '$_baseIcon/route-filled.svg';
   static const truckRegulerIcon = '$_baseIcon/truck-regular.svg';
   static const truckFilledIcon = '$_baseIcon/truck-filled.svg';
+  static const workOrderRegulerIcon = '$_baseIcon/work-order-regular.svg';
+  static const workOrderFilledIcon = '$_baseIcon/work-order-filled.svg';
   static const filterIcon = '$_baseIcon/filter.svg';
   static const searchIcon = '$_baseIcon/search.svg';
   static const alertIcon = '$_baseIcon/alert.svg';

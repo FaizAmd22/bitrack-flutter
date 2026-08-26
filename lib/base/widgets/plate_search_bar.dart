@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, dead_code
 
 import 'dart:async';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +19,8 @@ class PlateSearchBar extends StatefulWidget {
 
   final VoidCallback? onTapFilter;
 
-  final String hintText;
+  /// Null berarti pakai teks terjemahan bawaan.
+  final String? hintText;
 
   const PlateSearchBar({
     super.key,
@@ -27,7 +29,7 @@ class PlateSearchBar extends StatefulWidget {
     this.suggestionPlates,
     this.maxSuggestions = 10,
     this.onTapFilter,
-    this.hintText = 'Search License Plate...',
+    this.hintText,
   });
 
   @override
@@ -316,7 +318,9 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
                               onPressed: _clear,
                             )
                           : null,
-                      hintText: widget.hintText,
+                      hintText:
+                          widget.hintText ??
+                          AppLocalizations.of(context).searchLicensePlate,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,

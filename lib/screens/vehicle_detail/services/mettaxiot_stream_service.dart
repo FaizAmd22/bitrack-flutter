@@ -1,5 +1,7 @@
+import 'package:ams/base/localization/locale_controller.dart';
 import 'dart:convert';
 
+import 'package:ams/base/network/api_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,7 +18,9 @@ class MettaxiotStreamService {
           maxRedirects: 5,
           validateStatus: (c) => c != null && c >= 200 && c < 400,
         ),
-      );
+      ) {
+    attachApiLogger(_dio);
+  }
 
   static final MettaxiotStreamService I = MettaxiotStreamService._internal();
 
@@ -37,9 +41,9 @@ class MettaxiotStreamService {
   String _mustEnv(String key) {
     final v = dotenv.env[key];
     if (v == null || v.trim().isEmpty) {
-      throw Exception(
-        'ENV "$key" belum di-set. Pastikan dotenv.load() sudah dijalankan.',
-      );
+      // Detail teknisnya untuk developer; user cukup tahu layanannya mati.
+      debugPrint('ENV "$key" belum di-set. Pastikan dotenv.load() dijalankan.');
+      throw Exception(currentL10n().dashcamServiceUnavailable);
     }
     return v.trim();
   }
@@ -60,7 +64,7 @@ class MettaxiotStreamService {
     final body = res.data;
     final token = (body is Map) ? (body['data']?.toString() ?? '') : '';
     if (token.trim().isEmpty) {
-      throw Exception('Failed to get token');
+      throw Exception(currentL10n().dashcamServiceUnavailable);
     }
 
     _cachedToken = token.trim();
@@ -100,7 +104,9 @@ class MettaxiotStreamService {
     final url = (body is Map) ? (body['data']?.toString() ?? '') : '';
     if (url.trim().isEmpty) {
       final msg = (body is Map) ? (body['msg']?.toString() ?? '') : '';
-      throw Exception(msg.isEmpty ? 'Failed to get stream URL' : msg);
+      throw Exception(
+        msg.isEmpty ? currentL10n().dashcamServiceUnavailable : msg,
+      );
     }
 
     return url.trim();

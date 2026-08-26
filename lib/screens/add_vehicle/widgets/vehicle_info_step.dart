@@ -140,7 +140,9 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
 
       final typeExists =
           _typeId != null &&
-          typesOfSelectedModel.any((ty) => (ty['id'] ?? '').toString() == _typeId);
+          typesOfSelectedModel.any(
+            (ty) => (ty['id'] ?? '').toString() == _typeId,
+          );
 
       final fleetGroups = <Map<String, dynamic>>[];
       final seenFleet = <String>{};
@@ -152,8 +154,9 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
         if (seenFleet.add(id)) fleetGroups.add(m);
       }
       fleetGroups.sort(
-        (a, b) =>
-            (a['label'] ?? '').toString().compareTo((b['label'] ?? '').toString()),
+        (a, b) => (a['label'] ?? '').toString().compareTo(
+          (b['label'] ?? '').toString(),
+        ),
       );
 
       final fleetExists =
@@ -252,8 +255,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     if (name == null) return null;
     final m = _filteredTypes.where(
       (e) =>
-          (e['type_name'] ?? '').toString().toLowerCase() ==
-          name.toLowerCase(),
+          (e['type_name'] ?? '').toString().toLowerCase() == name.toLowerCase(),
     );
     return m.isEmpty ? null : (m.first['id'] ?? '').toString();
   }
@@ -381,7 +383,9 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                     value: _typeId,
                     searchable: true,
                     enabled:
-                        !_loading && _modelId != null && _filteredTypes.isNotEmpty,
+                        !_loading &&
+                        _modelId != null &&
+                        _filteredTypes.isNotEmpty,
                     options: _filteredTypes
                         .map(
                           (ty) => PickerOption(
@@ -408,7 +412,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                     hintText: t.selectVehicleCategoryHint,
                     value: _vehicleCategory,
                     searchable: false, // ← tanpa search, opsi sedikit
-                    options: vehicleCategoryOptions
+                    options: vehicleCategoryOptions(t)
                         .map(
                           (e) => PickerOption(value: e.value, label: e.label),
                         )
@@ -437,7 +441,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                     onChanged: (v) => widget.data.vin = v,
                   ),
                   PickerField(
-                    label: 'Fleet Group',
+                    label: t.vehicleInfoFleetGroup,
                     hintText: _loading ? t.loading : t.selectFleetGroupHint,
                     value: _fleetGroupId,
                     searchable: true,
@@ -451,7 +455,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
                         )
                         .toList(),
                     validator: (v) =>
-                        _requiredDropdown(context, v, 'Fleet Group'),
+                        _requiredDropdown(context, v, t.vehicleInfoFleetGroup),
                     onSelected: (opt) {
                       setState(() => _fleetGroupId = opt.value);
                       widget.data.fleetGroupId = opt.value;

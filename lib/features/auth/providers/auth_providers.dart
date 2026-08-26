@@ -1,3 +1,4 @@
+import 'package:ams/base/network/api_response.dart';
 import 'dart:convert';
 
 import 'package:ams/base/network/api_client.dart';
@@ -92,10 +93,7 @@ class AuthController extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: false, errorMessage: null);
       return result;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: apiErrorText(e));
       return null;
     }
   }

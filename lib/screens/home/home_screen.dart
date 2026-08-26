@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
+import 'package:ams/base/network/api_response.dart';
 import 'dart:async';
 
 import 'package:ams/base/res/styles/app_styles.dart';
@@ -39,20 +40,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<String> _cachedSuggestionPlates = const [];
   int _lastVehiclesHash = 0;
 
-  FilterOption _selectedFilterType = const FilterOption(
-    value: null,
-    label: 'Pilih jenis filter',
-  );
-
-  FilterOption _selectedFleetGroup = const FilterOption(
-    value: null,
-    label: 'Semua Fleet Group',
-  );
-
-  FilterOption _selectedGeofence = const FilterOption(
-    value: null,
-    label: 'Semua Geofence',
-  );
+  FilterOption? _selectedFilterType;
+  FilterOption? _selectedFleetGroup;
+  FilterOption? _selectedGeofence;
 
   String? selectedFleetgroupId;
   String? selectedGeofenceId;
@@ -141,7 +131,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     List<Map<String, dynamic>> fleetGroups,
   ) {
     final out = <FilterOption>[
-      const FilterOption(value: null, label: 'Semua Fleet Group'),
+      FilterOption(
+        value: null,
+        label: AppLocalizations.of(context).filterAllFleetGroup,
+      ),
     ];
 
     for (final fg in fleetGroups) {
@@ -157,8 +150,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> _openFilterSheet(List<FilterOption> fleetGroups) async {
     // Geofence belum bisa dipilih sebagai jenis filter (lihat _kTypeOptions
     // di filter_tracker_bottom_sheet.dart), jadi tidak perlu data geofence.
-    const geofences = <FilterOption>[
-      FilterOption(value: null, label: 'Semua Geofence'),
+    final geofences = <FilterOption>[
+      FilterOption(
+        value: null,
+        label: AppLocalizations.of(context).filterAllGeofence,
+      ),
     ];
 
     final result = await FilterTrackerBottomSheet.open(
@@ -178,8 +174,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _selectedFleetGroup = result.selectedFleetGroup;
       _selectedGeofence = result.selectedGeofence;
 
-      selectedFleetgroupId = _selectedFleetGroup.value;
-      selectedGeofenceId = _selectedGeofence.value;
+      selectedFleetgroupId = result.selectedFleetGroup.value;
+      selectedGeofenceId = result.selectedGeofence.value;
     });
 
     await _fitToQuery(_currentMapQuery());
@@ -213,6 +209,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final rawAsync = ref.watch(
       monitoringProvider(MonitoringQuery(activity: _selectedActivity)),
     );
@@ -279,7 +276,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: SearchBarBase(
               value: _searchQuery,
               onChanged: _onSearchChanged,
-              hintText: 'Search Vehicle License Plate ...',
+              hintText: t.searchLicensePlate,
               suggestionPlates: _cachedSuggestionPlates,
               onOpenFilter: (_) => _openFilterSheet(fleetGroupOptions),
               below: ActivityChips(
@@ -314,10 +311,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               right: 16,
               bottom: 90,
               child: Text(
-                monitoringAsync.error.toString().replaceFirst(
-                  'Exception: ',
-                  '',
-                ),
+                apiErrorText(monitoringAsync.error!, t.failedLoadData),
                 textAlign: TextAlign.center,
                 style: AppStyles.textSm.copyWith(color: AppStyles.primaryColor),
               ),

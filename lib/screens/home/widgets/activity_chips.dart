@@ -1,4 +1,5 @@
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ActivityOption {
@@ -7,14 +8,14 @@ class ActivityOption {
   const ActivityOption(this.value, this.label);
 }
 
-const kActivityOptions = <ActivityOption>[
-  ActivityOption('allVehicle', 'All Vehicle'),
-  ActivityOption('inOperation', 'In Operation'),
-  ActivityOption('moving', 'Moving'),
-  ActivityOption('idle', 'Idle'),
-  ActivityOption('stop', 'Stop'),
-  ActivityOption('silence', 'Silence'),
-  ActivityOption('repair', 'In Repair'),
+List<ActivityOption> activityOptions(AppLocalizations t) => [
+  ActivityOption('allVehicle', t.activityAllVehicle),
+  ActivityOption('inOperation', t.activityInOperation),
+  ActivityOption('moving', t.activityMoving),
+  ActivityOption('idle', t.activityIdle),
+  ActivityOption('stop', t.activityStop),
+  ActivityOption('silence', t.activitySilence),
+  ActivityOption('repair', t.activityInRepair),
 ];
 
 class ActivityChips extends StatelessWidget {
@@ -31,14 +32,15 @@ class ActivityChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final options = activityOptions(AppLocalizations.of(context));
     return SizedBox(
       height: 40,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: kActivityOptions.length,
+        itemCount: options.length,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, i) {
-          final item = kActivityOptions[i];
+          final item = options[i];
           final isActive = selectedActivity == item.value;
 
           return GestureDetector(

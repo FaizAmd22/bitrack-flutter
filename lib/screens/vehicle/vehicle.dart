@@ -1,3 +1,4 @@
+import 'package:ams/base/network/api_response.dart';
 import 'dart:async';
 
 import 'package:ams/base/routes/app_routes.dart';
@@ -120,7 +121,7 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
-                          e.toString().replaceFirst('Exception: ', ''),
+                          apiErrorText(e, t.failedLoadData),
                           textAlign: TextAlign.center,
                           style: AppStyles.textSm.copyWith(
                             color: AppStyles.primaryColor,

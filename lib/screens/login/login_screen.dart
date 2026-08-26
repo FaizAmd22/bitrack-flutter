@@ -2,6 +2,7 @@ import 'package:ams/base/res/media.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/screens/login/widgets/form_login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +11,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool get _isDevEnv =>
+      (dotenv.env['BASE_URL'] ?? '').toLowerCase().contains('dev');
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,6 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const Expanded(child: SizedBox()),
               Image.asset(AppMedia.logo, scale: 1.7),
+              if (_isDevEnv) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'DEVELOPMENT',
+                  style: AppStyles.textSmBold.copyWith(
+                    color: AppStyles.whiteColor,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
               SizedBox(height: 20),
               Container(
                 width: size.width * 0.9,

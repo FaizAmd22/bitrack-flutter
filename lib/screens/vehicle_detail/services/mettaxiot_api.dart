@@ -1,3 +1,4 @@
+import 'package:ams/base/localization/locale_controller.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ams/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
@@ -31,7 +32,7 @@ class MettaxiotApi {
   static Future<String> getTalkUrl({required String deviceId}) async {
     final token = await createToken();
     final url = dotenv.env['METTAXIOT_AUDIO'] ?? '';
-    if (url.isEmpty) throw Exception('METTAXIOT_AUDIO env not set');
+    if (url.isEmpty) throw Exception(currentL10n().dashcamServiceUnavailable);
 
     final resp = await _dio.post(
       url,
@@ -52,7 +53,9 @@ class MettaxiotApi {
 
     if (talkUrl.isEmpty) {
       final msg = (body is Map) ? (body['msg']?.toString() ?? '') : '';
-      throw Exception(msg.isEmpty ? 'Failed to get talkUrl' : msg);
+      throw Exception(
+        msg.isEmpty ? currentL10n().dashcamServiceUnavailable : msg,
+      );
     }
     return talkUrl;
   }

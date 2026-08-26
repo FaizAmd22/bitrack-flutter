@@ -1,8 +1,14 @@
+import 'package:ams/base/network/api_response.dart';
 import 'package:dio/dio.dart';
+import 'package:ams/base/localization/locale_controller.dart';
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 class AuthApi {
-  static const _fieldLabels = {'email': 'Email', 'password': 'Password'};
+  static Map<String, String> _fieldLabels(AppLocalizations t) => {
+    'email': t.email,
+    'password': t.password,
+  };
 
   static Future<Map<String, dynamic>> login({
     required String email,
@@ -18,31 +24,24 @@ class AuthApi {
     } on DioException catch (e) {
       throw Exception(_mapError(e));
     } catch (_) {
-      throw Exception('Terjadi kesalahan, coba lagi');
+      throw Exception(currentL10n().errGenericTryAgain);
     }
   }
 
+  /// Hanya menangani kasus yang khas login; sisanya diserahkan ke
+  /// [apiErrorText] supaya pesan jaringan seragam dengan layar lain.
   static String _mapError(DioException e) {
-    switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return 'Koneksi ke server timeout. Periksa koneksi internet Anda dan coba lagi.';
-      case DioExceptionType.connectionError:
-        return 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
-      case DioExceptionType.badCertificate:
-        return 'Koneksi ke server tidak aman. Hubungi admin.';
-      case DioExceptionType.cancel:
-        return 'Permintaan dibatalkan.';
-      case DioExceptionType.badResponse:
-        return _mapResponseError(e);
-      case DioExceptionType.unknown:
-        return 'Tidak ada koneksi internet. Periksa jaringan Anda dan coba lagi.';
+    final t = currentL10n();
+
+    if (e.type == DioExceptionType.badResponse) {
+      final specific = _loginResponseError(e, t);
+      if (specific != null) return specific;
     }
+
+    return apiErrorText(e, t.loginFailedTryAgain);
   }
 
-  static String _mapResponseError(DioException e) {
-    final statusCode = e.response?.statusCode;
+  static String? _loginResponseError(DioException e, AppLocalizations t) {
     final data = e.response?.data;
 
     if (data is Map) {
@@ -50,33 +49,26 @@ class AuthApi {
       final detail = data['detail'];
 
       if (serverMessage == 'Validation error' && detail is List) {
+        final fieldLabels = _fieldLabels(t);
         final fieldNames = detail
             .whereType<Map>()
             .map((d) => d['path']?.toString().replaceAll('/', ''))
             .whereType<String>()
-            .map((field) => _fieldLabels[field] ?? field)
+            .map((field) => fieldLabels[field] ?? field)
             .toSet()
             .toList();
 
         if (fieldNames.isNotEmpty) {
-          return '${fieldNames.join(' dan ')} wajib diisi.';
+          return t.errFieldsRequired(fieldNames.join(' ${t.errFieldsJoiner} '));
         }
-        return 'Data yang dimasukkan belum lengkap.';
+        return t.errIncompleteData;
       }
 
       if (serverMessage == 'Invalid credentials') {
-        return 'Email atau password yang Anda masukkan salah.';
-      }
-
-      if (serverMessage != null && serverMessage.isNotEmpty) {
-        return serverMessage;
+        return t.errInvalidCredentials;
       }
     }
 
-    if (statusCode != null && statusCode >= 500) {
-      return 'Server sedang bermasalah. Coba lagi beberapa saat lagi.';
-    }
-
-    return 'Login gagal, coba lagi.';
+    return null;
   }
 }

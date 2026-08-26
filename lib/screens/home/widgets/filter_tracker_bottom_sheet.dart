@@ -1,5 +1,6 @@
 // lib/screens/home/widgets/filter_tracker_bottom_sheet.dart
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:ams/screens/home/models/filter_model.dart';
 import 'package:flutter/material.dart';
 
@@ -20,9 +21,9 @@ class FilterTrackerBottomSheet {
     BuildContext context, {
     required List<FilterOption> fleetGroups,
     required List<FilterOption> geofences,
-    required FilterOption initialType,
-    required FilterOption initialFleetGroup,
-    required FilterOption initialGeofence,
+    required FilterOption? initialType,
+    required FilterOption? initialFleetGroup,
+    required FilterOption? initialGeofence,
   }) {
     return showModalBottomSheet<TrackerFilterResult>(
       context: context,
@@ -44,17 +45,17 @@ class FilterTrackerBottomSheet {
 
 // Jenis filter yang tersedia. Geofence di-comment di Cordova; di sini
 // aktif tapi kamu bisa hapus dari list ini kalau belum dipakai.
-const _kTypeOptions = <FilterOption>[
-  FilterOption(value: 'fleetgroup', label: 'Fleet Group'),
-  // FilterOption(value: 'geofence', label: 'Geofence'),
+List<FilterOption> _typeOptions(AppLocalizations t) => [
+  FilterOption(value: 'fleetgroup', label: t.filterFleetGroup),
+  // FilterOption(value: 'geofence', label: t.filterGeofence),
 ];
 
 class _FilterSheetBody extends StatefulWidget {
   final List<FilterOption> fleetGroups;
   final List<FilterOption> geofences;
-  final FilterOption initialType;
-  final FilterOption initialFleetGroup;
-  final FilterOption initialGeofence;
+  final FilterOption? initialType;
+  final FilterOption? initialFleetGroup;
+  final FilterOption? initialGeofence;
 
   const _FilterSheetBody({
     required this.fleetGroups,
@@ -69,53 +70,57 @@ class _FilterSheetBody extends StatefulWidget {
 }
 
 class _FilterSheetBodyState extends State<_FilterSheetBody> {
-  late FilterOption _type = widget.initialType;
-  late FilterOption _fleetGroup = widget.initialFleetGroup;
-  late FilterOption _geofence = widget.initialGeofence;
-
-  static const _allFleet = FilterOption(
-    value: null,
-    label: 'Semua Fleet Group',
-  );
-  static const _allGeo = FilterOption(value: null, label: 'Semua Geofence');
-  static const _noType = FilterOption(value: null, label: 'Pilih jenis filter');
+  late FilterOption? _type = widget.initialType;
+  late FilterOption? _fleetGroup = widget.initialFleetGroup;
+  late FilterOption? _geofence = widget.initialGeofence;
 
   void _clear() {
+    final t = AppLocalizations.of(context);
     Navigator.pop(
       context,
-      const TrackerFilterResult(
-        selectedType: _noType,
-        selectedFleetGroup: _allFleet,
-        selectedGeofence: _allGeo,
+      TrackerFilterResult(
+        selectedType: FilterOption(value: null, label: t.filterChooseType),
+        selectedFleetGroup: FilterOption(
+          value: null,
+          label: t.filterAllFleetGroup,
+        ),
+        selectedGeofence: FilterOption(value: null, label: t.filterAllGeofence),
       ),
     );
   }
 
   void _apply() {
+    final t = AppLocalizations.of(context);
     Navigator.pop(
       context,
       TrackerFilterResult(
-        selectedType: _type,
-        selectedFleetGroup: _fleetGroup,
-        selectedGeofence: _geofence,
+        selectedType:
+            _type ?? FilterOption(value: null, label: t.filterChooseType),
+        selectedFleetGroup:
+            _fleetGroup ??
+            FilterOption(value: null, label: t.filterAllFleetGroup),
+        selectedGeofence:
+            _geofence ?? FilterOption(value: null, label: t.filterAllGeofence),
       ),
     );
   }
 
   Future<void> _pickType() async {
+    final t = AppLocalizations.of(context);
     final picked = await _SearchablePicker.open(
       context,
-      title: 'Jenis Filter',
-      options: _kTypeOptions,
+      title: t.filterTypeTitle,
+      options: _typeOptions(t),
       selected: _type,
     );
     if (picked != null) setState(() => _type = picked);
   }
 
   Future<void> _pickFleetGroup() async {
+    final t = AppLocalizations.of(context);
     final picked = await _SearchablePicker.open(
       context,
-      title: 'Fleet Group',
+      title: t.filterFleetGroup,
       options: widget.fleetGroups,
       selected: _fleetGroup,
     );
@@ -123,9 +128,10 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
   }
 
   Future<void> _pickGeofence() async {
+    final t = AppLocalizations.of(context);
     final picked = await _SearchablePicker.open(
       context,
-      title: 'Geofence',
+      title: t.filterGeofence,
       options: widget.geofences,
       selected: _geofence,
     );
@@ -134,6 +140,12 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final type = _type ?? FilterOption(value: null, label: t.filterChooseType);
+    final fleetGroup =
+        _fleetGroup ?? FilterOption(value: null, label: t.filterAllFleetGroup);
+    final geofence =
+        _geofence ?? FilterOption(value: null, label: t.filterAllGeofence);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Padding(
@@ -158,7 +170,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text('Filter', style: AppStyles.textLBold),
+              child: Text(t.filterTitle, style: AppStyles.textLBold),
             ),
             const SizedBox(height: 8),
             const Divider(height: 1),
@@ -167,27 +179,27 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _Label('Jenis'),
+                  _Label(t.filterTypeLabel),
                   _SelectRow(
-                    value: _type.value == null ? null : _type.label,
-                    placeholder: 'Pilih jenis filter',
+                    value: type.value == null ? null : type.label,
+                    placeholder: t.filterChooseType,
                     onTap: _pickType,
                   ),
-                  if (_type.value == 'fleetgroup') ...[
+                  if (type.value == 'fleetgroup') ...[
                     const SizedBox(height: 16),
-                    _Label('Fleet Group'),
+                    _Label(t.filterFleetGroup),
                     _SelectRow(
-                      value: _fleetGroup.label,
-                      placeholder: 'Pilih Fleet Group',
+                      value: fleetGroup.label,
+                      placeholder: t.filterChooseFleetGroup,
                       onTap: _pickFleetGroup,
                     ),
                   ],
-                  if (_type.value == 'geofence') ...[
+                  if (type.value == 'geofence') ...[
                     const SizedBox(height: 16),
-                    _Label('Geofence'),
+                    _Label(t.filterGeofence),
                     _SelectRow(
-                      value: _geofence.label,
-                      placeholder: 'Pilih Geofence',
+                      value: geofence.label,
+                      placeholder: t.filterChooseGeofence,
                       onTap: _pickGeofence,
                     ),
                   ],
@@ -209,7 +221,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
                         ),
                       ),
                       child: Text(
-                        'Hapus Filter',
+                        t.filterClear,
                         style: AppStyles.textSmBold.copyWith(
                           color: AppStyles.primaryColor,
                         ),
@@ -228,7 +240,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
                         ),
                       ),
                       child: Text(
-                        'Terapkan',
+                        t.filterApply,
                         style: AppStyles.textSmBold.copyWith(
                           color: AppStyles.whiteColor,
                         ),
@@ -341,6 +353,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final q = _query.trim().toLowerCase();
     final filtered = q.isEmpty
         ? widget.options
@@ -377,7 +390,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
                   autofocus: false,
                   onChanged: (v) => setState(() => _query = v),
                   decoration: InputDecoration(
-                    hintText: 'Cari...',
+                    hintText: t.filterSearchHint,
                     prefixIcon: const Icon(
                       Icons.search,
                       color: AppStyles.primaryColor,
@@ -405,7 +418,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
                     ? Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          'Tidak ada opsi',
+                          t.filterNoOptions,
                           style: AppStyles.textSm.copyWith(
                             color: AppStyles.textDarkGrayColor,
                           ),

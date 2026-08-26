@@ -1,3 +1,4 @@
+import 'package:ams/base/localization/locale_controller.dart';
 import 'package:ams/base/network/api_client.dart';
 import 'package:ams/base/services/demo_data.dart';
 import 'package:ams/base/services/demo_mode.dart';
@@ -54,7 +55,7 @@ class MonitoringApi {
       );
       return response.data as Map<String, dynamic>;
     } catch (_) {
-      throw Exception('Terjadi kesalahan saat memuat monitoring');
+      throw Exception(currentL10n().errLoadMonitoringFailed);
     }
   }
 
@@ -85,7 +86,7 @@ class MonitoringApi {
       debugPrint('[MonitoringApi/position] raw data: ${data['data']}');
       return data;
     } catch (_) {
-      throw Exception('Terjadi kesalahan saat memuat posisi kendaraan');
+      throw Exception(currentL10n().errLoadVehiclePositionFailed);
     }
   }
 }

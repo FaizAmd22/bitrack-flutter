@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:ams/base/res/styles/app_styles.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AppStepper extends StatefulWidget {
@@ -12,9 +13,9 @@ class AppStepper extends StatefulWidget {
     this.initialStep = 0,
     this.onStepChanged,
     this.onSubmit,
-    this.nextLabel = 'Next',
-    this.prevLabel = 'Previous',
-    this.submitLabel = 'Add Vehicle',
+    this.nextLabel,
+    this.prevLabel,
+    this.submitLabel,
     this.activeColor = AppStyles.primaryColor,
     this.inactiveColor = const Color(0xFFE0E0E0),
     this.finishedColor = AppStyles.primaryColor,
@@ -32,9 +33,10 @@ class AppStepper extends StatefulWidget {
   final ValueChanged<int>? onStepChanged;
   final VoidCallback? onSubmit;
 
-  final String nextLabel;
-  final String prevLabel;
-  final String submitLabel;
+  /// Null berarti pakai teks terjemahan bawaan (lihat build).
+  final String? nextLabel;
+  final String? prevLabel;
+  final String? submitLabel;
 
   final Color activeColor;
   final Color inactiveColor;
@@ -96,6 +98,7 @@ class _AppStepperState extends State<AppStepper> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     assert(
       widget.steps.length == widget.stepContents.length,
       'steps.length harus sama dengan stepContents.length',
@@ -167,7 +170,7 @@ class _AppStepperState extends State<AppStepper> {
                       ),
                     ),
                     child: Text(
-                      widget.prevLabel,
+                      widget.prevLabel ?? t.previous,
                       style: AppStyles.textMd.copyWith(
                         color: AppStyles.primaryColor.withOpacity(
                           _isFirst ? 0.4 : 1,
@@ -190,7 +193,9 @@ class _AppStepperState extends State<AppStepper> {
                       elevation: 0,
                     ),
                     child: Text(
-                      _isLast ? widget.submitLabel : widget.nextLabel,
+                      _isLast
+                          ? (widget.submitLabel ?? t.addVehicleTitle)
+                          : (widget.nextLabel ?? t.next),
                       style: AppStyles.textMd.copyWith(
                         color: AppStyles.whiteColor,
                       ),

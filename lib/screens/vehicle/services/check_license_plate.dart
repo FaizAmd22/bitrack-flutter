@@ -15,13 +15,10 @@ class CheckLicensePlateService {
       final body = res.data;
       if (body is! Map) return false;
 
-      final status = body['status'];
-      final statusTrue = status == true || status == 'true';
-
+      // Request yang gagal sudah jadi DioException dan di-rethrow di bawah,
+      // jadi di titik ini cukup baca hasil pengecekannya saja.
       final metadata = body['metadata'];
-      final found = metadata is Map && metadata['found'] == true;
-
-      return statusTrue && found;
+      return metadata is Map && metadata['found'] == true;
     } catch (e) {
       debugPrint('checkLicensePlate error: $e');
       rethrow;

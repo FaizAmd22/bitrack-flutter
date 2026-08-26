@@ -76,20 +76,10 @@ class SubmitVehicleService {
     return _parse(res.data);
   }
 
-  SubmitVehicleResult _parse(dynamic body) {
-    debugPrint('>>> submit response: $body');
-
-    final status = body is Map ? body['status'] : null;
-    final isFalse = status == false || status == 'false';
-
-    debugPrint('>>> status=$status isFalse=$isFalse');
-
-    if (isFalse) {
-      final msg = body is Map
-          ? (body['message'] ?? body['error_msg'])?.toString()
-          : null;
-      return SubmitVehicleResult(success: false, errorMsg: msg);
-    }
-    return const SubmitVehicleResult(success: true);
-  }
+  /// Sampai di sini berarti HTTP-nya 2xx, jadi simpan dianggap berhasil.
+  /// Kegagalan datang sebagai DioException dan ditangani pemanggil — di
+  /// add_vehicle.dart, supaya pesan unique-constraint 422 bisa dibaca dari
+  /// response aslinya.
+  SubmitVehicleResult _parse(dynamic body) =>
+      const SubmitVehicleResult(success: true);
 }

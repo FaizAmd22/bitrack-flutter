@@ -1,8 +1,11 @@
+import 'package:ams/base/localization/locale_controller.dart';
+import 'package:ams/base/network/api_response.dart';
 import 'dart:convert';
 import 'package:ams/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/base/network/api_client.dart';
+import 'package:ams/base/network/api_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashcamStatusResult {
@@ -24,7 +27,9 @@ class DashcamStatusResult {
 }
 
 class DashcamService {
-  DashcamService({Dio? dashcamDio}) : _dashcamDio = dashcamDio ?? Dio();
+  DashcamService({Dio? dashcamDio}) : _dashcamDio = dashcamDio ?? Dio() {
+    attachApiLogger(_dashcamDio);
+  }
 
   final Dio _api = ApiClient.dio;
   final Dio _dashcamDio;
@@ -151,7 +156,7 @@ class DashcamService {
           isStreamAvailable: false,
           isChiller: isChiller,
           deviceId: null,
-          errorMessage: 'device_id kosong',
+          errorMessage: currentL10n().dashcamServiceUnavailable,
         );
       }
 
@@ -162,7 +167,7 @@ class DashcamService {
           isStreamAvailable: false,
           isChiller: isChiller,
           deviceId: deviceId,
-          errorMessage: 'Token kosong',
+          errorMessage: currentL10n().dashcamServiceUnavailable,
         );
       }
 
@@ -179,7 +184,7 @@ class DashcamService {
           isStreamAvailable: false,
           isChiller: isChiller,
           deviceId: deviceId,
-          errorMessage: 'API_METTAXIOT_URL kosong',
+          errorMessage: currentL10n().dashcamServiceUnavailable,
         );
       }
 
@@ -220,7 +225,7 @@ class DashcamService {
         isStreamAvailable: false,
         isChiller: isChiller,
         deviceId: deviceId.isEmpty ? null : deviceId,
-        errorMessage: 'DioException ${e.response?.statusCode}: ${e.message}',
+        errorMessage: apiErrorText(e, currentL10n().dashcamServiceUnavailable),
       );
     } catch (e) {
       debugPrint('checkDashcamStream error: $e');
@@ -229,7 +234,7 @@ class DashcamService {
         isStreamAvailable: false,
         isChiller: isChiller,
         deviceId: deviceId.isEmpty ? null : deviceId,
-        errorMessage: e.toString(),
+        errorMessage: apiErrorText(e),
       );
     }
   }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:ams/l10n/app_localizations.dart';
 
 class FullscreenPlayer extends StatefulWidget {
   final VideoController controller;
@@ -70,14 +71,17 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
                 controls: NoVideoControls,
               ),
             ),
-            if (_controlsVisible) ...[_buildTopBar(), _buildBottomBar()],
+            if (_controlsVisible) ...[
+              _buildTopBar(context),
+              _buildBottomBar(context),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _buildTopBar(BuildContext context) {
     return Positioned(
       top: 0,
       left: 0,
@@ -91,13 +95,13 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
             colors: [Colors.black.withOpacity(0.7), Colors.transparent],
           ),
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.volume_off, color: Colors.white70, size: 18),
-            SizedBox(width: 6),
+            const Icon(Icons.volume_off, color: Colors.white70, size: 18),
+            const SizedBox(width: 6),
             Text(
-              'Muted — gunakan Speaker untuk audio',
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+              AppLocalizations.of(context).fullscreenMutedHint,
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
             ),
           ],
         ),
@@ -105,7 +109,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(BuildContext context) {
     return Positioned(
       bottom: 0,
       left: 0,
@@ -130,13 +134,17 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
                   color: Colors.black.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.fullscreen_exit, color: Colors.white, size: 20),
-                    SizedBox(width: 4),
+                    const Icon(
+                      Icons.fullscreen_exit,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 4),
                     Text(
-                      'Keluar Fullscreen',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      AppLocalizations.of(context).fullscreenExit,
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 ),

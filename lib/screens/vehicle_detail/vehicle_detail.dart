@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:ams/base/localization/locale_controller.dart';
 import 'dart:async';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/widgets/back_button_circle.dart';
@@ -65,7 +66,7 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
 
     _future = _detailId.isNotEmpty
         ? _loadInitial()
-        : Future.error('detailId kosong');
+        : Future.error(Exception(currentL10n().failedLoadData));
 
     _initialized = true;
   }

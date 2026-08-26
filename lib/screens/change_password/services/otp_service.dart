@@ -1,3 +1,4 @@
+import 'package:ams/base/network/api_logger.dart';
 import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,9 @@ class OtpApi {
           // 5xx tetap error (akan melempar DioException).
           validateStatus: (s) => s != null && s < 500,
         ),
-      );
+      ) {
+    attachApiLogger(_dio);
+  }
 
   final Dio _dio;
 

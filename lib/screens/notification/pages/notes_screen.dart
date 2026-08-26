@@ -86,7 +86,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 ),
 
                 const SizedBox(height: 20),
-                Text('Media', style: AppStyles.textMdBold),
+                Text(t.mediaLabel, style: AppStyles.textMdBold),
                 const SizedBox(height: 10),
 
                 if (firstImage != null)

@@ -2,6 +2,7 @@
 
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/base/routes/navigation_service.dart';
+import 'package:ams/base/network/api_logger.dart';
 import 'package:ams/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/scheduler.dart';
@@ -58,55 +59,67 @@ class ApiClient {
     ]);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      NavigationService.navigatorKey.currentState
-          ?.pushNamedAndRemoveUntil(AppRoutes.loginScreen, (_) => false);
+      NavigationService.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        AppRoutes.loginScreen,
+        (_) => false,
+      );
     });
   }
 
-  static final Dio dio =
-      Dio(
-          BaseOptions(
-            baseUrl: (dotenv.env['BASE_URL'] ?? '').trim(),
-            connectTimeout: const Duration(seconds: 15),
-            receiveTimeout: const Duration(seconds: 15),
-            headers: {
-              'Accept': 'application/json',
-              // 'Content-Type': 'application/json',
-            },
-          ),
-        )
-        ..interceptors.add(
-          InterceptorsWrapper(
-            onRequest: (options, handler) {
-              if (options.path.endsWith('/login')) {
-                handler.next(options);
-                return;
-              }
+  static final Dio dio = _createDio();
 
-              // Reject request non-login saat sedang logout
-              if (_isLoggingOut) {
-                handler.reject(
-                  DioException(
-                    requestOptions: options,
-                    type: DioExceptionType.cancel,
-                    message: 'Logging out',
-                  ),
-                );
-                return;
-              }
+  static Dio _createDio() {
+    final client = Dio(
+      BaseOptions(
+        baseUrl: (dotenv.env['BASE_URL'] ?? '').trim(),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {
+          'Accept': 'application/json',
+          // 'Content-Type': 'application/json',
+        },
+      ),
+    );
 
-              if (_token != null) {
-                options.headers['Authorization'] = 'Bearer $_token';
-              }
-              handler.next(options);
-            },
-            onError: (DioException e, handler) async {
-              if (e.response?.statusCode == 401 &&
-                  !e.requestOptions.path.endsWith('/login')) {
-                await logout();
-              }
-              handler.next(e);
-            },
-          ),
-        );
+    client.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (options.path.endsWith('/login')) {
+            handler.next(options);
+            return;
+          }
+
+          // Reject request non-login saat sedang logout
+          if (_isLoggingOut) {
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.cancel,
+                message: 'Logging out',
+              ),
+            );
+            return;
+          }
+
+          if (_token != null) {
+            options.headers['Authorization'] = 'Bearer $_token';
+          }
+          handler.next(options);
+        },
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401 &&
+              !e.requestOptions.path.endsWith('/login')) {
+            await logout();
+          }
+          handler.next(e);
+        },
+      ),
+    );
+
+    // Dipasang paling akhir supaya log request sudah memuat header
+    // Authorization yang ditempel interceptor di atas.
+    attachApiLogger(client);
+
+    return client;
+  }
 }

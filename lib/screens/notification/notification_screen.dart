@@ -1,3 +1,4 @@
+import 'package:ams/base/network/api_response.dart';
 import 'dart:async';
 
 import 'package:ams/base/res/styles/app_styles.dart';
@@ -90,9 +91,9 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
       fleetGroupRaw = await ref.read(fleetGroupProvider.future);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(apiErrorText(e))));
     }
 
     final fleetGroups = fleetGroupRaw
@@ -110,9 +111,9 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
       alertTypeRaw = await ref.read(alertTypeProvider.future);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(apiErrorText(e))));
     }
 
     final alertTypes = alertTypeRaw

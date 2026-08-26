@@ -1,3 +1,4 @@
+import 'package:ams/base/localization/locale_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ams/screens/vehicle_detail/services/fetch_monitoring_detail.dart';
 import 'package:ams/screens/vehicle_detail/utils/flatten_monitoring_detail.dart';
@@ -9,7 +10,7 @@ final vehicleDetailByVehicleIdProvider = FutureProvider.autoDispose
     .family<Map<String, dynamic>, String>((ref, id) async {
       final detailId = id.trim();
       if (detailId.isEmpty) {
-        throw Exception('vehicle_id kosong');
+        throw Exception(currentL10n().failedLoadData);
       }
 
       final api = const FetchMonitoringDetail();

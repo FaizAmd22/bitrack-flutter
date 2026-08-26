@@ -11,6 +11,10 @@
 		<string>Face ID is used to log in to your account securely.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Microphone access is required for the intercom feature.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Camera access is required to take work order evidence photos.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Photo library access is required to upload work order evidence photos.</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>

@@ -1,18 +1,22 @@
+import 'package:ams/l10n/app_localizations.dart';
+import 'package:flutter/widgets.dart';
+
 enum PeriodicMetric { speed, ignition, accu, fuel, temperature }
 
 extension PeriodicMetricX on PeriodicMetric {
-  String label() {
+  String label(BuildContext context) {
+    final t = AppLocalizations.of(context);
     switch (this) {
       case PeriodicMetric.speed:
-        return 'Speed';
+        return t.vehicleStatusSpeed;
       case PeriodicMetric.ignition:
-        return 'Ignition';
+        return t.periodicMetricIgnition;
       case PeriodicMetric.accu:
-        return 'Accu Voltage';
+        return t.periodicMetricAccuVoltage;
       case PeriodicMetric.fuel:
-        return 'Fuel';
+        return t.vehicleSensorFuel;
       case PeriodicMetric.temperature:
-        return 'Temperature';
+        return t.periodicMetricTemperature;
     }
   }
 }

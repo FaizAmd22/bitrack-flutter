@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:ams/base/network/api_response.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -12,6 +13,7 @@ import 'package:ams/screens/vehicle_detail/services/mettaxiot_api.dart';
 import 'package:ams/screens/vehicle_detail/state/channel_state.dart';
 import 'package:ams/screens/vehicle_detail/widgets/bottom_actions.dart';
 import 'package:ams/screens/vehicle_detail/widgets/channel_card.dart';
+import 'package:ams/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -174,7 +176,7 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
       if (!mounted) return;
       setState(() {
         s.status = ChannelStatus.error;
-        s.errorMessage = 'Camera is offline right now.';
+        s.errorMessage = AppLocalizations.of(context).dashcamCameraOffline;
       });
     }
   }
@@ -205,13 +207,14 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
       setState(() => _isSpeaker = true);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _audioError = e.toString());
+      setState(() => _audioError = apiErrorText(e));
     } finally {
       if (mounted) setState(() => _isSpeakerLoading = false);
     }
   }
 
   void _startAudioStream(String talkUrl) {
+    final t = AppLocalizations.of(context);
     _pcmChunks.clear();
     _audioFlushTimer?.cancel();
 
@@ -247,8 +250,8 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
           _pcmChunks.add(G711Decoder.decode(bytes));
         } else if (data is String) {
           final errorMsg = switch (data) {
-            'repeat' => 'Device is busy',
-            'error' => 'Device error occurred',
+            'repeat' => t.dashcamDeviceBusy,
+            'error' => t.dashcamDeviceError,
             _ => null,
           };
           if (errorMsg != null) {
@@ -257,8 +260,7 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
           }
         }
       },
-      onError: (_) =>
-          setState(() => _audioError = 'WebSocket connection failed'),
+      onError: (_) => setState(() => _audioError = t.dashcamWebsocketFailed),
       onDone: () => debugPrint('WebSocket closed'),
     );
   }
@@ -298,8 +300,9 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
   void _handleMicrophone() {
     if (!_isSpeaker) {
       setState(
-        () => _audioError =
-            'Please turn on speaker first before using microphone',
+        () => _audioError = AppLocalizations.of(
+          context,
+        ).dashcamEnableSpeakerFirst,
       );
       return;
     }
@@ -365,14 +368,19 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text('Dashcam', style: AppStyles.textLBold),
+        child: Text(
+          AppLocalizations.of(context).dashcam,
+          style: AppStyles.textLBold,
+        ),
       ),
     );
   }
 
   Widget _buildChannelList() {
     if (widget.dashcamConfig.channels.isEmpty) {
-      return const Center(child: Text('No dashcam channels available.'));
+      return Center(
+        child: Text(AppLocalizations.of(context).dashcamNoChannels),
+      );
     }
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),

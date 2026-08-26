@@ -1,5 +1,6 @@
 // ignore_for_file: unused_element, deprecated_member_use
 
+import 'package:ams/base/network/api_response.dart';
 import 'package:ams/base/res/styles/app_styles.dart';
 import 'package:ams/base/routes/app_routes.dart';
 import 'package:ams/features/auth/providers/auth_providers.dart';
@@ -67,10 +68,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
         'assets/icons/face-id.svg',
         width: 40,
         height: 40,
-        colorFilter: ColorFilter.mode(
-          AppStyles.primaryColor,
-          BlendMode.srcIn,
-        ),
+        colorFilter: ColorFilter.mode(AppStyles.primaryColor, BlendMode.srcIn),
       );
     }
     return Icon(Icons.fingerprint, size: 40, color: AppStyles.primaryColor);
@@ -146,7 +144,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
     } catch (e) {
       if (!mounted) return;
-      final msg = e.toString().replaceFirst('Exception: ', '');
+      final msg = apiErrorText(e);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(t.errorPrefix(msg)),

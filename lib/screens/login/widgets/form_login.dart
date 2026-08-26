@@ -277,7 +277,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
                 ),
                 onPressed: isLoading ? null : _handleDemoLogin,
                 child: Text(
-                  'Continue with Demo',
+                  translate.continueWithDemo,
                   style: AppStyles.textSmBold.copyWith(
                     color: AppStyles.primaryColor,
                   ),
