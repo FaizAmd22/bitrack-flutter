@@ -1,0 +1,62 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FixTrack (Dev)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/fixtrack",
+      "args": ["--dart-define=APP_PRIMARY_COLOR=0xFF386AD8"]
+    },
+    {
+      "name": "FixTrack (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/fixtrack",
+      "args": [
+        "--dart-define=ENV_FILE=.env.prod",
+        "--dart-define=APP_PRIMARY_COLOR=0xFF386AD8"
+      ]
+    },
+    {
+      "name": "Bitrack (Dev)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/bitrack",
+      "args": ["--dart-define=APP_PRIMARY_COLOR=0xFFD84040"]
+    },
+    {
+      "name": "Bitrack (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/bitrack",
+      "args": [
+        "--dart-define=ENV_FILE=.env.prod",
+        "--dart-define=APP_PRIMARY_COLOR=0xFFD84040"
+      ]
+    },
+    {
+      "name": "Bitrack Internal (Dev)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/bitrack_internal",
+      "args": ["--dart-define=APP_PRIMARY_COLOR=0xFF9E2021"]
+    },
+    {
+      "name": "Bitrack Internal (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "apps/bitrack_internal",
+      "args": [
+        "--dart-define=ENV_FILE=.env.prod",
+        "--dart-define=APP_PRIMARY_COLOR=0xFF9E2021"
+      ]
+    }
+  ]
+}

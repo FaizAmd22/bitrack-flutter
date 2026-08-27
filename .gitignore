@@ -24,9 +24,10 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
+# Tanpa leading slash supaya ikut match di apps/fixtrack/.env,
+# apps/bitrack/.env, dst — bukan cuma di root repo.
 .env
 .env.prod
-
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -36,7 +37,12 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+# Sama alasannya dengan .env di atas: pola tanpa leading slash supaya match
+# di apps/*/build/ dan packages/core/build/, bukan cuma build/ di root.
+# Catatan: pubspec.lock TIDAK diabaikan dan hanya ada satu, di root repo —
+# itu lock bersama untuk seluruh pub workspace.
+build/
+coverage/
 
 # Symbolication related
 app.*.symbols
@@ -44,7 +50,18 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Android Studio will place build artifacts here (tanpa leading slash, sama
+# alasannya dengan build/ di atas)
+android/app/debug
+android/app/profile
+android/app/release
+
+# Konfigurasi lokal & signing per app: path SDK mesin ini + password keystore.
+# CATATAN: ios/Flutter/Env.xcconfig SENGAJA tidak diabaikan — file itu sudah
+# ter-commit sejak sebelum monorepo (dan isinya sudah ada di history git), jadi
+# menambahkannya di sini tidak menyembunyikan apa pun, cuma bikin app baru
+# beda perlakuan dari fixtrack. Kalau GOOGLE_MAPS_API_KEY-nya mau dicabut dari
+# repo, itu perlu rotasi key + rewrite history, bukan sekadar baris .gitignore.
+**/android/local.properties
+**/android/key.properties
+**/*.jks

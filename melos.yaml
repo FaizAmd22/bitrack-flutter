@@ -1,0 +1,139 @@
+name: bitrack_apps
+
+packages:
+  - apps/*
+  - packages/*
+
+# Warna primer tiap app dioper lewat --dart-define=APP_PRIMARY_COLOR, BUKAN
+# ditulis di kode: AppStyles.primaryColor dipakai di ratusan `const`
+# constructor sehingga harus tetap compile-time constant. Lihat
+# packages/core/lib/base/res/styles/app_styles.dart.
+#
+#   fixtrack         0xFF386AD8 (biru)         <- juga nilai default AppStyles
+#   bitrack          0xFFD84040 (merah)
+#   bitrack_internal 0xFF9E2021 (merah gelap)
+#
+# Ketiganya ditulis eksplisit di bawah supaya mengganti warna satu app tidak
+# perlu menyentuh kode sama sekali, cukup edit file ini + .vscode/launch.json.
+scripts:
+  analyze:
+    run: melos exec -- "flutter analyze"
+    description: flutter analyze di semua app & package.
+
+  test:
+    run: melos exec --dir-exists=test -- "flutter test"
+    description: flutter test di semua package yang punya folder test.
+
+  get:
+    run: flutter pub get
+    description: Resolve seluruh pub workspace (satu pubspec.lock di root).
+
+  # ---------------------------------------------------------------- run (dev)
+  fixtrack:
+    run: cd apps/fixtrack && flutter run --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Jalankan FixTrack (dev, pakai .env).
+
+  bitrack:
+    run: cd apps/bitrack && flutter run --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Jalankan Bitrack (dev, pakai .env).
+
+  internal:
+    run: cd apps/bitrack_internal && flutter run --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Jalankan Bitrack Internal (dev, pakai .env).
+
+  # --------------------------------------------------------------- run (prod)
+  fixtrack:prod:
+    run: cd apps/fixtrack && flutter run --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Jalankan FixTrack (prod, pakai .env.prod).
+
+  bitrack:prod:
+    run: cd apps/bitrack && flutter run --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Jalankan Bitrack (prod, pakai .env.prod).
+
+  internal:prod:
+    run: cd apps/bitrack_internal && flutter run --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Jalankan Bitrack Internal (prod, pakai .env.prod).
+
+  # ------------------------------------------------------------- run (release)
+  fixtrack:release:
+    run: cd apps/fixtrack && flutter run --release --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Jalankan FixTrack (dev .env, build release).
+
+  bitrack:release:
+    run: cd apps/bitrack && flutter run --release --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Jalankan Bitrack (dev .env, build release).
+
+  internal:release:
+    run: cd apps/bitrack_internal && flutter run --release --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Jalankan Bitrack Internal (dev .env, build release).
+
+  # ------------------------------------------------------------------ APK
+  fixtrack:apk:
+    run: cd apps/fixtrack && flutter build apk --release --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Build APK FixTrack (dev, pakai .env).
+
+  fixtrack:apk:prod:
+    run: cd apps/fixtrack && flutter build apk --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Build APK FixTrack (prod, pakai .env.prod).
+
+  bitrack:apk:
+    run: cd apps/bitrack && flutter build apk --release --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Build APK Bitrack (dev, pakai .env).
+
+  bitrack:apk:prod:
+    run: cd apps/bitrack && flutter build apk --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Build APK Bitrack (prod, pakai .env.prod).
+
+  internal:apk:
+    run: cd apps/bitrack_internal && flutter build apk --release --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Build APK Bitrack Internal (dev, pakai .env).
+
+  internal:apk:prod:
+    run: cd apps/bitrack_internal && flutter build apk --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Build APK Bitrack Internal (prod, pakai .env.prod).
+
+  # --------------------------------------------------- App Bundle (Play Store)
+  fixtrack:aab:
+    run: cd apps/fixtrack && flutter build appbundle --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Build AAB FixTrack untuk Play Store (prod).
+
+  bitrack:aab:
+    run: cd apps/bitrack && flutter build appbundle --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Build AAB Bitrack untuk Play Store (prod).
+
+  internal:aab:
+    run: cd apps/bitrack_internal && flutter build appbundle --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Build AAB Bitrack Internal untuk Play Store (prod).
+
+  # ------------------------------------------------------------------- iOS
+  fixtrack:ios:
+    run: cd apps/fixtrack && rm -rf build/native_assets && flutter build ios --release --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Build iOS FixTrack (dev, pakai .env).
+
+  fixtrack:ios:prod:
+    run: cd apps/fixtrack && rm -rf build/native_assets && flutter build ios --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF386AD8
+    description: Build iOS FixTrack (prod, pakai .env.prod).
+
+  bitrack:ios:
+    run: cd apps/bitrack && rm -rf build/native_assets && flutter build ios --release --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Build iOS Bitrack (dev, pakai .env).
+
+  bitrack:ios:prod:
+    run: cd apps/bitrack && rm -rf build/native_assets && flutter build ios --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFFD84040
+    description: Build iOS Bitrack (prod, pakai .env.prod).
+
+  internal:ios:
+    run: cd apps/bitrack_internal && rm -rf build/native_assets && flutter build ios --release --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Build iOS Bitrack Internal (dev, pakai .env).
+
+  internal:ios:prod:
+    run: cd apps/bitrack_internal && rm -rf build/native_assets && flutter build ios --release --dart-define=ENV_FILE=.env.prod --dart-define=APP_PRIMARY_COLOR=0xFF9E2021
+    description: Build iOS Bitrack Internal (prod, pakai .env.prod).
+
+  # -------------------------------------------------- splash & launcher icon
+  # Dijalankan ulang setiap kali assets/logos/logo.png atau warna brand di
+  # pubspec app berubah. Keduanya menulis file native (android/app/src/main/res,
+  # ios/Runner/Assets.xcassets) yang ikut di-commit.
+  branding:
+    run: melos exec --scope="fixtrack,bitrack,bitrack_internal" -- "dart run flutter_native_splash:create && dart run flutter_launcher_icons"
+    description: Regenerate splash screen + launcher icon untuk ketiga app.

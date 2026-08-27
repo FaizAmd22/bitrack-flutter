@@ -1,0 +1,67 @@
+name: fixtrack
+description: "FixTrack - Fleet tracking app."
+publish_to: "none"
+
+version: 1.0.6+7
+
+environment:
+  sdk: ^3.8.1
+
+# Anggota pub workspace (lihat pubspec.yaml di root).
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Seluruh logic & UI app ada di sini — lihat packages/core. Sesama anggota
+  # workspace, jadi TIDAK perlu `path:`; pub me-resolve-nya dari daftar
+  # `workspace:` di pubspec.yaml root.
+  bitrack_core: any
+
+  # Hanya paket yang dipakai langsung oleh lib/main.dart. Sisanya masuk lewat
+  # bitrack_core.
+  flutter_riverpod: ^3.0.3
+  flutter_dotenv: ^5.1.0
+  media_kit: ^1.2.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.7
+
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "#386AD8"
+
+  android_12:
+    image: assets/images/transparent.png
+    icon_background_color: "#386AD8"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logos/logo.png"
+  adaptive_icon_background: "#386AD8"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # Kedua file env WAJIB terdaftar di sini — flutter_dotenv membacanya lewat
+    # asset bundle, dan mana yang dipakai ditentukan --dart-define=ENV_FILE
+    # saat run/build (lihat lib/main.dart).
+    - .env
+    - .env.prod
+    - assets/
+    - assets/logos/
+    - assets/icons/
+    - assets/images/
+    - assets/images/trucks/
+    - assets/images/transparent.png
