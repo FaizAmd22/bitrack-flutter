@@ -102,9 +102,17 @@ class VehicleDetailContent extends StatelessWidget {
         ),
         IndicatorItemData(
           icon: "fuel.svg",
-          label: "-",
-          background: AppStyles.bgRedColor,
-          color: AppStyles.redColor,
+          label: "${detailData['fuel_consumed'] ?? '-'} %",
+          background: detailData['fuel_consumed'] >= 50
+              ? AppStyles.bgGreenColor
+              : detailData['fuel_consumed'] >= 25
+              ? AppStyles.bgYellowColor
+              : AppStyles.bgRedColor,
+          color: detailData['fuel_consumed'] >= 50
+              ? AppStyles.greenColor
+              : detailData['fuel_consumed'] >= 25
+              ? AppStyles.yellowColor
+              : AppStyles.redColor,
         ),
         IndicatorItemData(
           icon: "webcam.svg",
