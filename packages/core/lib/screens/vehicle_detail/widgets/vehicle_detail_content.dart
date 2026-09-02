@@ -3,6 +3,7 @@
 import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/periodic_track_filter_sheet.dart';
+import 'package:bitrack_core/screens/vehicle_detail/utils/format_helpers.dart';
 import 'package:bitrack_core/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/indicator_card.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/button_card.dart';
@@ -63,10 +64,10 @@ class VehicleDetailContent extends StatelessWidget {
       'vehicle_id',
       fallback: '',
     ).trim();
+    final ignition = safeIntFrom(detailData, 'ignition') == 1;
+    final lastEngineOn = safeTextFrom(detailData, 'last_engine_on');
 
     List<IndicatorItemData> buildIndicators() {
-      final ignition = safeIntFrom(detailData, 'ignition') == 1;
-
       final dashcamLabel = !hasDashcam
           ? t.statusNA
           : loadingDashcam
@@ -173,10 +174,41 @@ class VehicleDetailContent extends StatelessWidget {
                                 loadingAddress ? t.loading : address,
                                 style: AppStyles.textSm,
                               ),
+                              const SizedBox(height: 10),
+                              // Container(
+                              //   padding: EdgeInsets.symmetric(
+                              //     horizontal: 18,
+                              //     vertical: 8,
+                              //   ),
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.all(
+                              //       Radius.circular(16),
+                              //     ),
+                              //     color: AppStyles.bgGreenColor,
+                              //   ),
+                              //   child: Text(
+                              //     'Moving',
+                              //     style: AppStyles.textSmBold.copyWith(
+                              //       color: AppStyles.greenColor,
+                              //     ),
+                              //   ),
+                              // ),
+                              Text(
+                                ignition
+                                    ? t.activityMoving
+                                    : t.engineLastOn(
+                                        getRelativeTime(lastEngineOn),
+                                      ),
+                                style: AppStyles.textSmBold.copyWith(
+                                  color: ignition
+                                      ? AppStyles.greenColor
+                                      : AppStyles.textLightGrayColor,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 15),
                         IndicatorCard(items: buildIndicators()),
                         const SizedBox(height: 25),
                         Container(

@@ -253,6 +253,7 @@ class DemoData {
         'external_battery': 92,
         'odometer': v['odometer'],
       },
+      'last_engine_on': _deviceTime(180),
     };
   }
 

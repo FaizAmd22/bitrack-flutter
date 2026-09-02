@@ -25,6 +25,9 @@ Map<String, dynamic> flattenMonitoringDetail(
     'temperature': sensor['temperature'],
     'fuel_consumed': latestFuel ?? 0,
     'livecam': data['livecam'],
+    // Sejajar dengan unit_detail/live_tracking di response, bukan di
+    // dalamnya - jadi harus disalin eksplisit seperti `livecam`.
+    'last_engine_on': data['last_engine_on'],
   };
 }
 

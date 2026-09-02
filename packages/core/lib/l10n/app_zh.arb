@@ -474,6 +474,7 @@
   "statusNA": "无",
   "engineOn": "引擎已启动",
   "engineOff": "引擎已熄火",
+  "engineLastOn": "引擎已启动（{time}）",
   "chillerUnit": "冷藏机组",
 
   "demoVersionBanner": "演示版本 — 示例数据",
@@ -510,5 +511,15 @@
   "errServiceUnavailable": "此功能当前不可用。请稍后再试或联系管理员。",
   "errNoAccess": "您没有访问此数据的权限。",
   "errDuplicateData": "该数据已注册。请使用其他数据。",
-  "dashcamServiceUnavailable": "摄像头服务当前不可用。请联系管理员。"
+  "dashcamServiceUnavailable": "摄像头服务当前不可用。请联系管理员。",
+
+  "relativeJustNow": "刚刚",
+  "relativeYesterday": "昨天",
+  "relativeSeconds": "{count, plural, other{{count}秒前}}",
+  "relativeMinutes": "{count, plural, other{{count}分钟前}}",
+  "relativeHours": "{count, plural, other{{count}小时前}}",
+  "relativeDays": "{count, plural, other{{count}天前}}",
+  "relativeWeeks": "{count, plural, other{{count}周前}}",
+  "relativeMonths": "{count, plural, other{{count}个月前}}",
+  "relativeYears": "{count, plural, other{{count}年前}}"
 }

@@ -480,6 +480,7 @@
   "statusNA": "N/A",
   "engineOn": "Mesin Menyala",
   "engineOff": "Mesin Mati",
+  "engineLastOn": "Mesin menyala {time}",
   "chillerUnit": "Unit Chiller",
 
   "demoVersionBanner": "VERSI DEMO — Data Contoh",
@@ -516,5 +517,15 @@
   "errServiceUnavailable": "Fitur ini sedang tidak tersedia. Coba lagi nanti atau hubungi admin.",
   "errNoAccess": "Anda tidak memiliki akses ke data ini.",
   "errDuplicateData": "Data ini sudah terdaftar. Gunakan data yang berbeda.",
-  "dashcamServiceUnavailable": "Layanan kamera sedang tidak tersedia. Silakan hubungi admin."
+  "dashcamServiceUnavailable": "Layanan kamera sedang tidak tersedia. Silakan hubungi admin.",
+
+  "relativeJustNow": "baru saja",
+  "relativeYesterday": "kemarin",
+  "relativeSeconds": "{count, plural, other{{count} detik yang lalu}}",
+  "relativeMinutes": "{count, plural, other{{count} menit yang lalu}}",
+  "relativeHours": "{count, plural, other{{count} jam yang lalu}}",
+  "relativeDays": "{count, plural, other{{count} hari yang lalu}}",
+  "relativeWeeks": "{count, plural, other{{count} minggu yang lalu}}",
+  "relativeMonths": "{count, plural, other{{count} bulan yang lalu}}",
+  "relativeYears": "{count, plural, other{{count} tahun yang lalu}}"
 }

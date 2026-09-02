@@ -1279,6 +1279,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get engineOff => 'Engine OFF';
 
   @override
+  String engineLastOn(Object time) {
+    return 'Engine on $time';
+  }
+
+  @override
   String get chillerUnit => 'Chiller Unit';
 
   @override
@@ -1387,4 +1392,87 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dashcamServiceUnavailable =>
       'Camera service is unavailable right now. Please contact your admin.';
+
+  @override
+  String get relativeJustNow => 'just now';
+
+  @override
+  String get relativeYesterday => 'yesterday';
+
+  @override
+  String relativeSeconds(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count seconds ago',
+      one: '1 second ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weeks ago',
+      one: '1 week ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
 }

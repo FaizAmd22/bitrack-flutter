@@ -474,6 +474,7 @@
   "statusNA": "해당 없음",
   "engineOn": "엔진 켜짐",
   "engineOff": "엔진 꺼짐",
+  "engineLastOn": "엔진 켜짐 ({time})",
   "chillerUnit": "칠러 유닛",
 
   "demoVersionBanner": "데모 버전 — 샘플 데이터",
@@ -510,5 +511,15 @@
   "errServiceUnavailable": "이 기능은 현재 사용할 수 없습니다. 잠시 후 다시 시도하거나 관리자에게 문의해 주세요.",
   "errNoAccess": "이 데이터에 접근할 권한이 없습니다.",
   "errDuplicateData": "이 데이터는 이미 등록되어 있습니다. 다른 데이터를 사용해 주세요.",
-  "dashcamServiceUnavailable": "카메라 서비스를 현재 사용할 수 없습니다. 관리자에게 문의해 주세요."
+  "dashcamServiceUnavailable": "카메라 서비스를 현재 사용할 수 없습니다. 관리자에게 문의해 주세요.",
+
+  "relativeJustNow": "방금 전",
+  "relativeYesterday": "어제",
+  "relativeSeconds": "{count, plural, other{{count}초 전}}",
+  "relativeMinutes": "{count, plural, other{{count}분 전}}",
+  "relativeHours": "{count, plural, other{{count}시간 전}}",
+  "relativeDays": "{count, plural, other{{count}일 전}}",
+  "relativeWeeks": "{count, plural, other{{count}주 전}}",
+  "relativeMonths": "{count, plural, other{{count}개월 전}}",
+  "relativeYears": "{count, plural, other{{count}년 전}}"
 }

@@ -1259,6 +1259,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get engineOff => 'エンジン停止中';
 
   @override
+  String engineLastOn(Object time) {
+    return 'エンジン始動（$time）';
+  }
+
+  @override
   String get chillerUnit => 'チラーユニット';
 
   @override
@@ -1359,4 +1364,80 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get dashcamServiceUnavailable =>
       'カメラサービスは現在ご利用いただけません。管理者にお問い合わせください。';
+
+  @override
+  String get relativeJustNow => 'たった今';
+
+  @override
+  String get relativeYesterday => '昨日';
+
+  @override
+  String relativeSeconds(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count秒前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count分前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count時間前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count日前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count週間前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countか月前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count年前',
+    );
+    return '$_temp0';
+  }
 }

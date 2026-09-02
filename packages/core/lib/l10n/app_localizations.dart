@@ -2576,6 +2576,12 @@ abstract class AppLocalizations {
   /// **'Engine OFF'**
   String get engineOff;
 
+  /// No description provided for @engineLastOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine on {time}'**
+  String engineLastOn(Object time);
+
   /// No description provided for @chillerUnit.
   ///
   /// In en, this message translates to:
@@ -2767,6 +2773,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Camera service is unavailable right now. Please contact your admin.'**
   String get dashcamServiceUnavailable;
+
+  /// No description provided for @relativeJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get relativeJustNow;
+
+  /// No description provided for @relativeYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get relativeYesterday;
+
+  /// No description provided for @relativeSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 second ago} other{{count} seconds ago}}'**
+  String relativeSeconds(num count);
+
+  /// No description provided for @relativeMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute ago} other{{count} minutes ago}}'**
+  String relativeMinutes(num count);
+
+  /// No description provided for @relativeHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
+  String relativeHours(num count);
+
+  /// No description provided for @relativeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day ago} other{{count} days ago}}'**
+  String relativeDays(num count);
+
+  /// No description provided for @relativeWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week ago} other{{count} weeks ago}}'**
+  String relativeWeeks(num count);
+
+  /// No description provided for @relativeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month ago} other{{count} months ago}}'**
+  String relativeMonths(num count);
+
+  /// No description provided for @relativeYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year ago} other{{count} years ago}}'**
+  String relativeYears(num count);
 }
 
 class _AppLocalizationsDelegate

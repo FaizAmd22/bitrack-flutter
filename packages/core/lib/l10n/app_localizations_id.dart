@@ -1279,6 +1279,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get engineOff => 'Mesin Mati';
 
   @override
+  String engineLastOn(Object time) {
+    return 'Mesin menyala $time';
+  }
+
+  @override
   String get chillerUnit => 'Unit Chiller';
 
   @override
@@ -1387,4 +1392,80 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get dashcamServiceUnavailable =>
       'Layanan kamera sedang tidak tersedia. Silakan hubungi admin.';
+
+  @override
+  String get relativeJustNow => 'baru saja';
+
+  @override
+  String get relativeYesterday => 'kemarin';
+
+  @override
+  String relativeSeconds(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count detik yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMinutes(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count menit yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeHours(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jam yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeDays(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hari yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeWeeks(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minggu yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeMonths(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bulan yang lalu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String relativeYears(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tahun yang lalu',
+    );
+    return '$_temp0';
+  }
 }

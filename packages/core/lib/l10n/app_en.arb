@@ -480,6 +480,7 @@
   "statusNA": "N/A",
   "engineOn": "Engine ON",
   "engineOff": "Engine OFF",
+  "engineLastOn": "Engine On {time}",
   "chillerUnit": "Chiller Unit",
 
   "demoVersionBanner": "DEMO VERSION — Sample Data",
@@ -516,5 +517,15 @@
   "errServiceUnavailable": "This feature isn't available right now. Please try again later or contact your admin.",
   "errNoAccess": "You don't have access to this data.",
   "errDuplicateData": "This data is already registered. Please use a different one.",
-  "dashcamServiceUnavailable": "Camera service is unavailable right now. Please contact your admin."
+  "dashcamServiceUnavailable": "Camera service is unavailable right now. Please contact your admin.",
+
+  "relativeJustNow": "just now",
+  "relativeYesterday": "yesterday",
+  "relativeSeconds": "{count, plural, =1{1 second ago} other{{count} seconds ago}}",
+  "relativeMinutes": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "relativeHours": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "relativeDays": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "relativeWeeks": "{count, plural, =1{1 week ago} other{{count} weeks ago}}",
+  "relativeMonths": "{count, plural, =1{1 month ago} other{{count} months ago}}",
+  "relativeYears": "{count, plural, =1{1 year ago} other{{count} years ago}}"
 }

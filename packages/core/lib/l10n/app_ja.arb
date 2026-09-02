@@ -474,6 +474,7 @@
   "statusNA": "該当なし",
   "engineOn": "エンジン始動中",
   "engineOff": "エンジン停止中",
+  "engineLastOn": "エンジン始動（{time}）",
   "chillerUnit": "チラーユニット",
 
   "demoVersionBanner": "デモ版 — サンプルデータ",
@@ -510,5 +511,15 @@
   "errServiceUnavailable": "この機能は現在ご利用いただけません。しばらくしてから再度お試しいただくか、管理者にお問い合わせください。",
   "errNoAccess": "このデータにアクセスする権限がありません。",
   "errDuplicateData": "このデータはすでに登録されています。別のデータを使用してください。",
-  "dashcamServiceUnavailable": "カメラサービスは現在ご利用いただけません。管理者にお問い合わせください。"
+  "dashcamServiceUnavailable": "カメラサービスは現在ご利用いただけません。管理者にお問い合わせください。",
+
+  "relativeJustNow": "たった今",
+  "relativeYesterday": "昨日",
+  "relativeSeconds": "{count, plural, other{{count}秒前}}",
+  "relativeMinutes": "{count, plural, other{{count}分前}}",
+  "relativeHours": "{count, plural, other{{count}時間前}}",
+  "relativeDays": "{count, plural, other{{count}日前}}",
+  "relativeWeeks": "{count, plural, other{{count}週間前}}",
+  "relativeMonths": "{count, plural, other{{count}か月前}}",
+  "relativeYears": "{count, plural, other{{count}年前}}"
 }
