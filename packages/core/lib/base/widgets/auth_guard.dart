@@ -27,7 +27,16 @@ class _AuthGuardState extends State<AuthGuard> {
   }
 
   Future<void> _check() async {
+    // AuthGuard merender spinner-nya sendiri sampai pembacaan ini selesai,
+    // jadi layar anak (mis. VehicleDetail) belum dibuat dan request pertamanya
+    // belum terkirim. Durasinya dicatat supaya terlihat kalau langkah serial
+    // ini ikut menyumbang lamanya loading.
+    final started = DateTime.now();
     final token = (await _storage.read(key: 'auth_token'))?.trim() ?? '';
+    debugPrint(
+      '[AUTHGUARD] baca token selesai dalam '
+      '${DateTime.now().difference(started).inMilliseconds}ms',
+    );
     if (!mounted) return;
 
     if (token.isEmpty) {

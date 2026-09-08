@@ -18,6 +18,17 @@ class FetchMonitoringDetail {
       final res = await ApiClient.dio.get(
         '/monitoring/$id',
         queryParameters: {'tab': tab},
+        // Sengaja melampaui 15 detik milik ApiClient. Endpoint ini menghitung
+        // agregasi per jam (average_speed & fuel_consumption) sebelum
+        // menjawab, dan di produksi kerap tembus 15 detik sehingga request
+        // dibatalkan tepat sebelum data sampai. Menunggu lebih lama jauh
+        // lebih baik daripada gagal: layar sudah menampilkan data awal plus
+        // skeleton, jadi menunggu tidak berarti layar kosong.
+        //
+        // Ini menambal gejala, bukan sebabnya — lihat catatan di
+        // flattenMonitoringDetail: average_speed tidak dipakai sama sekali
+        // dan fuel_consumption hanya diambil entri terakhirnya.
+        options: Options(receiveTimeout: const Duration(seconds: 45)),
       );
 
       final body = res.data;

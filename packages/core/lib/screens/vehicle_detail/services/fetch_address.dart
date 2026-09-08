@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bitrack_core/base/network/api_logger.dart';
+import 'package:bitrack_core/base/network/api_timing.dart';
 import 'package:bitrack_core/base/services/demo_data.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
@@ -18,6 +19,7 @@ Dio _createGeoDio() {
       responseType: ResponseType.plain,
     ),
   );
+  attachRequestTiming(dio, tag: 'GEO');
   attachApiLogger(dio);
   return dio;
 }

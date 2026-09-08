@@ -88,6 +88,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: AppBranding.appName,
       navigatorKey: NavigationService.navigatorKey,
+      navigatorObservers: [NavigationService.routeObserver],
       locale: locale,
       supportedLocales: LocaleNotifier.supportedLocales,
       localizationsDelegates: const [

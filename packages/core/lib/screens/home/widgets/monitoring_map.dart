@@ -10,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:bitrack_core/screens/home/models/vehicle.dart';
+import 'package:bitrack_core/screens/vehicle_detail/models/vehicle_detail_args.dart';
 import 'package:bitrack_core/base/constants/map_urls.dart';
 
 class MonitoringMapController {
@@ -133,7 +134,19 @@ class _MonitoringMapState extends State<MonitoringMap> {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.vehicleDetailScreen,
-                  arguments: v.vehicleId.isNotEmpty ? v.vehicleId : v.id,
+                  // Ikut dikirim data yang sudah ada di marker ini supaya
+                  // layar detail bisa langsung tampil tanpa menunggu API.
+                  arguments: VehicleDetailArgs(
+                    id: v.vehicleId.isNotEmpty ? v.vehicleId : v.id,
+                    licensePlate: v.licensePlate,
+                    fleetGroupName: v.fleetGroupName,
+                    latitude: v.latitude,
+                    longitude: v.longitude,
+                    direction: v.bearing,
+                    activity: v.activity,
+                    ignition: v.ignition,
+                    deviceTime: v.deviceTime,
+                  ),
                 );
               },
               child: Transform.translate(

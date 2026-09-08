@@ -3,6 +3,7 @@
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/routes/navigation_service.dart';
 import 'package:bitrack_core/base/network/api_logger.dart';
+import 'package:bitrack_core/base/network/api_timing.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/scheduler.dart';
@@ -80,6 +81,9 @@ class ApiClient {
         },
       ),
     );
+
+    // Paling awal supaya jamnya mulai sebelum interceptor lain bekerja.
+    attachRequestTiming(client);
 
     client.interceptors.add(
       InterceptorsWrapper(

@@ -3,6 +3,7 @@
 import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/periodic_track_filter_sheet.dart';
+import 'package:bitrack_core/base/widgets/skeleton_box.dart';
 import 'package:bitrack_core/screens/vehicle_detail/utils/format_helpers.dart';
 import 'package:bitrack_core/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/indicator_card.dart';
@@ -19,6 +20,16 @@ class VehicleDetailContent extends StatelessWidget {
   final bool dashcamOnline;
   final bool isChiller;
   final bool loadingDashcam;
+
+  /// Layar masih menampilkan data awal dari layar pemanggil; response
+  /// `/monitoring/{id}` belum tiba.
+  ///
+  /// Field yang hanya ada di response itu (model, pengemudi, bahan bakar,
+  /// chiller, dashcam, waktu mesin terakhir menyala) diganti skeleton. Tanpa
+  /// ini yang tampil adalah `-`, `N/A`, dan `0 %` — semuanya tidak bisa
+  /// dibedakan dari data yang memang kosong.
+  final bool loadingDetail;
+
   final Map<String, dynamic>? vehicleData;
 
   const VehicleDetailContent({
@@ -30,6 +41,7 @@ class VehicleDetailContent extends StatelessWidget {
     required this.dashcamOnline,
     required this.isChiller,
     required this.loadingDashcam,
+    this.loadingDetail = false,
     this.vehicleData,
   });
 
@@ -66,6 +78,9 @@ class VehicleDetailContent extends StatelessWidget {
     ).trim();
     final ignition = safeIntFrom(detailData, 'ignition') == 1;
     final lastEngineOn = safeTextFrom(detailData, 'last_engine_on');
+    // Lewat safeDoubleFrom, bukan dibaca langsung dari map: pembandingan
+    // `detailData['fuel_consumed'] >= 50` melempar kalau nilainya null.
+    final fuel = safeDoubleFrom(detailData, 'fuel_consumed');
 
     List<IndicatorItemData> buildIndicators() {
       final dashcamLabel = !hasDashcam
@@ -73,6 +88,11 @@ class VehicleDetailContent extends StatelessWidget {
           : loadingDashcam
           ? '${t.dashcam}...'
           : (dashcamOnline ? t.dashcam : t.statusNA);
+
+      // Latar netral selama memuat: latar merah/kuning membawa arti (bahan
+      // bakar menipis) yang belum tentu benar.
+      const loadingBg = AppStyles.bgGrayColor;
+      const loadingFg = AppStyles.darkGrayColor;
 
       final dashcamBg = !hasDashcam
           ? AppStyles.bgGrayColor
@@ -96,30 +116,39 @@ class VehicleDetailContent extends StatelessWidget {
         IndicatorItemData(
           icon: "chiller.svg",
           label: isChiller ? t.chillerUnit : t.statusNA,
-          background: isChiller
-              ? AppStyles.bgGreenColor
-              : AppStyles.bgGrayColor,
-          color: isChiller ? AppStyles.greenColor : AppStyles.darkGrayColor,
+          background: loadingDetail
+              ? loadingBg
+              : (isChiller ? AppStyles.bgGreenColor : AppStyles.bgGrayColor),
+          color: loadingDetail
+              ? loadingFg
+              : (isChiller ? AppStyles.greenColor : AppStyles.darkGrayColor),
+          loading: loadingDetail,
         ),
         IndicatorItemData(
           icon: "fuel.svg",
           label: "${detailData['fuel_consumed'] ?? '-'} %",
-          background: detailData['fuel_consumed'] >= 50
+          background: loadingDetail
+              ? loadingBg
+              : fuel >= 50
               ? AppStyles.bgGreenColor
-              : detailData['fuel_consumed'] >= 25
+              : fuel >= 25
               ? AppStyles.bgYellowColor
               : AppStyles.bgRedColor,
-          color: detailData['fuel_consumed'] >= 50
+          color: loadingDetail
+              ? loadingFg
+              : fuel >= 50
               ? AppStyles.greenColor
-              : detailData['fuel_consumed'] >= 25
+              : fuel >= 25
               ? AppStyles.yellowColor
               : AppStyles.redColor,
+          loading: loadingDetail,
         ),
         IndicatorItemData(
           icon: "webcam.svg",
           label: dashcamLabel,
-          background: dashcamBg,
-          color: dashcamFg,
+          background: loadingDetail ? loadingBg : dashcamBg,
+          color: loadingDetail ? loadingFg : dashcamFg,
+          loading: loadingDetail,
         ),
       ];
     }
@@ -166,8 +195,16 @@ class VehicleDetailContent extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(model, style: AppStyles.textLBold),
+                              if (loadingDetail)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 4),
+                                  child: SkeletonBox(width: 150, height: 18),
+                                )
+                              else
+                                Text(model, style: AppStyles.textLBold),
                               const SizedBox(height: 7),
+                              // Fleet group ikut dikirim layar pemanggil, jadi
+                              // sudah valid sejak frame pertama.
                               Text(fleet, style: AppStyles.textMd),
                               const SizedBox(height: 7),
                               Text(
@@ -193,18 +230,24 @@ class VehicleDetailContent extends StatelessWidget {
                               //     ),
                               //   ),
                               // ),
-                              Text(
-                                ignition
-                                    ? t.activityMoving
-                                    : t.engineLastOn(
-                                        getRelativeTime(lastEngineOn),
-                                      ),
-                                style: AppStyles.textSmBold.copyWith(
-                                  color: ignition
-                                      ? AppStyles.greenColor
-                                      : AppStyles.textLightGrayColor,
+                              // `ignition` berasal dari data awal jadi sudah
+                              // benar, tapi waktu mesin terakhir menyala hanya
+                              // ada di response detail.
+                              if (loadingDetail && !ignition)
+                                const SkeletonBox(width: 120, height: 11)
+                              else
+                                Text(
+                                  ignition
+                                      ? t.activityMoving
+                                      : t.engineLastOn(
+                                          getRelativeTime(lastEngineOn),
+                                        ),
+                                  style: AppStyles.textSmBold.copyWith(
+                                    color: ignition
+                                        ? AppStyles.greenColor
+                                        : AppStyles.textLightGrayColor,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -231,7 +274,10 @@ class VehicleDetailContent extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 15),
-                              Text(driver, style: AppStyles.textMdBold),
+                              if (loadingDetail)
+                                const SkeletonBox(width: 110, height: 14)
+                              else
+                                Text(driver, style: AppStyles.textMdBold),
                             ],
                           ),
                         ),

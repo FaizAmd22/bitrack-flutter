@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:bitrack_core/base/network/api_response.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
+import 'package:bitrack_core/base/routes/navigation_service.dart';
 import 'package:bitrack_core/base/widgets/full_screen_loading.dart';
 import 'package:bitrack_core/base/widgets/search_bar_base.dart';
 import 'package:bitrack_core/features/monitoring/providers/monitoring_providers.dart';
@@ -31,7 +32,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
   String _selectedActivity = 'allVehicle';
 
   String? _searchQuery;
@@ -94,7 +95,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      // subscribe memakai Set, jadi aman dipanggil berulang kali.
+      NavigationService.routeObserver.subscribe(this, route);
+    }
+  }
+
+  /// Ada layar lain yang menimbun HomeScreen (mis. Vehicle Detail).
+  ///
+  /// State ini tidak di-dispose, jadi tanpa penghentian eksplisit timer-nya
+  /// terus menembak `/monitoring/` + `/monitoring/position` — dua request
+  /// daftar SELURUH kendaraan tiap 30 detik — sementara layar di atasnya
+  /// sedang menunggu response dari server yang sama.
+  @override
+  void didPushNext() => _stopPolling();
+
+  /// Layar di atas sudah ditutup dan HomeScreen terlihat lagi.
+  ///
+  /// Selain menyalakan ulang timer, sekalian refresh sekali supaya posisi
+  /// marker tidak tertinggal sampai tick berikutnya (bisa 30 detik lagi).
+  @override
+  void didPopNext() {
+    if (!mounted || !widget.isActive) return;
+    _startPolling();
+    _refresh(fitCamera: false);
+  }
+
+  @override
   void dispose() {
+    NavigationService.routeObserver.unsubscribe(this);
     _stopPolling();
     _debounce?.cancel();
     super.dispose();
