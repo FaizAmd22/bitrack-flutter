@@ -15,6 +15,7 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/vehicle_detail/models/vehicle_detail_args.dart';
 import 'package:bitrack_core/screens/vehicle_detail/vehicle_detail.dart';
 import 'package:bitrack_core/base/widgets/full_screen_loading.dart';
+import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/skeleton_box.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/vehicle_detail_content.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/vehicle_realtime_map.dart';
@@ -196,6 +197,10 @@ void main() {
     expect(find.text('B-9202-VCE'), findsOneWidget);
     expect(find.text('Treffix'), findsOneWidget);
 
+    // Badge status juga sudah tampil selama loading, berwarna merah untuk STOP.
+    final badge = tester.widget<Text>(find.text('Stop'));
+    expect(badge.style?.color, AppStyles.redColor);
+
     // Peta juga sudah diarahkan ke posisi kendaraan, bukan posisi default.
     final map = tester.widget<VehicleRealtimeMap>(
       find.byType(VehicleRealtimeMap),
@@ -226,10 +231,10 @@ void main() {
       ),
     );
 
-    // Model kendaraan, pengemudi, waktu mesin terakhir menyala, plus tiga chip
-    // indikator (chiller, bahan bakar, dashcam) — semuanya hanya ada di
-    // response detail.
-    expect(find.byType(SkeletonBox), findsNWidgets(6));
+    // Model kendaraan, kategori kendaraan, pengemudi, waktu mesin terakhir
+    // menyala, plus tiga chip indikator (chiller, bahan bakar, dashcam) —
+    // semuanya hanya ada di response detail.
+    expect(find.byType(SkeletonBox), findsNWidgets(7));
 
     // Yang PALING menyesatkan sebelum ini: seed mengisi fuel_consumed dengan 0,
     // jadi chip bahan bakar menampilkan "0 %" berlatar merah — terbaca sebagai

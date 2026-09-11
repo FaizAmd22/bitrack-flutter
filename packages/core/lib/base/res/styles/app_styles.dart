@@ -64,6 +64,11 @@ class AppStyles {
     color: textLightGrayColor,
     fontWeight: FontWeight.bold,
   );
+  static const TextStyle textSmSemibold = TextStyle(
+    fontSize: 14,
+    color: textLightGrayColor,
+    fontWeight: FontWeight.w500,
+  );
   static const TextStyle textSm = TextStyle(
     fontSize: 14,
     color: textLightGrayColor,

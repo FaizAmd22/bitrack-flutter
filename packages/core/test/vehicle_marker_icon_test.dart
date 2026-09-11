@@ -1,6 +1,7 @@
 // Ikon marker custom dari kolom `vehicle_category_icon` pada
 // /monitoring/position: URL http(s) -> gambar itu, kosong -> aset truk lama.
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/widgets/vehicle_marker_icon.dart';
@@ -45,6 +46,19 @@ bool _isTruckAsset(Widget w, String asset) {
   final provider = w.image;
   return provider is AssetImage && provider.assetName == asset;
 }
+
+/// Semua Transform di dalam marker. Harus tepat satu: rotasi dipasang sekali
+/// di luar, jadi truk cadangan di dalam Image.network tidak terputar dua kali.
+List<Transform> _rotations(WidgetTester tester) => tester
+    .widgetList<Transform>(
+      find.descendant(
+        of: find.byType(VehicleMarkerIcon),
+        matching: find.byType(Transform),
+      ),
+    )
+    .toList();
+
+Matrix4 _rotationFor(double deg) => Matrix4.rotationZ(deg * math.pi / 180);
 
 // Diambil apa adanya dari response /monitoring/position.
 const _mrtIcon =
@@ -149,5 +163,35 @@ void main() {
       reason: 'marker harus tetap terlihat walau gambarnya gagal dimuat',
     );
     expect(tester.takeException(), isNull);
+
+    // Cadangan tetap diputar tepat sekali, bukan dua kali.
+    expect(_rotations(tester), hasLength(1));
+  });
+
+  testWidgets('ikon custom ikut berputar mengikuti arah kendaraan', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        const VehicleMarkerIcon(
+          iconUrl: _mrtIcon,
+          activity: 'MOVING',
+          bearingDeg: 170,
+        ),
+      ),
+    );
+
+    final rotations = _rotations(tester);
+    expect(rotations, hasLength(1), reason: 'rotasi harus dipasang sekali');
+    expect(rotations.single.transform, _rotationFor(170));
+
+    // Dan yang diputar memang ikon custom-nya.
+    expect(
+      find.descendant(
+        of: find.byWidget(rotations.single),
+        matching: find.byWidgetPredicate(_isNetworkIcon),
+      ),
+      findsOneWidget,
+    );
   });
 }

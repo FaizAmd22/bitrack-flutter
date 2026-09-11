@@ -40,38 +40,41 @@ class VehicleMarkerIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Aset truk digambar dari atas, jadi memutarnya mengikuti arah memang
-    // benar.
-    final truck = Transform.rotate(
-      angle: bearingDeg * math.pi / 180,
-      child: Image.asset(
-        resolveTruckAsset(activity),
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-      ),
-    );
-
-    if (!isCustomIconUrl(iconUrl)) return truck;
-
-    // Ikon custom sengaja TIDAK diputar. Isinya unggahan user — piktogram
-    // tegak, bahkan foto — bukan sprite yang digambar dari atas, sehingga
-    // memutarnya ke arah 170° membuatnya tampil terbalik.
-    return Image.network(
-      iconUrl!.trim(),
+    final truck = Image.asset(
+      resolveTruckAsset(activity),
       width: size,
       height: size,
       fit: BoxFit.contain,
-      // Ikon hanya tampil selebar [size]. Tanpa cacheWidth, PNG unggahan user
-      // (bisa ribuan piksel) di-decode dalam resolusi penuh. 3x menutup layar
-      // berkepadatan tinggi; marker dengan URL yang sama tetap berbagi satu
-      // entri ImageCache.
-      cacheWidth: (size * 3).round(),
-      // Selama memuat dan saat gagal, tampilkan truk: marker tidak boleh
-      // hilang dari peta hanya karena gambarnya lambat atau URL-nya rusak.
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
-          frame == null ? truck : child,
-      errorBuilder: (context, error, stackTrace) => truck,
     );
+
+    final Widget icon = isCustomIconUrl(iconUrl)
+        ? Image.network(
+            iconUrl!.trim(),
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+            // Ikon hanya tampil selebar [size]. Tanpa cacheWidth, PNG
+            // unggahan user (bisa ribuan piksel) di-decode dalam resolusi
+            // penuh. 3x menutup layar berkepadatan tinggi; marker dengan URL
+            // yang sama tetap berbagi satu entri ImageCache.
+            cacheWidth: (size * 3).round(),
+            // Selama memuat dan saat gagal, tampilkan truk: marker tidak boleh
+            // hilang dari peta hanya karena gambarnya lambat atau URL-nya
+            // rusak.
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
+                frame == null ? truck : child,
+            errorBuilder: (context, error, stackTrace) => truck,
+          )
+        : truck;
+
+    // Rotasi dipasang SEKALI di sini, bukan di masing-masing ikon: truk
+    // cadangan di frameBuilder/errorBuilder berada di dalam Image.network,
+    // jadi kalau truk dan ikon custom diputar sendiri-sendiri, cadangannya
+    // ikut terputar dua kali.
+    //
+    // Ikon custom ikut berputar mengikuti arah, sama seperti truk. Karena itu
+    // ikon yang diunggah sebaiknya digambar tampak atas dengan moncong
+    // menghadap ke atas (utara); gambar tegak atau foto akan tampil miring.
+    return Transform.rotate(angle: bearingDeg * math.pi / 180, child: icon);
   }
 }

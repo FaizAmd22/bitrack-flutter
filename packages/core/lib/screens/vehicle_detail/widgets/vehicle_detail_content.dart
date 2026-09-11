@@ -7,6 +7,7 @@ import 'package:bitrack_core/base/widgets/skeleton_box.dart';
 import 'package:bitrack_core/screens/vehicle_detail/utils/format_helpers.dart';
 import 'package:bitrack_core/screens/vehicle_detail/utils/vehicle_detail_safety.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/indicator_card.dart';
+import 'package:bitrack_core/screens/vehicle_detail/widgets/status_label.dart';
 import 'package:bitrack_core/screens/vehicle_detail/widgets/button_card.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,11 @@ class VehicleDetailContent extends StatelessWidget {
 
     final plate = safeTextFrom(detailData, 'license_plate');
     final model = safeTextFrom(detailData, 'vehicle_model');
+    final activity = safeTextFrom(
+      detailData,
+      'vehicle_activity',
+      fallback: '',
+    ).toUpperCase();
     final fleet = safeTextFrom(
       detailData,
       'fleet_group_name',
@@ -81,6 +87,7 @@ class VehicleDetailContent extends StatelessWidget {
     // Lewat safeDoubleFrom, bukan dibaca langsung dari map: pembandingan
     // `detailData['fuel_consumed'] >= 50` melempar kalau nilainya null.
     final fuel = safeDoubleFrom(detailData, 'fuel_consumed');
+    final vehicleCategory = detailData['vehicle_category'] ?? "Truck";
 
     List<IndicatorItemData> buildIndicators() {
       final dashcamLabel = !hasDashcam
@@ -195,13 +202,50 @@ class VehicleDetailContent extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Status dari data awal marker home, jadi sudah benar walau model
+                              // masih dimuat — hanya teks model yang diganti skeleton.
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                spacing: 5,
+                                children: [
+                                  if (loadingDetail)
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      child: SkeletonBox(
+                                        width: 150,
+                                        height: 18,
+                                      ),
+                                    )
+                                  else
+                                    Flexible(
+                                      child: Text(
+                                        model,
+                                        style: AppStyles.textLBold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  if (activity.isNotEmpty) ...[
+                                    StatusLabel(activity: activity),
+                                  ],
+                                ],
+                              ),
                               if (loadingDetail)
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 4),
-                                  child: SkeletonBox(width: 150, height: 18),
-                                )
+                                const SkeletonBox(width: 120, height: 11)
                               else
-                                Text(model, style: AppStyles.textLBold),
+                                Column(
+                                  children: [
+                                    const SizedBox(height: 7),
+                                    Text(
+                                      vehicleCategory,
+                                      style: AppStyles.textSmSemibold.copyWith(
+                                        color: AppStyles.textLightGrayColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               const SizedBox(height: 7),
                               // Fleet group ikut dikirim layar pemanggil, jadi
                               // sudah valid sejak frame pertama.
@@ -211,36 +255,21 @@ class VehicleDetailContent extends StatelessWidget {
                                 loadingAddress ? t.loading : address,
                                 style: AppStyles.textSm,
                               ),
-                              const SizedBox(height: 10),
-                              // Container(
-                              //   padding: EdgeInsets.symmetric(
-                              //     horizontal: 18,
-                              //     vertical: 8,
-                              //   ),
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.all(
-                              //       Radius.circular(16),
-                              //     ),
-                              //     color: AppStyles.bgGreenColor,
-                              //   ),
-                              //   child: Text(
-                              //     'Moving',
-                              //     style: AppStyles.textSmBold.copyWith(
-                              //       color: AppStyles.greenColor,
-                              //     ),
-                              //   ),
-                              // ),
-                              // `ignition` berasal dari data awal jadi sudah
-                              // benar, tapi waktu mesin terakhir menyala hanya
-                              // ada di response detail.
                               if (loadingDetail && !ignition)
                                 const SkeletonBox(width: 120, height: 11)
                               else if (!ignition)
-                                Text(
-                                  t.engineLastOn(getRelativeTime(lastEngineOn)),
-                                  style: AppStyles.textSmBold.copyWith(
-                                    color: AppStyles.textLightGrayColor,
-                                  ),
+                                Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      t.engineLastOn(
+                                        getRelativeTime(lastEngineOn),
+                                      ),
+                                      style: AppStyles.textSmBold.copyWith(
+                                        color: AppStyles.textLightGrayColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                             ],
                           ),
