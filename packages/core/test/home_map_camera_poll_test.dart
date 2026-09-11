@@ -26,17 +26,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:latlong2/latlong.dart';
 
 Vehicle _v(String id, double lat, double lng) => Vehicle(
-      id: id,
-      vehicleId: id,
-      latitude: lat,
-      longitude: lng,
-      bearing: 0,
-      activity: 'MOVING',
-      deviceTime: '2026-01-01 00:00:00',
-      ignition: 1,
-      licensePlate: 'B $id XX',
-      fleetGroupName: 'grup',
-    );
+  id: id,
+  vehicleId: id,
+  latitude: lat,
+  longitude: lng,
+  bearing: 0,
+  activity: 'MOVING',
+  deviceTime: '2026-01-01 00:00:00',
+  ignition: 1,
+  licensePlate: 'B $id XX',
+  fleetGroupName: 'grup',
+  vehicleCategoryIcon: "",
+);
 
 /// Aset (ikon truk, animasi lottie loading) ada di `apps/*/assets`, bukan di
 /// packages/core, jadi tidak bisa di-resolve dari test package ini.
@@ -61,8 +62,7 @@ class _StubAssetBundle extends CachingAssetBundle {
   }
 
   @override
-  Future<ByteData> load(String key) async =>
-      ByteData.sublistView(_bytes(key));
+  Future<ByteData> load(String key) async => ByteData.sublistView(_bytes(key));
 
   @override
   Future<String> loadString(String key, {bool cache = true}) async =>
@@ -100,40 +100,39 @@ MapController _mapControllerOf(WidgetTester tester) =>
     tester.widget<FlutterMap>(find.byType(FlutterMap)).mapController!;
 
 Widget _harness(List<Vehicle> vehicles) => ProviderScope(
-      overrides: [
-        monitoringProvider.overrideWith(
-          (ref, query) async => MonitoringData(
-            vehicles: vehicles,
-            total: vehicles.length,
-          ),
-        ),
-        plateSuggestionProvider.overrideWith((ref, filter) => const <String>[]),
-        fleetGroupProvider.overrideWith(
-          (ref) async => const <Map<String, dynamic>>[],
-        ),
+  overrides: [
+    monitoringProvider.overrideWith(
+      (ref, query) async =>
+          MonitoringData(vehicles: vehicles, total: vehicles.length),
+    ),
+    plateSuggestionProvider.overrideWith((ref, filter) => const <String>[]),
+    fleetGroupProvider.overrideWith(
+      (ref) async => const <Map<String, dynamic>>[],
+    ),
+  ],
+  child: DefaultAssetBundle(
+    bundle: _StubAssetBundle(),
+    child: MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      child: DefaultAssetBundle(
-        bundle: _StubAssetBundle(),
-        child: MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const HomeScreen(isActive: true),
-        ),
-      ),
-    );
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const HomeScreen(isActive: true),
+    ),
+  ),
+);
 
 void main() {
   setUpAll(() => dotenv.testLoad(fileInput: 'GOOGLE_MAP_KEY=test-key'));
 
-
   testWidgets('polling 30 detik TIDAK menggeser kamera user', (tester) async {
     _muteTileImageErrors();
-    await tester.pumpWidget(_harness([_v('a', -6.2, 106.8), _v('b', -6.4, 107.0)]));
+    await tester.pumpWidget(
+      _harness([_v('a', -6.2, 106.8), _v('b', -6.4, 107.0)]),
+    );
     // pumpAndSettle tidak dipakai: animasi lottie loading berulang terus dan
     // tile terus di-retry, jadi frame tidak pernah "diam". Pump manual saja
     // sampai load pertama selesai.
@@ -151,10 +150,16 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     final camera = _mapControllerOf(tester).camera;
-    expect(camera.center.latitude, closeTo(userCenter.latitude, 0.0001),
-        reason: 'polling tidak boleh menggeser kamera');
-    expect(camera.center.longitude, closeTo(userCenter.longitude, 0.0001),
-        reason: 'polling tidak boleh menggeser kamera');
+    expect(
+      camera.center.latitude,
+      closeTo(userCenter.latitude, 0.0001),
+      reason: 'polling tidak boleh menggeser kamera',
+    );
+    expect(
+      camera.center.longitude,
+      closeTo(userCenter.longitude, 0.0001),
+      reason: 'polling tidak boleh menggeser kamera',
+    );
     expect(camera.zoom, userZoom, reason: 'polling tidak boleh mengubah zoom');
   });
 

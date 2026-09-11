@@ -1,10 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:bitrack_core/base/config/app_branding.dart';
-import 'dart:math' as math;
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
-import 'package:bitrack_core/base/utils/truck_asset.dart';
+import 'package:bitrack_core/base/widgets/vehicle_marker_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -110,6 +109,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
             v.deviceTime,
             v.ignition,
             v.licensePlate,
+            v.vehicleCategoryIcon,
           ),
         ),
       ),
@@ -120,8 +120,6 @@ class _MonitoringMapState extends State<MonitoringMap> {
 
     _cachedMarkers = vehicles
         .map((v) {
-          final asset = resolveTruckAsset(v.activity);
-          final angleRad = roundedBearing(v.bearing) * math.pi / 180;
           debugPrint('data vehicle : "$v"');
 
           return Marker(
@@ -146,6 +144,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
                     activity: v.activity,
                     ignition: v.ignition,
                     deviceTime: v.deviceTime,
+                    vehicleCategoryIcon: v.vehicleCategoryIcon,
                   ),
                 );
               },
@@ -156,9 +155,10 @@ class _MonitoringMapState extends State<MonitoringMap> {
                   children: [
                     if (widget.showPlate) _PlateBubble(text: v.licensePlate),
                     const SizedBox(height: 2),
-                    Transform.rotate(
-                      angle: angleRad,
-                      child: Image.asset(asset, width: 45, height: 45),
+                    VehicleMarkerIcon(
+                      iconUrl: v.vehicleCategoryIcon,
+                      activity: v.activity,
+                      bearingDeg: roundedBearing(v.bearing).toDouble(),
                     ),
                   ],
                 ),

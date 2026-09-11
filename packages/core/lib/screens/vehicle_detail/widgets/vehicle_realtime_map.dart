@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:bitrack_core/base/constants/map_urls.dart';
-import 'package:bitrack_core/base/utils/truck_asset.dart';
+import 'package:bitrack_core/base/widgets/vehicle_marker_icon.dart';
 
 class VehicleRealtimeMap extends StatefulWidget {
   const VehicleRealtimeMap({
@@ -16,6 +16,7 @@ class VehicleRealtimeMap extends StatefulWidget {
     required this.direction,
     required this.speed,
     required this.vehicleActivity,
+    this.iconUrl,
     this.initialZoom = 15,
     this.followMarker = true,
   });
@@ -24,6 +25,9 @@ class VehicleRealtimeMap extends StatefulWidget {
   final double direction;
   final double speed;
   final String? vehicleActivity;
+
+  /// `vehicle_category_icon` dari API. Lihat [VehicleMarkerIcon].
+  final String? iconUrl;
   final double initialZoom;
   final bool followMarker;
 
@@ -215,7 +219,8 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
                 height: 120,
                 alignment: Alignment.center,
                 child: _TruckMarkerWithTooltip(
-                  asset: resolveTruckAsset(widget.vehicleActivity),
+                  iconUrl: widget.iconUrl,
+                  activity: widget.vehicleActivity,
                   directionDeg: _currentRot,
                   speed: widget.speed,
                 ),
@@ -229,19 +234,19 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
 
 class _TruckMarkerWithTooltip extends StatelessWidget {
   const _TruckMarkerWithTooltip({
-    required this.asset,
+    required this.iconUrl,
+    required this.activity,
     required this.directionDeg,
     required this.speed,
   });
 
-  final String asset;
+  final String? iconUrl;
+  final String? activity;
   final double directionDeg;
   final double speed;
 
   @override
   Widget build(BuildContext context) {
-    final radians = directionDeg * math.pi / 180.0;
-
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
@@ -268,9 +273,11 @@ class _TruckMarkerWithTooltip extends StatelessWidget {
             ),
           ],
         ),
-        Transform.rotate(
-          angle: radians,
-          child: Image.asset(asset, width: 55, height: 55, fit: BoxFit.contain),
+        VehicleMarkerIcon(
+          iconUrl: iconUrl,
+          activity: activity,
+          bearingDeg: directionDeg,
+          size: 55,
         ),
       ],
     );

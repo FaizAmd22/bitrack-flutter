@@ -9,6 +9,7 @@ class Vehicle {
   final int ignition;
   final String licensePlate;
   final String fleetGroupName;
+  final String vehicleCategoryIcon;
 
   const Vehicle({
     required this.id,
@@ -21,6 +22,7 @@ class Vehicle {
     required this.ignition,
     required this.licensePlate,
     required this.fleetGroupName,
+    required this.vehicleCategoryIcon,
   });
 
   static double _toDouble(dynamic v) {
@@ -64,6 +66,7 @@ class Vehicle {
       ignition: _toIgnition(json['ignition']),
       licensePlate: (json['license_plate'] ?? '').toString(),
       fleetGroupName: (json['fleet_group_name'] ?? '').toString(),
+      vehicleCategoryIcon: (json['vehicle_category_icon'] ?? '').toString(),
     );
   }
 }

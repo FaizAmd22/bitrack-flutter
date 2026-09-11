@@ -329,6 +329,12 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
                 direction: _direction,
                 speed: speed,
                 vehicleActivity: activity,
+                // Terisi dari data awal marker home, lalu dari response detail.
+                iconUrl: safeTextFrom(
+                  _detailData,
+                  'vehicle_category_icon',
+                  fallback: '',
+                ),
                 initialZoom: 15,
                 followMarker: true,
               ),

@@ -235,17 +235,11 @@ class VehicleDetailContent extends StatelessWidget {
                               // ada di response detail.
                               if (loadingDetail && !ignition)
                                 const SkeletonBox(width: 120, height: 11)
-                              else
+                              else if (!ignition)
                                 Text(
-                                  ignition
-                                      ? t.activityMoving
-                                      : t.engineLastOn(
-                                          getRelativeTime(lastEngineOn),
-                                        ),
+                                  t.engineLastOn(getRelativeTime(lastEngineOn)),
                                   style: AppStyles.textSmBold.copyWith(
-                                    color: ignition
-                                        ? AppStyles.greenColor
-                                        : AppStyles.textLightGrayColor,
+                                    color: AppStyles.textLightGrayColor,
                                   ),
                                 ),
                             ],

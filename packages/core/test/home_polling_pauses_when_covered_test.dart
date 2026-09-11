@@ -36,6 +36,7 @@ Vehicle _v(String id, double lat, double lng) => Vehicle(
   ignition: 1,
   licensePlate: 'B $id XX',
   fleetGroupName: 'grup',
+  vehicleCategoryIcon: "",
 );
 
 /// Aset (ikon truk, animasi lottie loading) ada di `apps/*/assets`, bukan di

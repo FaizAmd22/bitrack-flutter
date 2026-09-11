@@ -56,17 +56,18 @@ class _StubAssetBundle extends CachingAssetBundle {
 }
 
 Vehicle _v(String id, double lat, double lng) => Vehicle(
-      id: id,
-      vehicleId: id,
-      latitude: lat,
-      longitude: lng,
-      bearing: 0,
-      activity: 'MOVING',
-      deviceTime: '2026-01-01 00:00:00',
-      ignition: 1,
-      licensePlate: 'B $id XX',
-      fleetGroupName: 'grup',
-    );
+  id: id,
+  vehicleId: id,
+  latitude: lat,
+  longitude: lng,
+  bearing: 0,
+  activity: 'MOVING',
+  deviceTime: '2026-01-01 00:00:00',
+  ignition: 1,
+  licensePlate: 'B $id XX',
+  fleetGroupName: 'grup',
+  vehicleCategoryIcon: "",
+);
 
 /// MapController milik FlutterMap yang sedang hidup di widget tree.
 /// `mapController` adalah field publik FlutterMap, jadi tes ini tidak perlu
@@ -95,7 +96,9 @@ void main() {
   // benar-benar diunduh di widget test.
   setUpAll(() => dotenv.testLoad(fileInput: 'GOOGLE_MAP_KEY=test-key'));
 
-  testWidgets('data di-refetch: kamera user TIDAK ikut tereset', (tester) async {
+  testWidgets('data di-refetch: kamera user TIDAK ikut tereset', (
+    tester,
+  ) async {
     final controller = MonitoringMapController();
 
     await tester.pumpWidget(_app([_v('a', -6.2, 106.8)], controller));

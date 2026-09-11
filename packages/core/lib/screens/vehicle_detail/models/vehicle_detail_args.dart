@@ -19,6 +19,7 @@ class VehicleDetailArgs {
     this.activity = '',
     this.ignition = 0,
     this.deviceTime = '',
+    this.vehicleCategoryIcon = '',
   });
 
   final String id;
@@ -30,6 +31,11 @@ class VehicleDetailArgs {
   final String activity;
   final int ignition;
   final String deviceTime;
+
+  /// URL ikon custom kategori kendaraan, atau kosong. Ikut dioper supaya
+  /// peta detail menampilkan ikon yang sama dengan marker yang baru ditekan
+  /// sejak frame pertama, tanpa menunggu response detail.
+  final String vehicleCategoryIcon;
 
   bool get hasCoordinate => latitude != null && longitude != null;
 
@@ -46,6 +52,7 @@ class VehicleDetailArgs {
     'vehicle_activity': activity,
     'ignition': ignition,
     'device_time': deviceTime,
+    'vehicle_category_icon': vehicleCategoryIcon,
     // buildIndicators() di VehicleDetailContent membandingkan
     // `fuel_consumed >= 50` tanpa penjagaan null, jadi kedua field ini WAJIB
     // ada dan numerik walaupun nilainya belum diketahui.
