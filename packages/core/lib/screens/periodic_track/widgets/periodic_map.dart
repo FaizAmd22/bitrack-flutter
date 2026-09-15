@@ -50,15 +50,45 @@ class PeriodicMap extends StatefulWidget {
   State<PeriodicMap> createState() => _PeriodicMapState();
 }
 
+/// Posisi truk dan indeks titik yang sedang diputar.
+class _TruckState {
+  const _TruckState(this.pos, this.index);
+
+  final LatLng pos;
+  final int index;
+}
+
 class _PeriodicMapState extends State<PeriodicMap>
     with TickerProviderStateMixin {
   late final PeriodicPlaybackController _playback;
 
-  LatLng? _truckPos;
+  /// Diperbarui di SETIAP frame animasi pemutaran, dan hanya lapisan truk yang
+  /// mendengarkannya.
+  ///
+  /// Dulu setiap frame memanggil setState pada seluruh peta, dan tiap build
+  /// menyusun ulang daftar marker semua titik, koordinat garis, dan himpunan
+  /// alert — O(n) alokasi 60x per detik padahal yang bergerak hanya truk.
+  final ValueNotifier<_TruckState?> _truck = ValueNotifier(null);
   int _playbackIndex = 0;
 
   bool _userIsInteracting = false;
   Timer? _resumeAutoCenterTimer;
+
+  // Disusun ulang hanya saat `points` (atau jenis peta) berubah, lalu dipakai
+  // ulang apa adanya. Instance widget yang sama membuat Flutter melewati
+  // subtree-nya saat peta di-build ulang.
+  List<LatLng> _coords = const [];
+  Set<int> _alertIdx = const {};
+  Widget _tileLayer = const SizedBox.shrink();
+  Widget _polylineLayer = const SizedBox.shrink();
+  Widget _dotsLayer = const SizedBox.shrink();
+  Widget _alertsLayer = const SizedBox.shrink();
+
+  int _clampIndex(int i) {
+    final last = widget.points.length - 1;
+    if (last < 0 || i < 0) return 0;
+    return i > last ? last : i;
+  }
 
   @override
   void initState() {
@@ -67,16 +97,12 @@ class _PeriodicMapState extends State<PeriodicMap>
     _playback = PeriodicPlaybackController(
       vsync: this,
       onTick: (pos, segIndex, frac) {
-        setState(() {
-          _truckPos = pos;
-          _playbackIndex = segIndex.clamp(
-            0,
-            math.max(0, widget.points.length - 1),
-          );
-        });
+        final idx = _clampIndex(segIndex);
+        _playbackIndex = idx;
+        _truck.value = _TruckState(pos, idx);
 
         if (widget.isPlaying) {
-          widget.onPlaybackIndexChanged?.call(_playbackIndex);
+          widget.onPlaybackIndexChanged?.call(idx);
         }
 
         if (widget.autoCenter && !_userIsInteracting) {
@@ -86,12 +112,11 @@ class _PeriodicMapState extends State<PeriodicMap>
       },
     );
 
+    _buildTileLayer();
+    _rebuildPointCaches();
     _setupPlaybackData(resetPos: true);
 
-    _playbackIndex = widget.currentIndex.clamp(
-      0,
-      math.max(0, widget.points.length - 1),
-    );
+    _playbackIndex = _clampIndex(widget.currentIndex);
 
     if (widget.isPlaying) {
       _playback.play(startIndex: _playbackIndex);
@@ -99,18 +124,14 @@ class _PeriodicMapState extends State<PeriodicMap>
   }
 
   void _updatePlaybackSpeedOnly() {
-    if (widget.points.length < 2) return;
-
-    final pts = widget.points
-        .map((e) => LatLng(e.latitude, e.longitude))
-        .toList();
+    if (_coords.length < 2) return;
 
     final segDur = List<int>.filled(
-      math.max(0, pts.length - 1),
+      _coords.length - 1,
       widget.speed.segmentDurationMs,
     );
 
-    _playback.setData(points: pts, segmentDurationsMs: segDur);
+    _playback.setData(points: _coords, segmentDurationsMs: segDur);
   }
 
   @override
@@ -120,10 +141,12 @@ class _PeriodicMapState extends State<PeriodicMap>
     final pointsChanged = oldWidget.points != widget.points;
     final speedChanged = oldWidget.speed != widget.speed;
     final playingChanged = oldWidget.isPlaying != widget.isPlaying;
-    final metricChanged = oldWidget.metric != widget.metric;
     final indexChanged = oldWidget.currentIndex != widget.currentIndex;
 
+    if (oldWidget.isSatellite != widget.isSatellite) _buildTileLayer();
+
     if (pointsChanged) {
+      _rebuildPointCaches();
       _setupPlaybackData(resetPos: true);
     }
 
@@ -136,25 +159,20 @@ class _PeriodicMapState extends State<PeriodicMap>
     }
 
     if (indexChanged && widget.points.isNotEmpty) {
-      final idx = widget.currentIndex.clamp(0, widget.points.length - 1);
+      final idx = _clampIndex(widget.currentIndex);
       _playbackIndex = idx;
 
-      final p = widget.points[idx];
-      final target = LatLng(p.latitude, p.longitude);
+      final target = _coords[idx];
 
       if (widget.isPlaying) {
         _playback.play(startIndex: _playbackIndex);
       } else {
-        setState(() => _truckPos = target);
+        _truck.value = _TruckState(target, idx);
       }
 
       if (widget.autoCenter && !_userIsInteracting) {
         widget.mapController.move(target, widget.mapController.camera.zoom);
       }
-    }
-
-    if (metricChanged) {
-      setState(() {});
     }
 
     if (playingChanged) {
@@ -170,87 +188,102 @@ class _PeriodicMapState extends State<PeriodicMap>
   void dispose() {
     _resumeAutoCenterTimer?.cancel();
     _playback.dispose();
+    _truck.dispose();
     super.dispose();
   }
 
-  // List<Marker> _buildStartEndMarkers() {
-  //   if (widget.points.isEmpty) return [];
+  void _buildTileLayer() {
+    _tileLayer = TileLayer(
+      urlTemplate: widget.isSatellite ? googleSatelliteMapUrl : googleMapUrl,
+      subdomains: googleMapSubdomains,
+      userAgentPackageName: AppBranding.mapUserAgentPackageName,
+    );
+  }
 
-  //   final lastIndex = widget.points.length - 1;
+  /// Susun ulang semua yang bergantung pada `points`: koordinat, alert, dan
+  /// ketiga lapisan statis (garis, titik biru, pin alert).
+  void _rebuildPointCaches() {
+    final points = widget.points;
+    _coords = [for (final p in points) LatLng(p.latitude, p.longitude)];
+    _alertIdx = {
+      for (var i = 0; i < points.length; i++)
+        if (points[i].isAlert) i,
+    };
 
-  //   Marker buildCircle(int index) {
-  //     final p = widget.points[index];
-  //     return Marker(
-  //       point: LatLng(p.latitude, p.longitude),
-  //       width: 18,
-  //       height: 18,
-  //       alignment: Alignment.center,
-  //       child: GestureDetector(
-  //         onTap: () => widget.onPointSelected(index),
-  //         child: Container(
-  //           decoration: BoxDecoration(
-  //             color: AppStyles.primaryColor,
-  //             shape: BoxShape.circle,
-  //             border: Border.all(color: AppStyles.whiteColor, width: 2),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
+    _polylineLayer = PolylineLayer(
+      polylines: [
+        Polyline(
+          points: _coords,
+          strokeWidth: 4,
+          color: AppStyles.primaryColor.withOpacity(0.85),
+        ),
+      ],
+    );
 
-  //   if (lastIndex == 0) return [buildCircle(0)];
-  //   return [buildCircle(0), buildCircle(lastIndex)];
-  // }
+    // Titik biru tetap widget (tap langsung). CircleLayer sempat dicoba:
+    // sama ringannya (terukur 9,6 vs 8,2 ms per frame), tapi di flutter_map 6
+    // tap-nya harus lewat MapOptions.onTap, yang menunggu kemungkinan
+    // double-tap sehingga tertunda ~250 ms.
+    _dotsLayer = MarkerLayer(
+      markers: [
+        for (var i = 0; i < points.length; i++)
+          // Titik alert sudah punya pin sendiri.
+          if (!_alertIdx.contains(i))
+            Marker(
+              point: _coords[i],
+              width: 16,
+              height: 16,
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () => _handlePointTap(i),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppStyles.blueColor, // #007BFF di Cordova
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppStyles.whiteColor, width: 2),
+                  ),
+                ),
+              ),
+            ),
+      ],
+    );
 
-  List<Marker> _buildPointCircles(Set<int> alertIdx) {
-    final markers = <Marker>[];
-
-    for (int i = 0; i < widget.points.length; i++) {
-      if (alertIdx.contains(i)) continue; // skip, sudah ada alert marker
-
-      final p = widget.points[i];
-      markers.add(
-        Marker(
-          point: LatLng(p.latitude, p.longitude),
-          width: 16,
-          height: 16,
-          alignment: Alignment.center,
-          child: GestureDetector(
-            onTap: () => _handlePointTap(i),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppStyles.blueColor, // #007BFF di Cordova
-                shape: BoxShape.circle,
-                border: Border.all(color: AppStyles.whiteColor, width: 2),
+    _alertsLayer = MarkerLayer(
+      markers: [
+        for (final i in _alertIdx)
+          Marker(
+            point: _coords[i],
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () => _handlePointTap(i), // ← pindah + popup
+              child: SvgPicture.asset(
+                AppMedia.alertIcon,
+                width: 36,
+                height: 36,
               ),
             ),
           ),
-        ),
-      );
-    }
-
-    return markers;
+      ],
+    );
   }
 
   void _setupPlaybackData({required bool resetPos}) {
-    if (widget.points.length < 2) return;
-
-    final pts = widget.points
-        .map((e) => LatLng(e.latitude, e.longitude))
-        .toList();
+    if (_coords.length < 2) return;
 
     final segDur = List<int>.filled(
-      math.max(0, pts.length - 1),
+      _coords.length - 1,
       widget.speed.segmentDurationMs,
     );
 
-    _playback.setData(points: pts, segmentDurationsMs: segDur);
+    _playback.setData(points: _coords, segmentDurationsMs: segDur);
 
-    final safeIndex = widget.currentIndex.clamp(0, pts.length - 1);
+    final safeIndex = _clampIndex(widget.currentIndex);
     _playbackIndex = safeIndex;
 
     if (resetPos) {
-      setState(() => _truckPos = pts[safeIndex]);
+      _truck.value = _TruckState(_coords[safeIndex], safeIndex);
     }
   }
 
@@ -277,57 +310,50 @@ class _PeriodicMapState extends State<PeriodicMap>
     PeriodicAlertSheet.open(context, point);
   }
 
-  Set<int> _alertIndices() {
-    final out = <int>{};
-    for (int i = 0; i < widget.points.length; i++) {
-      if (widget.points[i].isAlert) out.add(i);
-    }
-    return out;
+  /// Lapisan truk: satu-satunya bagian peta yang berubah tiap frame.
+  Widget _buildTruckLayer(BuildContext context, _TruckState? truck, Widget? _) {
+    final points = widget.points;
+    final safeSelectedIndex = _clampIndex(widget.currentIndex);
+
+    final idxForInfo = widget.isPlaying
+        ? _clampIndex(truck?.index ?? _playbackIndex)
+        : safeSelectedIndex;
+
+    final truckPoint = truck?.pos ?? _coords[safeSelectedIndex];
+    final curr = points[idxForInfo];
+    final next = idxForInfo < points.length - 1
+        ? _coords[idxForInfo + 1]
+        : _coords[idxForInfo];
+
+    return MarkerLayer(
+      markers: [
+        Marker(
+          point: truckPoint,
+          width: 90,
+          height: 90,
+          alignment: Alignment.center,
+          // Truk tetap digambar paling atas supaya posisi pemutaran selalu
+          // terlihat. Ia tidak punya aksi tap, jadi dikecualikan dari hit
+          // test supaya tap selalu diteruskan ke pin di bawahnya.
+          child: IgnorePointer(
+            child: PeriodicTruckMarker(
+              tooltipText: getDisplayValue(curr, widget.metric),
+              bearingDeg: _bearingLatLng(truckPoint, next),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.points.isEmpty) return const SizedBox.shrink();
 
-    final alertIdx = _alertIndices();
-
-    final safeSelectedIndex = widget.currentIndex.clamp(
-      0,
-      widget.points.length - 1,
-    );
-
-    final fallbackPoint = widget.points[safeSelectedIndex];
-    final truckPoint =
-        _truckPos ?? LatLng(fallbackPoint.latitude, fallbackPoint.longitude);
-
-    final coords = widget.points
-        .map((p) => LatLng(p.latitude, p.longitude))
-        .toList();
-
-    final idxForInfo = widget.isPlaying
-        ? _playbackIndex.clamp(0, widget.points.length - 1)
-        : safeSelectedIndex;
-
-    final curr = widget.points[idxForInfo];
-    final nextPoint = idxForInfo < widget.points.length - 1
-        ? widget.points[idxForInfo + 1]
-        : curr;
-
-    final LatLng targetLatLng = LatLng(nextPoint.latitude, nextPoint.longitude);
-    final LatLng currentLatLng = truckPoint;
-
-    final bearing = _bearingLatLng(currentLatLng, targetLatLng);
-    final tooltip = getDisplayValue(curr, widget.metric);
-
-    final initialCenter = LatLng(
-      widget.points[safeSelectedIndex].latitude,
-      widget.points[safeSelectedIndex].longitude,
-    );
-
     return FlutterMap(
       mapController: widget.mapController,
       options: MapOptions(
-        initialCenter: initialCenter,
+        initialCenter: _coords[_clampIndex(widget.currentIndex)],
         initialZoom: 16,
         interactionOptions: const InteractionOptions(
           flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
@@ -338,76 +364,27 @@ class _PeriodicMapState extends State<PeriodicMap>
 
           _userIsInteracting = true;
           _resumeAutoCenterTimer?.cancel();
-          _resumeAutoCenterTimer = Timer(const Duration(milliseconds: 900), () {
-            if (!mounted) return;
-            setState(() => _userIsInteracting = false);
-          });
+          // Cukup mengubah field: tidak ada yang digambar dari nilai ini, jadi
+          // tidak perlu setState (yang dulu mem-build ulang seluruh peta
+          // setiap kali user selesai menggeser).
+          _resumeAutoCenterTimer = Timer(
+            const Duration(milliseconds: 900),
+            () => _userIsInteracting = false,
+          );
         },
       ),
       children: [
-        TileLayer(
-          urlTemplate: widget.isSatellite
-              ? googleSatelliteMapUrl
-              : googleMapUrl,
-          subdomains: googleMapSubdomains,
-          userAgentPackageName: AppBranding.mapUserAgentPackageName,
-        ),
-        PolylineLayer(
-          polylines: [
-            Polyline(
-              points: coords,
-              strokeWidth: 4,
-              color: AppStyles.primaryColor.withOpacity(0.85),
-            ),
-          ],
-        ),
-        MarkerLayer(markers: _buildPointCircles(alertIdx)),
+        _tileLayer,
+        _polylineLayer,
+        _dotsLayer,
         // Alert SETELAH titik biru: di FlutterMap layer yang ditulis
         // belakangan digambar di atas sekaligus menerima tap lebih dulu.
         // Dulu urutannya terbalik, jadi pin alert tertutup titik biru dan tap
-        // di atasnya ditangkap GestureDetector milik titik biru.
-        MarkerLayer(
-          markers: widget.points
-              .asMap()
-              .entries
-              .where((e) => e.value.isAlert)
-              .map((e) {
-                final p = e.value;
-                return Marker(
-                  point: LatLng(p.latitude, p.longitude),
-                  width: 36,
-                  height: 36,
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () => _handlePointTap(e.key), // ← pindah + popup
-                    child: SvgPicture.asset(
-                      AppMedia.alertIcon,
-                      width: 36,
-                      height: 36,
-                    ),
-                  ),
-                );
-              })
-              .toList(),
-        ),
-        MarkerLayer(
-          markers: [
-            Marker(
-              point: truckPoint,
-              width: 90,
-              height: 90,
-              alignment: Alignment.center,
-              // Truk tetap digambar paling atas supaya posisi pemutaran selalu
-              // terlihat. Ia tidak punya aksi tap, jadi dikecualikan dari hit
-              // test supaya tap selalu diteruskan ke pin di bawahnya.
-              child: IgnorePointer(
-                child: PeriodicTruckMarker(
-                  tooltipText: tooltip,
-                  bearingDeg: bearing,
-                ),
-              ),
-            ),
-          ],
+        // di atasnya ditangkap titik biru.
+        _alertsLayer,
+        ValueListenableBuilder<_TruckState?>(
+          valueListenable: _truck,
+          builder: _buildTruckLayer,
         ),
       ],
     );

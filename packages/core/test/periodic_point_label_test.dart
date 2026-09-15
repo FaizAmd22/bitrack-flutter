@@ -284,6 +284,51 @@ void main() {
       expect(find.byIcon(Icons.warning_amber_rounded), findsNothing);
     });
 
+    // Laporan: di 16:40:05 ada data rutin DAN alert "Over Stay Engine Off".
+    // Pin di grafik menandai alert-nya, tapi penggaris menampilkan SAMPLING.
+    // Kedua urutan diuji karena pengurutan waktu tidak menjamin mana yang
+    // lebih dulu untuk detik yang sama.
+    for (final alertFirst in [false, true]) {
+      testWidgets('data rutin dan alert di detik yang sama: penggaris '
+          'menampilkan alert (${alertFirst ? 'alert' : 'data rutin'} lebih '
+          'dulu di data)', (tester) async {
+        final routine = _pt(300, speed: 0, name: 'SAMPLING');
+        final alert = _pt(
+          300,
+          speed: 0,
+          type: 'OVERSTAY_ENGINE_OFF',
+          name: 'Over Stay Engine Off',
+        );
+        final points = [
+          for (var i = 0; i < 40; i++)
+            if (i == 10)
+              ...(alertFirst ? [alert, routine] : [routine, alert])
+            else
+              _pt(i * 30),
+        ];
+
+        // Titik yang sedang diputar di peta adalah data rutinnya.
+        await pumpActive(tester, points, points.indexOf(routine));
+
+        final label = find.byType(PeriodicPointLabel);
+        expect(label, findsOneWidget);
+        expect(
+          find.descendant(
+            of: label,
+            matching: find.text('Over Stay Engine Off'),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: label,
+            matching: find.byIcon(Icons.warning_amber_rounded),
+          ),
+          findsOneWidget,
+        );
+      });
+    }
+
     testWidgets('tetap di dalam grafik untuk titik tinggi di tepi kanan', (
       tester,
     ) async {

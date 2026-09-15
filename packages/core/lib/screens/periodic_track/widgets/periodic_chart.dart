@@ -20,6 +20,11 @@ const _maxRenderedPoints = 2000;
 /// Lama label detail tampil sebelum hilang sendiri.
 const _labelVisibleFor = Duration(seconds: 4);
 
+/// Paling sering penggaris dipindahkan saat titik aktif berganti cepat
+/// (pemutaran 4x–16x, slider digeser). Satu rebuild grafik ±40 ms, jadi di
+/// 16x (titik berganti tiap ±63 ms) grafik nyaris tidak pernah istirahat.
+const _rulerMinInterval = Duration(milliseconds: 200);
+
 /// Pin alert di grafik: ikon yang sama dengan pin di peta, sedikit lebih kecil
 /// (di peta 36).
 const _alertPinSize = 26.0;
@@ -70,6 +75,20 @@ class _PeriodicChartState extends State<PeriodicChart> {
   /// disembunyikan Syncfusion; timer ini yang menyembunyikannya.
   Timer? _labelHideTimer;
 
+  /// Titik aktif yang benar-benar digambar. Mengikuti `widget.activeTime`,
+  /// tapi dibatasi [_rulerMinInterval]: perpindahan pertama langsung
+  /// digambar, perpindahan berikutnya dalam jeda itu ditahan, dan yang
+  /// terakhir digambar begitu jedanya habis.
+  DateTime? _shownActiveTime;
+  bool _rulerCoolingDown = false;
+  bool _rulerPending = false;
+  Timer? _rulerTimer;
+
+  /// Hasil build terakhir. Dikembalikan apa adanya selama tidak ada yang
+  /// berubah, sehingga rebuild dari layar induk (mis. titik aktif berganti
+  /// tapi penggaris sedang ditahan) tidak menyentuh Syncfusion sama sekali.
+  Widget? _built;
+
   @override
   void initState() {
     super.initState();
@@ -99,6 +118,13 @@ class _PeriodicChartState extends State<PeriodicChart> {
     );
 
     _rebuildSeries();
+    _shownActiveTime = widget.activeTime;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _built = null;
   }
 
   @override
@@ -110,12 +136,44 @@ class _PeriodicChartState extends State<PeriodicChart> {
     if (oldWidget.points != widget.points ||
         oldWidget.metric != widget.metric) {
       _rebuildSeries();
+      _shownActiveTime = widget.activeTime;
+      _built = null;
+    } else if (oldWidget.activeTime != widget.activeTime) {
+      _onActiveTimeChanged();
     }
+  }
+
+  void _onActiveTimeChanged() {
+    if (_rulerCoolingDown) {
+      _rulerPending = true;
+      return;
+    }
+    _applyRuler();
+    _startRulerCooldown();
+  }
+
+  void _applyRuler() {
+    _shownActiveTime = widget.activeTime;
+    _built = null;
+  }
+
+  void _startRulerCooldown() {
+    _rulerCoolingDown = true;
+    _rulerTimer?.cancel();
+    _rulerTimer = Timer(_rulerMinInterval, () {
+      _rulerCoolingDown = false;
+      if (_rulerPending && mounted) {
+        _rulerPending = false;
+        setState(_applyRuler);
+        _startRulerCooldown();
+      }
+    });
   }
 
   @override
   void dispose() {
     _labelHideTimer?.cancel();
+    _rulerTimer?.cancel();
     super.dispose();
   }
 
@@ -131,13 +189,15 @@ class _PeriodicChartState extends State<PeriodicChart> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => _built ??= _buildChart(context);
+
+  Widget _buildChart(BuildContext context) {
     if (widget.points.isEmpty) return const SizedBox.shrink();
 
-    final activeTime = widget.activeTime;
+    final activeTime = _shownActiveTime;
     final activePoint = activeTime == null
         ? null
-        : nearestByTime(_normalized, activeTime);
+        : _preferAlert(nearestByTime(_normalized, activeTime));
     final data = withActivePoint(_series, activePoint);
     _rendered = data;
 
@@ -295,11 +355,18 @@ class _PeriodicChartState extends State<PeriodicChart> {
   }
 
   SeriesPoint? _pointFor(TrackballDetails details) {
-    final p = _trackedPoint(details);
-    // Alert dan data rutin bisa berbagi detik yang sama. Alert yang dipilih,
-    // karena itulah yang ingin dilihat user.
-    return p == null ? null : (_alertByTime[p.dt] ?? p);
+    return _preferAlert(_trackedPoint(details));
   }
+
+  /// Alert dan data rutin bisa berbagi detik yang sama. Alert yang dipilih,
+  /// karena itulah yang ditandai pin di grafik dan ingin dilihat user.
+  ///
+  /// Label penggaris dan label saat grafik ditekan sama-sama lewat sini.
+  /// Dulu hanya label tekan; penggaris mengambil titik mana saja yang
+  /// kebetulan terurut duluan di detik itu, sehingga di detik yang sama
+  /// penggaris bisa menampilkan SAMPLING sementara pin menampilkan alert.
+  SeriesPoint? _preferAlert(SeriesPoint? p) =>
+      p == null ? null : (_alertByTime[p.dt] ?? p);
 
   /// Titik yang sedang ditunjuk trackball. Utamanya lewat `pointIndex`, dengan
   /// cadangan berdasarkan waktu (sumbu-x) kalau indeksnya tidak cocok dengan

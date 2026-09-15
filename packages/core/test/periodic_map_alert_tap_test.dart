@@ -163,4 +163,63 @@ void main() {
       expect(find.text('Overspeed'), findsWidgets);
     },
   );
+
+  testWidgets('titik biru bisa ditekan dan langsung terpilih', (tester) async {
+    // Hanya SATU pump setelah tap: tap titik biru harus langsung, bukan
+    // tertunda menunggu double-tap seperti MapOptions.onTap di flutter_map 6.
+    _muteTileImageErrors();
+    tester.view.physicalSize = const Size(1233, 2673);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    final points = [
+      _pt(-7.0, 110.4, '2026-09-07 10:19:51'),
+      _pt(-7.001, 110.401, '2026-09-07 10:20:01'),
+      _pt(-7.002, 110.402, '2026-09-07 10:20:11'),
+    ];
+
+    final selected = <int>[];
+    await tester.pumpWidget(
+      DefaultAssetBundle(
+        bundle: _StubAssetBundle(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 360,
+                height: 400,
+                child: PeriodicMap(
+                  mapController: MapController(),
+                  points: points,
+                  currentIndex: 0,
+                  metric: PeriodicMetric.speed,
+                  autoCenter: false,
+                  onPointSelected: selected.add,
+                  isPlaying: false,
+                  speed: PlaybackSpeed.x1,
+                  isSatellite: false,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    // Peta berpusat di titik 0 (truk juga di sana, tapi tidak menangkap tap).
+    await tester.tapAt(tester.getCenter(find.byType(FlutterMap)));
+    await tester.pump();
+
+    expect(selected, [0]);
+    await tester.pump(const Duration(milliseconds: 400));
+  });
 }
