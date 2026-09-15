@@ -18,6 +18,7 @@ import '../models/periodic_metric.dart';
 import '../models/periodic_point.dart';
 import '../utils/periodic_value.dart';
 import 'periodic_truck_marker.dart';
+import 'package:bitrack_core/screens/periodic_track/models/playback_speed.dart';
 
 class PeriodicMap extends StatefulWidget {
   final MapController mapController;
@@ -27,7 +28,7 @@ class PeriodicMap extends StatefulWidget {
   final bool autoCenter;
   final ValueChanged<int> onPointSelected;
   final bool isPlaying;
-  final int speedIndex;
+  final PlaybackSpeed speed;
   final bool isSatellite;
   final ValueChanged<int>? onPlaybackIndexChanged;
 
@@ -40,7 +41,7 @@ class PeriodicMap extends StatefulWidget {
     required this.autoCenter,
     required this.onPointSelected,
     required this.isPlaying,
-    required this.speedIndex,
+    required this.speed,
     required this.isSatellite,
     this.onPlaybackIndexChanged,
   });
@@ -55,8 +56,6 @@ class _PeriodicMapState extends State<PeriodicMap>
 
   LatLng? _truckPos;
   int _playbackIndex = 0;
-
-  final List<int> _speeds = const [200, 500, 1000, 1500, 2000];
 
   bool _userIsInteracting = false;
   Timer? _resumeAutoCenterTimer;
@@ -106,8 +105,10 @@ class _PeriodicMapState extends State<PeriodicMap>
         .map((e) => LatLng(e.latitude, e.longitude))
         .toList();
 
-    final si = widget.speedIndex.clamp(0, _speeds.length - 1);
-    final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
+    final segDur = List<int>.filled(
+      math.max(0, pts.length - 1),
+      widget.speed.segmentDurationMs,
+    );
 
     _playback.setData(points: pts, segmentDurationsMs: segDur);
   }
@@ -117,7 +118,7 @@ class _PeriodicMapState extends State<PeriodicMap>
     super.didUpdateWidget(oldWidget);
 
     final pointsChanged = oldWidget.points != widget.points;
-    final speedChanged = oldWidget.speedIndex != widget.speedIndex;
+    final speedChanged = oldWidget.speed != widget.speed;
     final playingChanged = oldWidget.isPlaying != widget.isPlaying;
     final metricChanged = oldWidget.metric != widget.metric;
     final indexChanged = oldWidget.currentIndex != widget.currentIndex;
@@ -238,8 +239,10 @@ class _PeriodicMapState extends State<PeriodicMap>
         .map((e) => LatLng(e.latitude, e.longitude))
         .toList();
 
-    final si = widget.speedIndex.clamp(0, _speeds.length - 1);
-    final segDur = List<int>.filled(math.max(0, pts.length - 1), _speeds[si]);
+    final segDur = List<int>.filled(
+      math.max(0, pts.length - 1),
+      widget.speed.segmentDurationMs,
+    );
 
     _playback.setData(points: pts, segmentDurationsMs: segDur);
 
@@ -277,7 +280,7 @@ class _PeriodicMapState extends State<PeriodicMap>
   Set<int> _alertIndices() {
     final out = <int>{};
     for (int i = 0; i < widget.points.length; i++) {
-      if (widget.points[i].eventType != 'SAMPLING') out.add(i);
+      if (widget.points[i].isAlert) out.add(i);
     }
     return out;
   }
@@ -343,7 +346,9 @@ class _PeriodicMapState extends State<PeriodicMap>
       ),
       children: [
         TileLayer(
-          urlTemplate: widget.isSatellite ? googleSatelliteMapUrl : googleMapUrl,
+          urlTemplate: widget.isSatellite
+              ? googleSatelliteMapUrl
+              : googleMapUrl,
           subdomains: googleMapSubdomains,
           userAgentPackageName: AppBranding.mapUserAgentPackageName,
         ),
@@ -356,11 +361,16 @@ class _PeriodicMapState extends State<PeriodicMap>
             ),
           ],
         ),
+        MarkerLayer(markers: _buildPointCircles(alertIdx)),
+        // Alert SETELAH titik biru: di FlutterMap layer yang ditulis
+        // belakangan digambar di atas sekaligus menerima tap lebih dulu.
+        // Dulu urutannya terbalik, jadi pin alert tertutup titik biru dan tap
+        // di atasnya ditangkap GestureDetector milik titik biru.
         MarkerLayer(
           markers: widget.points
               .asMap()
               .entries
-              .where((e) => e.value.eventType != 'SAMPLING')
+              .where((e) => e.value.isAlert)
               .map((e) {
                 final p = e.value;
                 return Marker(
@@ -380,7 +390,6 @@ class _PeriodicMapState extends State<PeriodicMap>
               })
               .toList(),
         ),
-        MarkerLayer(markers: _buildPointCircles(alertIdx)),
         MarkerLayer(
           markers: [
             Marker(
@@ -388,9 +397,14 @@ class _PeriodicMapState extends State<PeriodicMap>
               width: 90,
               height: 90,
               alignment: Alignment.center,
-              child: PeriodicTruckMarker(
-                tooltipText: tooltip,
-                bearingDeg: bearing,
+              // Truk tetap digambar paling atas supaya posisi pemutaran selalu
+              // terlihat. Ia tidak punya aksi tap, jadi dikecualikan dari hit
+              // test supaya tap selalu diteruskan ke pin di bawahnya.
+              child: IgnorePointer(
+                child: PeriodicTruckMarker(
+                  tooltipText: tooltip,
+                  bearingDeg: bearing,
+                ),
               ),
             ),
           ],

@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'models/periodic_metric.dart';
+import 'models/playback_speed.dart';
 import 'models/periodic_point.dart';
 import 'widgets/periodic_chart.dart';
 import 'widgets/periodic_map.dart';
@@ -36,8 +37,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
 
   bool _isPlaying = true;
 
-  final List<int> _speeds = const [200, 500, 1000, 1500, 2000];
-  int _speedIndex = 2;
+  PlaybackSpeed _speed = PlaybackSpeed.x1;
 
   final bool _autoCenter = true;
 
@@ -154,14 +154,22 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     setState(() => _isPlaying = !_isPlaying);
   }
 
-  void _increaseSpeed() {
-    if (_speedIndex <= 0) return;
-    setState(() => _speedIndex--);
+  /// Pindah ke titik sebelum ([delta] = -1) atau sesudah (+1) titik aktif.
+  ///
+  /// Lewat [_onPickIndex] — jalur yang sama dengan tap titik di peta dan
+  /// geser slider — jadi pemutaran ikut dijeda. Kalau tidak dijeda, animasi
+  /// langsung melanjutkan dari titik tujuan dan user tidak sempat melihat
+  /// titik yang baru dipilih.
+  void _stepPoint(int delta) {
+    if (_data.isEmpty) return;
+    _onPickIndex(_currentIndex + delta);
   }
 
-  void _decreaseSpeed() {
-    if (_speedIndex >= _speeds.length - 1) return;
-    setState(() => _speedIndex++);
+  /// Mengganti kecepatan TIDAK menjeda pemutaran; PeriodicMap memuat ulang
+  /// durasi segmen dan melanjutkan dari titik yang sedang diputar.
+  void _onSpeedChanged(PlaybackSpeed speed) {
+    if (speed == _speed) return;
+    setState(() => _speed = speed);
   }
 
   void _onSliderChanged(double v) {
@@ -220,6 +228,15 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     setState(() => _currentIndex = safe);
   }
 
+  /// Waktu titik yang sedang dituju slider. `_currentIndex` sudah mengikuti
+  /// jari selama digeser (lihat [_onSliderDrag]), jadi labelnya ikut berubah.
+  /// Tanggal ikut ditampilkan karena rentang data bisa lebih dari satu hari.
+  String? _sliderLabel() {
+    if (_data.isEmpty) return null;
+    final p = _data[_currentIndex.clamp(0, _data.length - 1)];
+    return '${p.deviceTime} WIB';
+  }
+
   void _onSliderStart(double v) {
     setState(() => _isScrubbing = true);
   }
@@ -243,8 +260,8 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     final topPad = MediaQuery.of(context).padding.top;
     final topPlayer = topPad + size.height * 0.36;
 
-    final canSpeedUp = _speedIndex > 0;
-    final canSpeedDown = _speedIndex < _speeds.length - 1;
+    final canPrev = _data.isNotEmpty && _currentIndex > 0;
+    final canNext = _data.isNotEmpty && _currentIndex < _data.length - 1;
 
     return Scaffold(
       body: Container(
@@ -265,7 +282,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
                   autoCenter: _autoCenter,
                   onPointSelected: _onPickIndex,
                   isPlaying: _isPlaying,
-                  speedIndex: _speedIndex,
+                  speed: _speed,
                   isSatellite: _isSatellite,
                   onPlaybackIndexChanged: _onPlaybackIndexChanged,
                 ),
@@ -301,10 +318,12 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
               top: topPlayer,
               child: PlayerCard(
                 isPlaying: _isPlaying,
-                canSpeedUp: canSpeedUp,
-                canSpeedDown: canSpeedDown,
-                onSpeedUp: _increaseSpeed,
-                onSpeedDown: _decreaseSpeed,
+                canPrev: canPrev,
+                canNext: canNext,
+                onPrev: () => _stepPoint(-1),
+                onNext: () => _stepPoint(1),
+                speed: _speed,
+                onSpeedChanged: _onSpeedChanged,
                 onPlayPause: _togglePlay,
                 value: _data.isEmpty ? 0.0 : _currentIndex.toDouble(),
                 max: _data.isEmpty ? 0.0 : (_data.length - 1).toDouble(),
@@ -312,6 +331,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
                 onChangeStart: _onSliderStart,
                 onChanged: _onSliderDrag,
                 onChangeEnd: _onSliderEnd,
+                valueLabel: _sliderLabel(),
               ),
             ),
 

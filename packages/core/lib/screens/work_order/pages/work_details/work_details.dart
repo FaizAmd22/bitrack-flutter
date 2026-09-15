@@ -289,8 +289,16 @@ class _WorkDetailsScreenState extends ConsumerState<WorkDetailsScreen> {
 
       AppToast.show(context, t.woCompleteSuccess);
       Navigator.pop(context, true);
-    } catch (_) {
-      if (mounted) AppToast.showFailed(context, t.woCompleteFailed);
+    } catch (e) {
+      // Pesan dari server (mis. "Simcard Number tidak boleh kosong") lebih
+      // berguna daripada "gagal" generik karena memberi tahu user apa yang
+      // harus dilengkapi. Tanpa pesan dari server, tetap pesan default.
+      if (mounted) {
+        AppToast.showFailed(
+          context,
+          apiRejectionMessage(e) ?? t.woCompleteFailed,
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

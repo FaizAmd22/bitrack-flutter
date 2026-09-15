@@ -6,6 +6,7 @@ import 'package:bitrack_core/screens/work_order/models/work_order_list_page.dart
 import 'package:bitrack_core/screens/work_order/models/work_order_options.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:bitrack_core/base/network/api_response.dart';
 
 /// Semua endpoint Work Order. Padanan folder `pages/work-order/hooks` di
 /// bitrack-mobile, dikumpulkan jadi satu kelas supaya gampang dilacak.
@@ -121,7 +122,8 @@ class WorkOrderApi {
   }
 
   Future<void> createWorkOrderDetail(Map<String, dynamic> payload) async {
-    await ApiClient.dio.post('/work-order/detail', data: payload);
+    final res = await ApiClient.dio.post('/work-order/detail', data: payload);
+    throwIfRejected(res.data);
   }
 
   Future<void> deleteWorkOrderDetail(String id) async {
@@ -170,28 +172,31 @@ class WorkOrderApi {
       ..add(MapEntry('work_order_detail_id', workOrderDetailId))
       ..add(MapEntry('event', event));
 
-    await ApiClient.dio.post(
+    final res = await ApiClient.dio.post(
       '/work-order/evidence',
       data: form,
       options: Options(contentType: 'multipart/form-data'),
     );
+    throwIfRejected(res.data);
   }
 
   Future<void> deleteEvidence(String fileUrl) async {
-    await ApiClient.dio.delete(
+    final res = await ApiClient.dio.delete(
       '/work-order/evidence',
       queryParameters: {'file_url': fileUrl},
     );
+    throwIfRejected(res.data);
   }
 
   Future<void> updateNotes({
     required String workOrderDetailId,
     required String notes,
   }) async {
-    await ApiClient.dio.post(
+    final res = await ApiClient.dio.post(
       '/work-order/notes',
       data: {'work_order_detail_id': workOrderDetailId, 'notes': notes},
     );
+    throwIfRejected(res.data);
   }
 
   // ----------------------------------------------------------------- misc

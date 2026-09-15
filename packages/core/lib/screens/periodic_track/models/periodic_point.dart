@@ -13,6 +13,10 @@ class PeriodicPoint {
   final String eventType; // "SAMPLING" atau alert
   final String eventName;
 
+  /// Titik alert, bukan data rutin. Aturan yang sama dipakai peta, grafik,
+  /// dan label detail supaya ketiganya selalu sepakat.
+  bool get isAlert => eventType != 'SAMPLING';
+
   const PeriodicPoint({
     required this.latitude,
     required this.longitude,

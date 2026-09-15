@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
+import 'package:bitrack_core/base/widgets/tx_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -211,7 +212,8 @@ class TxInputDate extends FormField<DateTime> {
                    : () async {
                        final now = DateTime.now();
                        final effectiveFirst = firstDate ?? DateTime(2000);
-                       final effectiveLast = lastDate ?? DateTime(now.year + 20);
+                       final effectiveLast =
+                           lastDate ?? DateTime(now.year + 20);
 
                        var init = state.value ?? now;
                        if (init.isBefore(effectiveFirst)) init = effectiveFirst;
@@ -312,33 +314,28 @@ class TxInputDateTime extends FormField<DateTime> {
              );
              if (pickedDate == null) return;
 
-             final pickedTime = await showTimePicker(
-               context: state.context,
-               initialTime: TimeOfDay(hour: init.hour, minute: init.minute),
-               builder: (context, child) {
-                 final media = MediaQuery.of(context);
-                 return MediaQuery(
-                   data: media.copyWith(alwaysUse24HourFormat: use24HourFormat),
-                   child: Theme(
-                     data: Theme.of(context).copyWith(
-                       colorScheme: Theme.of(
-                         context,
-                       ).colorScheme.copyWith(primary: AppStyles.primaryColor),
-                     ),
-                     child: child!,
-                   ),
-                 );
-               },
-             );
-             if (pickedTime == null) return;
+             if (!state.context.mounted) return;
 
-             final combined = DateTime(
-               pickedDate.year,
-               pickedDate.month,
-               pickedDate.day,
-               pickedTime.hour,
-               pickedTime.minute,
+             // Jam dipilih dengan roda gulir ala iOS, bukan jam putar Material.
+             // Batas firstDate/lastDate kini berlaku sampai ke menit, bukan
+             // hanya tanggalnya.
+             final combined = await showTxTimePicker(
+               state.context,
+               initial: DateTime(
+                 pickedDate.year,
+                 pickedDate.month,
+                 pickedDate.day,
+                 init.hour,
+                 init.minute,
+               ),
+               minimum: firstDate,
+               maximum: lastDate,
+               use24HourFormat: use24HourFormat,
+               title: MaterialLocalizations.of(
+                 state.context,
+               ).formatFullDate(pickedDate),
              );
+             if (combined == null) return;
 
              state.didChange(combined);
              onChanged(combined);

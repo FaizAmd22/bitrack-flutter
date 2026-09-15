@@ -151,3 +151,54 @@ int? metaInt(Map<dynamic, dynamic> meta, List<String> keys) {
   }
   return null;
 }
+
+/// Server menjawab (HTTP 2xx) tapi menolak permintaannya lewat body, dengan
+/// envelope lama `{"status": false, "data": [], "error_msg": "..."}`.
+///
+/// Ini TIDAK bertentangan dengan prinsip di atas file ini. Yang dihindari di
+/// sana adalah mengunci nilai SUKSES (pernah `true`, sekarang `"success"`) —
+/// yang memang terus berubah. Di sini yang dikenali hanya satu hal: boolean
+/// `false` yang eksplisit. Tidak ada versi backend yang memakai `false` untuk
+/// "berhasil", jadi tidak ada nilai sukses yang ikut terkunci.
+///
+/// Tanpa ini, request yang ditolak dengan HTTP 200 lolos sebagai sukses dan
+/// user melihat toast "berhasil" padahal datanya tidak tersimpan.
+class ApiRejectedException implements Exception {
+  const ApiRejectedException([this.message]);
+
+  /// `error_msg` dari server, atau null kalau server tidak mengirimnya.
+  final String? message;
+
+  @override
+  String toString() => message ?? 'ApiRejectedException';
+}
+
+/// Lempar [ApiRejectedException] kalau body berisi `status: false`.
+///
+/// Dipanggil setelah request yang body-nya tidak dibaca apa pun selain untuk
+/// memastikan server tidak menolaknya.
+void throwIfRejected(dynamic body) {
+  if (body is Map && body['status'] == false) {
+    throw ApiRejectedException(_errorMsg(body));
+  }
+}
+
+/// Pesan penolakan dari server untuk ditampilkan apa adanya, atau null.
+///
+/// Menangani dua jalur yang sama-sama dipakai backend untuk envelope ini:
+/// HTTP 2xx + `status: false` (lewat [throwIfRejected]), dan HTTP 4xx yang
+/// body-nya membawa `error_msg`. Null berarti tidak ada pesan dari server,
+/// sehingga pemanggil memakai pesan default miliknya sendiri.
+String? apiRejectionMessage(Object error) {
+  if (error is ApiRejectedException) return error.message;
+  if (error is DioException) {
+    final body = error.response?.data;
+    if (body is Map) return _errorMsg(body);
+  }
+  return null;
+}
+
+String? _errorMsg(Map<dynamic, dynamic> body) {
+  final msg = body['error_msg']?.toString().trim() ?? '';
+  return msg.isEmpty ? null : msg;
+}
