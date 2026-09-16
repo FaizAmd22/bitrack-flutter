@@ -480,7 +480,7 @@
   "statusNA": "N/A",
   "engineOn": "Mesin Menyala",
   "engineOff": "Mesin Mati",
-  "engineLastOn": "Mesin menyala {time}",
+  "engineLastOn": "Mesin terakhir menyala {time}",
   "chillerUnit": "Unit Chiller",
 
   "demoVersionBanner": "VERSI DEMO — Data Contoh",
@@ -524,6 +524,7 @@
   "relativeSeconds": "{count, plural, other{{count} detik yang lalu}}",
   "relativeMinutes": "{count, plural, other{{count} menit yang lalu}}",
   "relativeHours": "{count, plural, other{{count} jam yang lalu}}",
+  "relativeHoursMinutes": "{hours} jam {minutes} menit yang lalu",
   "relativeDays": "{count, plural, other{{count} hari yang lalu}}",
   "relativeWeeks": "{count, plural, other{{count} minggu yang lalu}}",
   "relativeMonths": "{count, plural, other{{count} bulan yang lalu}}",

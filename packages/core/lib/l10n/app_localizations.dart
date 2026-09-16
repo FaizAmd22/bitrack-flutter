@@ -2579,7 +2579,7 @@ abstract class AppLocalizations {
   /// No description provided for @engineLastOn.
   ///
   /// In en, this message translates to:
-  /// **'Engine on {time}'**
+  /// **'Last Engine On {time}'**
   String engineLastOn(Object time);
 
   /// No description provided for @chillerUnit.
@@ -2803,6 +2803,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
   String relativeHours(num count);
+
+  /// No description provided for @relativeHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours, plural, =1{1 hour} other{{hours} hours}} {minutes, plural, =1{1 minute} other{{minutes} minutes}} ago'**
+  String relativeHoursMinutes(num hours, num minutes);
 
   /// No description provided for @relativeDays.
   ///

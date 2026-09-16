@@ -92,11 +92,15 @@ String getRelativeTime(String? dateString) {
   if (days >= 365) return t.relativeYears(days ~/ 365);
   if (days >= 30) return t.relativeMonths(days ~/ 30);
   if (days >= 7) return t.relativeWeeks(days ~/ 7);
-  // "kemarin" lebih alami daripada "1 hari yang lalu".
   if (days >= 1) return days == 1 ? t.relativeYesterday : t.relativeDays(days);
 
   final hours = seconds ~/ 3600;
-  if (hours >= 1) return t.relativeHours(hours);
+  if (hours >= 1) {
+    final minutes = (seconds % 3600) ~/ 60;
+    return minutes == 0
+        ? t.relativeHours(hours)
+        : t.relativeHoursMinutes(hours, minutes);
+  }
   return t.relativeMinutes(seconds ~/ 60);
 }
 

@@ -480,7 +480,7 @@
   "statusNA": "N/A",
   "engineOn": "Engine ON",
   "engineOff": "Engine OFF",
-  "engineLastOn": "Engine On {time}",
+  "engineLastOn": "Last Engine On {time}",
   "chillerUnit": "Chiller Unit",
 
   "demoVersionBanner": "DEMO VERSION — Sample Data",
@@ -524,6 +524,7 @@
   "relativeSeconds": "{count, plural, =1{1 second ago} other{{count} seconds ago}}",
   "relativeMinutes": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
   "relativeHours": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "relativeHoursMinutes": "{hours, plural, =1{1 hour} other{{hours} hours}} {minutes, plural, =1{1 minute} other{{minutes} minutes}} ago",
   "relativeDays": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "relativeWeeks": "{count, plural, =1{1 week ago} other{{count} weeks ago}}",
   "relativeMonths": "{count, plural, =1{1 month ago} other{{count} months ago}}",

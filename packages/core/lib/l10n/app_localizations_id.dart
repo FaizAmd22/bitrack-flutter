@@ -1280,7 +1280,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String engineLastOn(Object time) {
-    return 'Mesin menyala $time';
+    return 'Mesin terakhir menyala $time';
   }
 
   @override
@@ -1427,6 +1427,11 @@ class AppLocalizationsId extends AppLocalizations {
       other: '$count jam yang lalu',
     );
     return '$_temp0';
+  }
+
+  @override
+  String relativeHoursMinutes(num hours, num minutes) {
+    return '$hours jam $minutes menit yang lalu';
   }
 
   @override

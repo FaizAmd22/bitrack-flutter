@@ -474,7 +474,7 @@
   "statusNA": "해당 없음",
   "engineOn": "엔진 켜짐",
   "engineOff": "엔진 꺼짐",
-  "engineLastOn": "엔진 켜짐 ({time})",
+  "engineLastOn": "{time} 엔진 마지막 가동",
   "chillerUnit": "칠러 유닛",
 
   "demoVersionBanner": "데모 버전 — 샘플 데이터",
@@ -518,6 +518,7 @@
   "relativeSeconds": "{count, plural, other{{count}초 전}}",
   "relativeMinutes": "{count, plural, other{{count}분 전}}",
   "relativeHours": "{count, plural, other{{count}시간 전}}",
+  "relativeHoursMinutes": "{hours}시간 {minutes}분 전",
   "relativeDays": "{count, plural, other{{count}일 전}}",
   "relativeWeeks": "{count, plural, other{{count}주 전}}",
   "relativeMonths": "{count, plural, other{{count}개월 전}}",

@@ -1280,7 +1280,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String engineLastOn(Object time) {
-    return 'Engine on $time';
+    return 'Last Engine On $time';
   }
 
   @override
@@ -1430,6 +1430,23 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 hour ago',
     );
     return '$_temp0';
+  }
+
+  @override
+  String relativeHoursMinutes(num hours, num minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: '$hours hours',
+      one: '1 hour',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes minutes',
+      one: '1 minute',
+    );
+    return '$_temp0 $_temp1 ago';
   }
 
   @override

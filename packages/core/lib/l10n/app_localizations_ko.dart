@@ -1260,7 +1260,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String engineLastOn(Object time) {
-    return '엔진 켜짐 ($time)';
+    return '$time 엔진 마지막 가동';
   }
 
   @override
@@ -1400,6 +1400,11 @@ class AppLocalizationsKo extends AppLocalizations {
       other: '$count시간 전',
     );
     return '$_temp0';
+  }
+
+  @override
+  String relativeHoursMinutes(num hours, num minutes) {
+    return '$hours시간 $minutes분 전';
   }
 
   @override

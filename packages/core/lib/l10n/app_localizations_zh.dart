@@ -1255,7 +1255,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String engineLastOn(Object time) {
-    return '引擎已启动（$time）';
+    return '最后一次引擎启动 $time';
   }
 
   @override
@@ -1390,6 +1390,11 @@ class AppLocalizationsZh extends AppLocalizations {
       other: '$count小时前',
     );
     return '$_temp0';
+  }
+
+  @override
+  String relativeHoursMinutes(num hours, num minutes) {
+    return '$hours小时$minutes分钟前';
   }
 
   @override

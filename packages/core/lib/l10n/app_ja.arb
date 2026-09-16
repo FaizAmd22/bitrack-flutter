@@ -474,7 +474,7 @@
   "statusNA": "該当なし",
   "engineOn": "エンジン始動中",
   "engineOff": "エンジン停止中",
-  "engineLastOn": "エンジン始動（{time}）",
+  "engineLastOn": "最後のエンジン始動 {time}",
   "chillerUnit": "チラーユニット",
 
   "demoVersionBanner": "デモ版 — サンプルデータ",
@@ -518,6 +518,7 @@
   "relativeSeconds": "{count, plural, other{{count}秒前}}",
   "relativeMinutes": "{count, plural, other{{count}分前}}",
   "relativeHours": "{count, plural, other{{count}時間前}}",
+  "relativeHoursMinutes": "{hours}時間{minutes}分前",
   "relativeDays": "{count, plural, other{{count}日前}}",
   "relativeWeeks": "{count, plural, other{{count}週間前}}",
   "relativeMonths": "{count, plural, other{{count}か月前}}",

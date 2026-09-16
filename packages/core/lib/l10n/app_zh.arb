@@ -474,7 +474,7 @@
   "statusNA": "无",
   "engineOn": "引擎已启动",
   "engineOff": "引擎已熄火",
-  "engineLastOn": "引擎已启动（{time}）",
+  "engineLastOn": "最后一次引擎启动 {time}",
   "chillerUnit": "冷藏机组",
 
   "demoVersionBanner": "演示版本 — 示例数据",
@@ -518,6 +518,7 @@
   "relativeSeconds": "{count, plural, other{{count}秒前}}",
   "relativeMinutes": "{count, plural, other{{count}分钟前}}",
   "relativeHours": "{count, plural, other{{count}小时前}}",
+  "relativeHoursMinutes": "{hours}小时{minutes}分钟前",
   "relativeDays": "{count, plural, other{{count}天前}}",
   "relativeWeeks": "{count, plural, other{{count}周前}}",
   "relativeMonths": "{count, plural, other{{count}个月前}}",

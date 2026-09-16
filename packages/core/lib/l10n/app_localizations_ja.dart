@@ -1260,7 +1260,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String engineLastOn(Object time) {
-    return 'エンジン始動（$time）';
+    return '最後のエンジン始動 $time';
   }
 
   @override
@@ -1399,6 +1399,11 @@ class AppLocalizationsJa extends AppLocalizations {
       other: '$count時間前',
     );
     return '$_temp0';
+  }
+
+  @override
+  String relativeHoursMinutes(num hours, num minutes) {
+    return '$hours時間$minutes分前';
   }
 
   @override
