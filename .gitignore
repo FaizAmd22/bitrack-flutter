@@ -65,3 +65,15 @@ android/app/release
 **/android/local.properties
 **/android/key.properties
 **/*.jks
+
+# Sisa struktur sebelum monorepo. Folder platform yang SEBENARNYA ada di
+# apps/<app>/{android,ios,linux,macos,windows}; yang di root ini cuma artefak
+# yang di-regenerate flutter tooling (GeneratedPluginRegistrant, gradlew,
+# Pods/, .symlinks/, Generated.xcconfig) — tidak ada satu pun source file
+# di dalamnya. Pakai leading slash supaya HANYA match di root repo, bukan
+# di apps/*/ios, apps/*/android, dst.
+/android/
+/ios/
+/linux/
+/macos/
+/windows/
