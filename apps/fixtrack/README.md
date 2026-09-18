@@ -4,12 +4,13 @@ Shell app. Seluruh logic dan UI ada di `packages/core` (package
 `bitrack_core`) dan dipakai bersama dengan app lain di monorepo ini — folder
 ini cuma memuat yang membedakan FixTrack dari saudaranya:
 
-| | |
-|---|---|
-| applicationId / bundle ID | `fixtrack.treffix.id` |
-| Warna primer | `#386AD8` |
-| Identitas brand | `AppBranding.configure(...)` di `lib/main.dart` |
-| Assets & env | `assets/`, `.env`, `.env.prod` (per app, isinya bisa beda) |
+|                           |                                                            |
+| ------------------------- | ---------------------------------------------------------- |
+| applicationId (Android)   | `fixtrack.treffix.id`                                      |
+| bundle ID (iOS)           | `com.treffix.fixtrack`                                     |
+| Warna primer              | `#386AD8`                                                  |
+| Identitas brand           | `AppBranding.configure(...)` di `lib/main.dart`            |
+| Assets & env              | `assets/`, `.env`, `.env.prod` (per app, isinya bisa beda) |
 
 ## Menjalankan
 

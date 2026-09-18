@@ -24,14 +24,15 @@ shell tipis yang membedakan identitas brand.
 Hanya enam hal. Selebihnya — tiap baris logic dan UI — dipakai bersama dari
 `packages/core`.
 
-| | fixtrack | bitrack | bitrack_internal |
-|---|---|---|---|
-| Nama app | FixTrack | Bitrack | Bitrack Internal |
-| applicationId / bundle ID | `fixtrack.treffix.id` | `com.bitrack.mobile` | `com.treffix.bitrack` |
-| Warna primer | `#386AD8` | `#D84040` | `#9E2021` |
-| Versi | 1.0.6+7 | 1.0.0+1 | 1.0.0+1 |
-| `assets/` | \<— identik —> | \<— identik —> | \<— identik —> |
-| `.env` / `.env.prod` | \<— identik —> | \<— identik —> | \<— identik —> |
+|                           | fixtrack               | bitrack              | bitrack_internal      |
+| ------------------------- | ---------------------- | -------------------- | --------------------- |
+| Nama app                  | FixTrack               | Bitrack              | Bitrack Internal      |
+| applicationId (Android)   | `fixtrack.treffix.id`  | `com.bitrack.mobile` | `com.treffix.bitrack` |
+| bundle ID (iOS)           | `com.treffix.fixtrack` | `bitrack.treffix.id` | `com.treffix.bitrack` |
+| Warna primer              | `#386AD8`              | `#D84040`            | `#9E2021`             |
+| Versi                     | 1.0.6+7                | 1.0.0+1              | 1.0.0+1               |
+| `assets/`                 | \<— identik —>         | \<— identik —>       | \<— identik —>        |
+| `.env` / `.env.prod`      | \<— identik —>         | \<— identik —>       | \<— identik —>        |
 
 `assets/`, `.env`, dan `.env.prod` sengaja dibuat **sama persis** di ketiga app
 supaya bisa diganti manual per app tanpa menyentuh kode.
@@ -46,16 +47,16 @@ flutter pub get                       # sekali, resolve seluruh workspace
 flutter pub run melos run bitrack     # atau: melos run <script>
 ```
 
-| Script | Hasil |
-|---|---|
-| `fixtrack` / `bitrack` / `internal` | `flutter run`, `.env` (dev) |
-| `<app>:prod` | `flutter run`, `.env.prod` |
-| `<app>:release` | `flutter run --release` |
-| `<app>:apk` / `<app>:apk:prod` | `flutter build apk --release` |
-| `<app>:aab` | `flutter build appbundle --release` (Play Store, prod) |
-| `<app>:ios` / `<app>:ios:prod` | `flutter build ios --release` |
-| `analyze` / `test` | di semua app + package |
-| `branding` | regenerate splash + launcher icon ketiga app |
+| Script                              | Hasil                                                  |
+| ----------------------------------- | ------------------------------------------------------ |
+| `fixtrack` / `bitrack` / `internal` | `flutter run`, `.env` (dev)                            |
+| `<app>:prod`                        | `flutter run`, `.env.prod`                             |
+| `<app>:release`                     | `flutter run --release`                                |
+| `<app>:apk` / `<app>:apk:prod`      | `flutter build apk --release`                          |
+| `<app>:aab`                         | `flutter build appbundle --release` (Play Store, prod) |
+| `<app>:ios` / `<app>:ios:prod`      | `flutter build ios --release`                          |
+| `analyze` / `test`                  | di semua app + package                                 |
+| `branding`                          | regenerate splash + launcher icon ketiga app           |
 
 Nama script Bitrack Internal disingkat `internal` (`internal:apk`, `internal:aab`, …).
 
@@ -98,8 +99,10 @@ Mengganti warna satu app = edit `melos.yaml` + `.vscode/launch.json`, lalu
 - **Signing**: `android/key.properties` + `upload-keystore.jks` disalin apa
   adanya, jadi ketiga app dibangun dengan upload key yang sama. Ganti kalau
   tiap app mau punya key sendiri.
-- **`bitrack` vs app Cordova lama**: `com.bitrack.mobile` sama dengan
-  `Bitrack/bitrack-mobile` (Cordova, versi 1.0.11). Kalau app ini dimaksudkan
-  menimpa listing Play Store yang sudah ada, `version:` di
-  `apps/bitrack/pubspec.yaml` harus dinaikkan dulu di atas versionCode yang
-  sudah terbit — sekarang masih 1.0.0+1.
+- **`bitrack` vs app Cordova lama**: `com.treffix.bitrack` — id
+  `Bitrack/bitrack-mobile` (Cordova, versi 1.0.11) — sekarang hanya dipakai
+  `bitrack_internal`. `bitrack` memakai id sendiri di tiap platform
+  (`com.bitrack.mobile` di Android, `bitrack.treffix.id` di iOS), jadi id-nya
+  **tidak** menimpa listing store yang sudah terbit. Kalau suatu app memang
+  dimaksudkan menimpa listing lama, id-nya harus sama persis dan `version:` di
+  `pubspec.yaml` dinaikkan di atas versionCode yang sudah terbit.
