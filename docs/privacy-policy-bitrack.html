@@ -1,0 +1,721 @@
+<title>Bitrack Privacy Policy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root {
+    --ground: #FBF8F7;
+    --surface: #FFFFFF;
+    --surface-sunk: #F4EFED;
+    --ink: #1D1918;
+    --ink-soft: #5F5654;
+    --ink-faint: #8B817E;
+    --rule: #E3DAD7;
+    --rule-strong: #CFC3BF;
+    --accent: #C33636;
+    --accent-soft: #FBEDEC;
+    --flag: #8A5A00;
+    --flag-bg: #FBF0D8;
+    --flag-rule: #E3C67F;
+
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #141110;
+      --surface: #1B1716;
+      --surface-sunk: #221D1C;
+      --ink: #F1EBE9;
+      --ink-soft: #ABA19E;
+      --ink-faint: #837977;
+      --rule: #2E2725;
+      --rule-strong: #453B39;
+      --accent: #E8756B;
+      --accent-soft: #2B1D1B;
+      --flag: #E8C177;
+      --flag-bg: #2A2115;
+      --flag-rule: #5C4720;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #141110;
+    --surface: #1B1716;
+    --surface-sunk: #221D1C;
+    --ink: #F1EBE9;
+    --ink-soft: #ABA19E;
+    --ink-faint: #837977;
+    --rule: #2E2725;
+    --rule-strong: #453B39;
+    --accent: #E8756B;
+    --accent-soft: #2B1D1B;
+    --flag: #E8C177;
+    --flag-bg: #2A2115;
+    --flag-rule: #5C4720;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 47rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  /* ---- masthead ---- */
+
+  header.masthead {
+    border-bottom: 2px solid var(--ink);
+    padding-block: 56px 20px;
+    margin-bottom: 36px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 7vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+    margin: 0 0 22px;
+  }
+
+  .masthead-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .masthead-meta b {
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  /* ---- draft notice ---- */
+
+  .draft {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+    background: var(--flag-bg);
+    border: 1px solid var(--flag-rule);
+    border-radius: 3px;
+    padding: 14px 16px;
+    margin-bottom: 36px;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .draft strong {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--flag);
+    font-weight: 500;
+  }
+
+  .fill {
+    background: var(--flag-bg);
+    border-bottom: 1px solid var(--flag-rule);
+    color: var(--flag);
+    font-family: var(--mono);
+    font-size: 0.86em;
+    padding: 1px 4px;
+  }
+
+  /* ---- summary ---- */
+
+  .summary {
+    background: var(--surface-sunk);
+    border-radius: 3px;
+    padding: 26px 26px 28px;
+    margin-bottom: 44px;
+  }
+
+  .summary h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 16px;
+  }
+
+  .summary ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .summary li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .summary li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 9px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* ---- contents ---- */
+
+  nav.toc {
+    margin-bottom: 52px;
+  }
+
+  nav.toc h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 32px;
+    counter-reset: toc;
+  }
+
+  nav.toc li {
+    counter-increment: toc;
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+
+  nav.toc a {
+    display: flex;
+    gap: 10px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding-block: 2px;
+  }
+
+  nav.toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    padding-top: 3px;
+  }
+
+  nav.toc a:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 560px) {
+    nav.toc ol { grid-template-columns: 1fr; }
+  }
+
+  /* ---- sections ---- */
+
+  section {
+    margin-bottom: 44px;
+    scroll-margin-top: 24px;
+  }
+
+  h2.clause {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.32rem;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    text-wrap: balance;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h2.clause .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.97rem;
+    letter-spacing: -0.005em;
+    margin: 26px 0 8px;
+  }
+
+  h3 .sub {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-right: 8px;
+  }
+
+  p {
+    margin: 0 0 14px;
+  }
+
+  section ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+  }
+
+  section li {
+    margin-bottom: 7px;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  a:focus-visible,
+  nav.toc a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    background: var(--surface-sunk);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* ---- tables ---- */
+
+  .scroller {
+    overflow-x: auto;
+    margin: 0 0 16px;
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: left;
+    padding: 10px 16px 10px 0;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px 12px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td:first-child {
+    color: var(--ink);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  td.wrap-cell:first-child {
+    white-space: normal;
+  }
+
+  /* ---- callout ---- */
+
+  .note {
+    border-left: 2px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 16px 18px;
+    margin: 0 0 16px;
+    font-size: 16px;
+  }
+
+  .note p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- contact ---- */
+
+  .contact {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 24px 26px;
+    font-family: var(--sans);
+    font-size: 15px;
+  }
+
+  .contact dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 10px 16px;
+  }
+
+  .contact dt {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 3px;
+  }
+
+  .contact dd {
+    margin: 0;
+    color: var(--ink);
+  }
+
+  @media (max-width: 560px) {
+    .contact dl { grid-template-columns: 1fr; gap: 3px; }
+    .contact dd { margin-bottom: 10px; }
+  }
+
+  footer {
+    margin-top: 52px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ink);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Bitrack · Fleet telematics for iOS and Android</p>
+    <h1>Privacy Policy</h1>
+    <div class="masthead-meta">
+      <span><b>Effective</b> <span class="fill">[date]</span></span>
+      <span><b>Version</b> 1.0</span>
+      <span><b>Applies to</b> Bitrack mobile app</span>
+    </div>
+  </header>
+
+  <div class="draft">
+    <strong>Before publishing</strong>
+    <span>Replace every highlighted field with your real details, delete this notice, then host the page at a public URL and enter that URL in App Store Connect.</span>
+  </div>
+
+  <div class="summary">
+    <h2>In short</h2>
+    <ul>
+      <li>Bitrack is a business tool for fleet operators. Accounts are issued by <span class="fill">[Company]</span> to customers who purchase GPS tracking hardware; there is no public sign-up.</li>
+      <li>The app does <strong>not</strong> use your phone's location. Vehicle positions come from GPS devices installed in the vehicles themselves.</li>
+      <li>No advertising, no analytics SDKs, no third-party trackers. We do not track you across other apps or websites, and we never sell personal data.</li>
+      <li>Demo mode uses sample data only. Nothing you do in demo mode is tied to a real account.</li>
+    </ul>
+  </div>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#scope">Scope and who we are</a></li>
+      <li><a href="#roles">Your employer's role and ours</a></li>
+      <li><a href="#collect">Information we collect</a></li>
+      <li><a href="#permissions">Device permissions</a></li>
+      <li><a href="#not-collect">What we do not collect</a></li>
+      <li><a href="#demo">Demo mode</a></li>
+      <li><a href="#use">How we use information</a></li>
+      <li><a href="#sharing">Sharing and service providers</a></li>
+      <li><a href="#storage">Storage, location and retention</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#rights">Your rights and choices</a></li>
+      <li><a href="#accounts">Account creation and deletion</a></li>
+      <li><a href="#children">Children</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
+
+  <section id="scope">
+    <h2 class="clause"><span class="num">01</span>Scope and who we are</h2>
+    <p>This policy explains how <span class="fill">[Legal entity name]</span> ("<strong>we</strong>", "<strong>us</strong>"), registered at <span class="fill">[registered address]</span>, handles personal data in the <strong>Bitrack</strong> mobile app for iOS and Android.</p>
+    <p>Bitrack lets fleet operators monitor vehicles fitted with our GPS tracking hardware: live position on a map, trip and route history, engine and ignition status, event alerts, work orders, and — on supported hardware — dashcam video and intercom audio.</p>
+    <p>It covers the mobile app only. Separate agreements govern our web platform, our tracking hardware, and the contracts we hold with business customers.</p>
+  </section>
+
+  <section id="roles">
+    <h2 class="clause"><span class="num">02</span>Your employer's role and ours</h2>
+    <p>Bitrack is sold to organisations, not to individuals. If you use Bitrack because your employer or fleet operator gave you an account, then <strong>that organisation decides</strong> which vehicles are tracked, who can see the data, and how long it is kept. They are the controller of that data; we process it on their instructions under our service agreement with them.</p>
+    <p>This matters for requests about your own data: we will usually refer you to your fleet administrator first, because we are not permitted to alter or release a customer's data on our own initiative. Section&nbsp;11 explains how to make a request.</p>
+  </section>
+
+  <section id="collect">
+    <h2 class="clause"><span class="num">03</span>Information we collect</h2>
+
+    <h3><span class="sub">3.1</span>Account and profile</h3>
+    <p>Your name, email address, phone number, the company you belong to, and your assigned role and permissions. This is supplied when your account is created — by you or by your fleet administrator — and is used to sign you in and to decide which vehicles and features you can access.</p>
+
+    <h3><span class="sub">3.2</span>Sign-in credentials</h3>
+    <p>Your email address and password are sent to our servers over an encrypted connection when you sign in.</p>
+    <p>If you turn on biometric sign-in, your credentials are stored <strong>on your device only</strong>, in the iOS Keychain or the Android Keystore, so the app can sign you in after Face ID, Touch ID or a fingerprint check. Your fingerprint and face data are handled entirely by your device's operating system — they are never sent to us and we cannot access them. Turning biometric sign-in off, or signing out, removes the stored credentials from the device.</p>
+
+    <h3><span class="sub">3.3</span>Vehicle and telematics data</h3>
+    <p>Position, speed, heading, ignition and engine status, trip and route history, mileage, and event alerts for the vehicles your account is allowed to see.</p>
+    <div class="note">
+      <p>This data is produced by the GPS tracking device installed in the vehicle and transmitted to our servers by that device. The app reads it from our servers; <strong>it is not collected from your phone</strong>, and Bitrack never asks for location permission.</p>
+    </div>
+    <p>Where a vehicle is assigned to a named driver, this data can indirectly reveal that person's movements during working hours. Fleet operators are responsible for informing their drivers and for having a lawful basis to monitor them.</p>
+
+    <h3><span class="sub">3.4</span>Work orders and evidence photos</h3>
+    <p>Maintenance and job records linked to a vehicle, together with any photos you attach as evidence. Photos are taken with the camera or chosen from your photo library at the moment you attach them, and are uploaded to our servers as part of the work order. The app does not scan, index or read your photo library in the background.</p>
+
+    <h3><span class="sub">3.5</span>Dashcam video and intercom audio</h3>
+    <p>On vehicles fitted with a supported dashcam, the app can stream live video from the vehicle and open a two-way intercom with the cabin. Your microphone is active only while an intercom session is open, and the audio is used solely to carry that conversation. These streams are delivered through our dashcam provider (see section&nbsp;8).</p>
+
+    <h3><span class="sub">3.6</span>Settings stored on your device</h3>
+    <p>Your language preference and notification settings are stored locally on your device.</p>
+
+    <h3><span class="sub">3.7</span>Technical and connection data</h3>
+    <p>When the app talks to our servers, those servers record standard technical information such as IP address, request time, app version and operating system version. We use it to deliver the service, diagnose faults, and detect abuse.</p>
+  </section>
+
+  <section id="permissions">
+    <h2 class="clause"><span class="num">04</span>Device permissions</h2>
+    <p>Bitrack asks for a permission only at the point where a feature needs it. You can refuse any of them, or withdraw them later in your device settings; the rest of the app keeps working.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Permission</th><th>Why</th><th>When it is used</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Face ID / biometrics</td>
+            <td>Sign in without retyping your password</td>
+            <td>Only if you enable biometric sign-in</td>
+          </tr>
+          <tr>
+            <td>Camera</td>
+            <td>Take work order evidence photos</td>
+            <td>Only when you tap to add a photo</td>
+          </tr>
+          <tr>
+            <td>Photo library</td>
+            <td>Attach an existing photo to a work order</td>
+            <td>Only when you choose a photo</td>
+          </tr>
+          <tr>
+            <td>Microphone</td>
+            <td>Speak to the vehicle cabin over the dashcam intercom</td>
+            <td>Only while an intercom session is open</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Bitrack does not request access to your location, contacts, calendar, health data, or files other than the photos you pick yourself.</p>
+  </section>
+
+  <section id="not-collect">
+    <h2 class="clause"><span class="num">05</span>What we do not collect</h2>
+    <ul>
+      <li><strong>No device location.</strong> The app holds no location permission on either platform.</li>
+      <li><strong>No advertising.</strong> Bitrack contains no ads, no advertising identifier, and no ad network code.</li>
+      <li><strong>No analytics or crash-reporting SDKs.</strong> We do not embed third-party analytics, attribution, or behavioural profiling tools.</li>
+      <li><strong>No tracking.</strong> We do not track you across apps or websites owned by other companies, and we do not share data with data brokers. Bitrack therefore does not present Apple's App Tracking Transparency prompt.</li>
+      <li><strong>No sale of personal data.</strong> We do not sell, rent or trade personal data.</li>
+    </ul>
+  </section>
+
+  <section id="demo">
+    <h2 class="clause"><span class="num">06</span>Demo mode</h2>
+    <p>The login screen may offer <strong>Continue with demo</strong>. Demo mode signs you into a sample dataset so the app can be evaluated without an account. It creates no account, is not linked to any real vehicle or person, and sends no personal data to our servers. Leaving demo mode clears the sample session from the device.</p>
+  </section>
+
+  <section id="use">
+    <h2 class="clause"><span class="num">07</span>How we use information</h2>
+    <ul>
+      <li>To authenticate you and enforce the access rights your organisation has assigned.</li>
+      <li>To show vehicle positions, trip history, status and alerts to the people entitled to see them.</li>
+      <li>To deliver work orders, dashcam streams and intercom sessions.</li>
+      <li>To provide support, investigate faults, and keep the service secure and available.</li>
+      <li>To comply with legal obligations and to establish or defend legal claims.</li>
+    </ul>
+    <p>We do not use your data to build advertising profiles, and we do not make decisions about you by automated means that produce legal effects.</p>
+  </section>
+
+  <section id="sharing">
+    <h2 class="clause"><span class="num">08</span>Sharing and service providers</h2>
+    <p>Your data is shared with the other authorised users of your organisation's fleet account, and with the service providers below, each of which is contracted to process data only as needed to deliver its part of the service.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Provider</th><th>Purpose</th><th>Data involved</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="wrap-cell"><span class="fill">[Company]</span> platform</td>
+            <td>Core service: accounts, vehicles, telematics, work orders</td>
+            <td>All of section 3</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Realtime streaming service</td>
+            <td>Pushes live vehicle positions to the app</td>
+            <td>Vehicle telematics, session token</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Geocoding service</td>
+            <td>Turns coordinates into readable street addresses</td>
+            <td>Vehicle coordinates</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Google Maps Platform</td>
+            <td>Renders the map the vehicles are drawn on</td>
+            <td>Map view coordinates, IP address</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Dashcam streaming provider</td>
+            <td>Live dashcam video and intercom audio</td>
+            <td>Video and audio during a session, device identifier</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Supabase</td>
+            <td>Remote configuration flags for the app</td>
+            <td>No personal data</td>
+          </tr>
+          <tr>
+            <td class="wrap-cell">Apple App Store / Google Play</td>
+            <td>App distribution and updates</td>
+            <td>Handled by the store under its own policy</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>We may also disclose data where we are legally required to do so by a valid order from a competent authority, or to a successor entity in a merger or acquisition, in which case this policy continues to apply until you are notified otherwise.</p>
+  </section>
+
+  <section id="storage">
+    <h2 class="clause"><span class="num">09</span>Storage, location and retention</h2>
+    <p>Data is stored on servers located in <span class="fill">[country / region]</span>. Some of the providers listed above operate globally, so data may be processed outside that country; where that happens we rely on the safeguards required by applicable law.</p>
+    <p>We keep account data for as long as your organisation's account is active. Telematics and trip history are retained for <span class="fill">[retention period]</span>, work order records for <span class="fill">[retention period]</span>, and dashcam recordings for <span class="fill">[retention period]</span>, unless your organisation has agreed a different period with us or the law requires otherwise. After that, data is deleted or irreversibly anonymised.</p>
+  </section>
+
+  <section id="security">
+    <h2 class="clause"><span class="num">10</span>Security</h2>
+    <p>Traffic between the app and our servers is encrypted in transit with TLS. Credentials kept for biometric sign-in are stored in the iOS Keychain or Android Keystore rather than ordinary app storage. Access to fleet data is restricted by the role and permissions your organisation assigns, and our administrative access is limited to staff who need it.</p>
+    <p>No system is perfectly secure. If a breach affects your personal data, we will notify the affected organisations and the relevant authority as required by law.</p>
+  </section>
+
+  <section id="rights">
+    <h2 class="clause"><span class="num">11</span>Your rights and choices</h2>
+    <p>Subject to the law that applies to you — including Indonesia's Personal Data Protection Law (Law No. 27 of 2022), and the GDPR where it applies — you may ask to access your personal data, correct it, delete it, restrict or object to its processing, or receive a copy in a portable format.</p>
+    <p>Because your organisation controls the fleet account, start with your fleet administrator. You can also write to us at <span class="fill">[privacy@email]</span> and we will respond within <span class="fill">[30]</span> days, forwarding the request to the controlling organisation where we are not permitted to act alone.</p>
+    <p>You can also, at any time: withdraw the camera, photo library or microphone permission in your device settings; turn off biometric sign-in inside the app; or stop using the app and ask your administrator to close your account.</p>
+  </section>
+
+  <section id="accounts">
+    <h2 class="clause"><span class="num">12</span>Account creation and deletion</h2>
+    <p>Bitrack accounts are not created from inside the app by the general public. They are issued by <span class="fill">[Company]</span> to organisations that purchase our GPS tracking hardware, and additional users are added by that organisation's administrator.</p>
+    <p>To have an account and its personal data deleted, ask your fleet administrator, or email <span class="fill">[privacy@email]</span> from the address on the account. We will delete the account and associated personal data within <span class="fill">[30]</span> days, except where we must retain records to meet a legal or accounting obligation.</p>
+  </section>
+
+  <section id="children">
+    <h2 class="clause"><span class="num">13</span>Children</h2>
+    <p>Bitrack is a workplace tool intended for adults. It is not directed to children, and we do not knowingly collect personal data from anyone under 17. If you believe a child's data has reached us, contact us and we will delete it.</p>
+  </section>
+
+  <section id="changes">
+    <h2 class="clause"><span class="num">14</span>Changes to this policy</h2>
+    <p>We may update this policy as the app changes. The effective date at the top always reflects the current version. For material changes we will give notice in the app or by email to account administrators before the change takes effect.</p>
+  </section>
+
+  <section id="contact">
+    <h2 class="clause"><span class="num">15</span>Contact us</h2>
+    <div class="contact">
+      <dl>
+        <dt>Entity</dt>
+        <dd><span class="fill">[Legal entity name]</span></dd>
+        <dt>Address</dt>
+        <dd><span class="fill">[registered address]</span></dd>
+        <dt>Privacy email</dt>
+        <dd><span class="fill">[privacy@email]</span></dd>
+        <dt>Support</dt>
+        <dd><span class="fill">[support@email]</span></dd>
+        <dt>Website</dt>
+        <dd><span class="fill">[https://…]</span></dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    <span>Bitrack Privacy Policy</span>
+    <span>Version 1.0</span>
+    <span>Effective <span class="fill">[date]</span></span>
+  </footer>
+
+</div>

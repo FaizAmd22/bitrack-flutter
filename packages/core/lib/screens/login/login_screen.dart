@@ -12,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool get _isDevEnv =>
-      (dotenv.env['BASE_URL'] ?? '').toLowerCase().contains('dev');
+      (dotenv.env['VITE_APP_TYPES'] ?? '').toLowerCase().contains('dev');
 
   @override
   Widget build(BuildContext context) {

@@ -4,12 +4,13 @@ Shell app. Seluruh logic dan UI ada di `packages/core` (package
 `bitrack_core`) dan dipakai bersama dengan app lain di monorepo ini — folder
 ini cuma memuat yang membedakan Bitrack dari saudaranya:
 
-| | |
-|---|---|
-| applicationId / bundle ID | `com.bitrack.mobile` |
-| Warna primer | `#D84040` |
-| Identitas brand | `AppBranding.configure(...)` di `lib/main.dart` |
-| Assets & env | `assets/`, `.env`, `.env.prod` (per app, isinya bisa beda) |
+|                           |                                                            |
+| ------------------------- | ---------------------------------------------------------- |
+| applicationId (Android)   | `com.bitrack.mobile`                                       |
+| bundle ID (iOS)           | `bitrack.treffix.id`                                       |
+| Warna primer              | `#D84040`                                                  |
+| Identitas brand           | `AppBranding.configure(...)` di `lib/main.dart`            |
+| Assets & env              | `assets/`, `.env`, `.env.prod` (per app, isinya bisa beda) |
 
 ## Menjalankan
 

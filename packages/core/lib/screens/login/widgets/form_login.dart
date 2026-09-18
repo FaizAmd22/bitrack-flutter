@@ -36,6 +36,9 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     super.initState();
     _initBiometricFlag();
     _detectBiometricType();
+    // Paksa baca ulang flag tombol demo tiap kali halaman login dibuka, supaya
+    // perubahan di Supabase langsung terpakai tanpa perlu kill app.
+    ref.invalidate(showRegisterLinkProvider);
     // Sinkronkan ulang flag banner demo tiap kali layar login tampil lagi
     // (mis. setelah logout), karena demoModeProvider adalah StateProvider
     // global yang tidak auto-reset saat DemoMode.clearOnLogout() dipanggil
