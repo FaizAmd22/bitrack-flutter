@@ -451,6 +451,7 @@
   "activityIdle": "Idle",
   "activityStop": "Berhenti",
   "activitySilence": "Silence",
+  "activityTempSilence": "Silence Sementara",
   "activityInRepair": "Dalam Perbaikan",
 
   "filterTypeLabel": "Jenis",

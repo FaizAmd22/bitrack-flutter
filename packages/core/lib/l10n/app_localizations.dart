@@ -2420,6 +2420,12 @@ abstract class AppLocalizations {
   /// **'Silence'**
   String get activitySilence;
 
+  /// No description provided for @activityTempSilence.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Silence'**
+  String get activityTempSilence;
+
   /// No description provided for @activityInRepair.
   ///
   /// In en, this message translates to:

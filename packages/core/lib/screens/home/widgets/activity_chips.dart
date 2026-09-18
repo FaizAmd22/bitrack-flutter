@@ -14,6 +14,7 @@ List<ActivityOption> activityOptions(AppLocalizations t) => [
   ActivityOption('moving', t.activityMoving),
   ActivityOption('idle', t.activityIdle),
   ActivityOption('stop', t.activityStop),
+  ActivityOption('tempSilence', t.activityTempSilence),
   ActivityOption('silence', t.activitySilence),
   ActivityOption('repair', t.activityInRepair),
 ];
@@ -36,6 +37,10 @@ class ActivityChips extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: ListView.separated(
+        // Posisi scroll disimpan di PageStorage, jadi chip yang sedang
+        // terlihat tetap di tempatnya walau daftar ini sempat dibangun
+        // ulang (mis. overlay loading muncul saat chip ditekan).
+        key: const PageStorageKey('activityChips'),
         scrollDirection: Axis.horizontal,
         itemCount: options.length,
         separatorBuilder: (_, __) => const SizedBox(width: 10),

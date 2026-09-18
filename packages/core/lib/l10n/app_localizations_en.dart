@@ -1200,6 +1200,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activitySilence => 'Silence';
 
   @override
+  String get activityTempSilence => 'Temporary Silence';
+
+  @override
   String get activityInRepair => 'In Repair';
 
   @override

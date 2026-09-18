@@ -1181,6 +1181,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get activitySilence => '無通信';
 
   @override
+  String get activityTempSilence => '一時無通信';
+
+  @override
   String get activityInRepair => '修理中';
 
   @override

@@ -451,6 +451,7 @@
   "activityIdle": "Idle",
   "activityStop": "Stop",
   "activitySilence": "Silence",
+  "activityTempSilence": "Temporary Silence",
   "activityInRepair": "In Repair",
 
   "filterTypeLabel": "Type",

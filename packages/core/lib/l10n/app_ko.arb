@@ -445,6 +445,7 @@
   "activityIdle": "공회전",
   "activityStop": "정차",
   "activitySilence": "신호 없음",
+  "activityTempSilence": "일시적 신호 없음",
   "activityInRepair": "정비 중",
 
   "filterTypeLabel": "유형",

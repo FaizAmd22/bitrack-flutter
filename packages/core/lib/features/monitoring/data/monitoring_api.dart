@@ -15,6 +15,7 @@ class MonitoringApi {
     'idle': 'idle',
     'stop': 'stop',
     'silence': 'silence',
+    'tempSilence': 'temp_silence',
     'repair': 'repair',
   };
 
@@ -27,10 +28,12 @@ class MonitoringApi {
     'idle': 'IDLE',
     'stop': 'STOP',
     'silence': 'SILENCE',
+    'tempSilence': 'TEMP_SILENCE',
     'repair': 'REPAIR',
   };
 
-  static String activityParam(String activity) => _activityParams[activity] ?? '';
+  static String activityParam(String activity) =>
+      _activityParams[activity] ?? '';
 
   static String summaryKey(String activity) => _summaryKeys[activity] ?? 'ALL';
 

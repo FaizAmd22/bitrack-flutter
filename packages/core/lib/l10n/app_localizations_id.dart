@@ -1199,6 +1199,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get activitySilence => 'Silence';
 
   @override
+  String get activityTempSilence => 'Silence Sementara';
+
+  @override
   String get activityInRepair => 'Dalam Perbaikan';
 
   @override

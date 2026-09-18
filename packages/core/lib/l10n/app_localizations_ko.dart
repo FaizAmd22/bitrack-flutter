@@ -1181,6 +1181,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get activitySilence => '신호 없음';
 
   @override
+  String get activityTempSilence => '일시적 신호 없음';
+
+  @override
   String get activityInRepair => '정비 중';
 
   @override

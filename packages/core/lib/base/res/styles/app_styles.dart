@@ -36,8 +36,10 @@ class AppStyles {
   static const Color bgGrayColor = Color.fromARGB(26, 123, 123, 123);
   static const Color bgGreenColor = Color.fromARGB(26, 36, 196, 36);
   static const Color bgYellowColor = Color.fromARGB(26, 253, 204, 7);
+  static const Color bgOrangeColor = Color.fromARGB(26, 245, 124, 0);
   static const Color greenColor = Color(0xFF24C424);
   static const Color yellowColor = Color(0xFFFDCC07);
+  static const Color orangeColor = Color(0xFFF57C00);
 
   static const Color bottomNavbarColor = Color(0xFFFEF7FF);
   static const Color plateNumberBg = Color(0xFFF4F4F4);

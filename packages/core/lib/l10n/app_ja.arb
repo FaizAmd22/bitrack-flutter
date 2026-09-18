@@ -445,6 +445,7 @@
   "activityIdle": "アイドリング",
   "activityStop": "停止中",
   "activitySilence": "無通信",
+  "activityTempSilence": "一時無通信",
   "activityInRepair": "修理中",
 
   "filterTypeLabel": "種類",

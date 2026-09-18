@@ -445,6 +445,7 @@
   "activityIdle": "怠速",
   "activityStop": "停止",
   "activitySilence": "静默",
+  "activityTempSilence": "临时静默",
   "activityInRepair": "维修中",
 
   "filterTypeLabel": "类型",

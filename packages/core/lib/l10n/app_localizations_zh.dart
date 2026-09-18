@@ -1176,6 +1176,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get activitySilence => '静默';
 
   @override
+  String get activityTempSilence => '临时静默';
+
+  @override
   String get activityInRepair => '维修中';
 
   @override

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 /// Label status kendaraan (MOVING/IDLE/STOP/SILENCE/...).
 ///
 /// Warnanya mengikuti aturan yang sama dengan aset marker truk: MOVING hijau,
-/// IDLE kuning, STOP merah, selebihnya abu-abu.
+/// IDLE kuning, STOP merah, selebihnya abu-abu. TEMP_SILENCE oranye: diam
+/// tapi belum selama SILENCE.
 class StatusLabel extends StatelessWidget {
   const StatusLabel({super.key, required this.activity});
 
@@ -33,6 +34,11 @@ class StatusLabel extends StatelessWidget {
         t.activitySilence,
         AppStyles.darkGrayColor,
         AppStyles.bgGrayColor,
+      ),
+      'TEMP_SILENCE' || 'TEMPORARY_SILENCE' => (
+        t.activityTempSilence,
+        AppStyles.orangeColor,
+        AppStyles.bgOrangeColor,
       ),
       'IN_OPERATION' => (
         t.activityInOperation,

@@ -324,8 +324,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
     return Scaffold(
       backgroundColor: AppStyles.bgColor,
       body: Stack(
+        // Tiap anak diberi key karena overlay loading muncul dan hilang di
+        // tengah daftar ini. Tanpa key, Flutter mencocokkan anak menurut
+        // urutannya, sehingga saat overlay muncul, anak sesudahnya (search
+        // bar + ActivityChips) dianggap widget lain dan dibangun ulang dari
+        // nol — posisi scroll chip activity ikut tereset tiap ganti chip.
         children: [
           Positioned.fill(
+            key: const ValueKey('map'),
             child: RepaintBoundary(
               child: MonitoringMap(
                 vehicles: filteredVehicles,
@@ -337,10 +343,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
 
           if (_showLoading)
             const Positioned.fill(
+              key: ValueKey('loadingOverlay'),
               child: IgnorePointer(ignoring: true, child: FullScreenLoading()),
             ),
 
           Positioned(
+            key: const ValueKey('searchBar'),
             top: 45,
             left: 0,
             right: 0,
@@ -371,6 +379,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
           ),
 
           Positioned(
+            key: const ValueKey('togglePlate'),
             right: 12,
             bottom: 24,
             child: _TogglePlateButton(
@@ -381,6 +390,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
 
           if (monitoringAsync.hasError)
             Positioned(
+              key: const ValueKey('errorText'),
               left: 16,
               right: 16,
               bottom: 90,
