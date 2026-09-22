@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
+import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:bitrack_core/base/widgets/app_input_field.dart';
 import 'package:bitrack_core/base/widgets/confirm_dialog.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
@@ -160,6 +163,11 @@ class _FormLoginState extends ConsumerState<FormLogin> {
         },
       ),
     );
+
+    // Izin notifikasi ditanyakan setelah user selesai dengan pilihan
+    // biometric (simpan, batal, atau dialog ditutup), supaya dua dialog
+    // tidak bertumpuk. Tidak ditunggu: jangan menahan perpindahan ke home.
+    unawaited(PushNotificationService.requestPermission());
   }
 
   Future<void> _handleDemoLogin() async {

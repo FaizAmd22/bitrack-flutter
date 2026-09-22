@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitrack_core/base/bottom_nav_bar.dart';
 import 'package:bitrack_core/base/config/app_branding.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
@@ -5,6 +7,7 @@ import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/routes/navigation_service.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
+import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:bitrack_core/base/widgets/demo_banner.dart';
 import 'package:bitrack_core/base/widgets/guest_guard.dart';
 import 'package:bitrack_core/screens/add_vehicle/add_vehicle.dart';
@@ -75,6 +78,9 @@ Future<void> main() async {
   } catch (e) {
     debugPrint('Token load skipped: $e');
   }
+  // Push notification (OneSignal). Tidak ditunggu, supaya tidak ikut
+  // menahan runApp() seperti catatan splash di atas.
+  unawaited(PushNotificationService.start());
   runApp(const ProviderScope(child: MyApp()));
 }
 

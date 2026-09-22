@@ -4,7 +4,10 @@ import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/routes/navigation_service.dart';
 import 'package:bitrack_core/base/network/api_logger.dart';
 import 'package:bitrack_core/base/network/api_timing.dart';
+import 'dart:async';
+
 import 'package:bitrack_core/base/services/demo_mode.dart';
+import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -48,6 +51,8 @@ class ApiClient {
     _isLoggingOut = true;
 
     clearToken();
+    // Perangkat ini berhenti menerima notifikasi milik user yang keluar.
+    unawaited(PushNotificationService.onLogout());
 
     await Future.wait([
       _storage.delete(key: 'auth_token'),

@@ -1,8 +1,11 @@
 // ignore_for_file: unused_element, deprecated_member_use
 
+import 'dart:async';
+
 import 'package:bitrack_core/base/network/api_response.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
+import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:bitrack_core/features/auth/providers/auth_providers.dart';
 import 'package:bitrack_core/features/monitoring/providers/monitoring_providers.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
@@ -141,6 +144,9 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
       ref.invalidate(notificationServiceProvider);
       ref.invalidateMonitoring();
 
+      // Login biometric tidak punya dialog pilihan biometric, jadi izin
+      // notifikasi ditanyakan di sini (tetap hanya sekali per instalasi).
+      unawaited(PushNotificationService.requestPermission());
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
     } catch (e) {
       if (!mounted) return;

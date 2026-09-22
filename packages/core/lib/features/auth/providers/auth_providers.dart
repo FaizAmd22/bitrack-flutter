@@ -1,7 +1,9 @@
 import 'package:bitrack_core/base/network/api_response.dart';
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bitrack_core/base/network/api_client.dart';
+import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -87,6 +89,10 @@ class AuthController extends StateNotifier<AuthState> {
         await _secureStorage.write(
           key: 'user_role_permission',
           value: jsonEncode(dataUser['permission_allowed'] ?? []),
+        );
+        // Tidak ditunggu supaya login tidak tertahan oleh OneSignal.
+        unawaited(
+          PushNotificationService.onLogin(dataUser['email']?.toString() ?? ''),
         );
       }
 
