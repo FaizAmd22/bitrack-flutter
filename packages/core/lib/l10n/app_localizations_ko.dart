@@ -1184,6 +1184,30 @@ class AppLocalizationsKo extends AppLocalizations {
   String get activityTempSilence => '일시적 신호 없음';
 
   @override
+  String get patchDownloading => '업데이트 다운로드 중…';
+
+  @override
+  String get patchReadyTitle => '업데이트 준비 완료';
+
+  @override
+  String get patchReadyMessage => '이 업데이트를 적용하려면 앱을 다시 시작하세요.';
+
+  @override
+  String get patchReadyMessageManual => '앱을 완전히 종료한 뒤 다시 열면 업데이트가 적용됩니다.';
+
+  @override
+  String get patchReadyRestart => '다시 시작';
+
+  @override
+  String get patchReadyLater => '나중에';
+
+  @override
+  String get patchReadyRestartFailed => '다시 시작하지 못했습니다. 앱을 닫았다가 다시 열어 주세요.';
+
+  @override
+  String get patchReadyClose => '닫기';
+
+  @override
   String get activityInRepair => '정비 중';
 
   @override

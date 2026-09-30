@@ -6,9 +6,12 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/routes/navigation_service.dart';
+import 'package:bitrack_core/base/services/code_push_service.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:bitrack_core/base/services/push_notification_service.dart';
 import 'package:bitrack_core/base/widgets/demo_banner.dart';
+import 'package:bitrack_core/base/widgets/patch_download_banner.dart';
+import 'package:bitrack_core/base/widgets/patch_ready_popup.dart';
 import 'package:bitrack_core/base/widgets/guest_guard.dart';
 import 'package:bitrack_core/screens/add_vehicle/add_vehicle.dart';
 import 'package:bitrack_core/screens/change_password/change_password.dart';
@@ -78,6 +81,9 @@ Future<void> main() async {
   } catch (e) {
     debugPrint('Token load skipped: $e');
   }
+  // Nomor patch Shorebird yang sedang berjalan (untuk label versi).
+  // Cepat dan tidak pernah melempar - lihat base/services/code_push_service.dart.
+  await initCurrentPatch();
   // Push notification (OneSignal). Tidak ditunggu, supaya tidak ikut
   // menahan runApp() seperti catatan splash di atas.
   unawaited(PushNotificationService.start());
@@ -95,7 +101,12 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: AppBranding.appName,
       navigatorKey: NavigationService.navigatorKey,
-      navigatorObservers: [NavigationService.routeObserver],
+      navigatorObservers: [
+        NavigationService.routeObserver,
+        // Mencatat halaman yang sedang tampil; popup "pembaruan siap"
+        // memakainya untuk menunggu splash lewat.
+        NavigationService.routeTracker,
+      ],
       locale: locale,
       supportedLocales: LocaleNotifier.supportedLocales,
       localizationsDelegates: const [
@@ -105,8 +116,13 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      builder: (context, child) =>
-          DemoBanner(child: child ?? const SizedBox.shrink()),
+      // PatchDownloadBanner membungkus SEMUA halaman: ia yang memicu
+      // unduhan patch Shorebird dan menampilkan "Mengunduh pembaruan..."
+      // di halaman mana pun, termasuk login.
+      builder: (context, child) => PatchDownloadBanner(
+        onPatchReady: showPatchReadyPopupWhenPossible,
+        child: DemoBanner(child: child ?? const SizedBox.shrink()),
+      ),
       initialRoute: AppRoutes.splashScreen,
       routes: {
         AppRoutes.splashScreen: (_) => const SplashScreen(),

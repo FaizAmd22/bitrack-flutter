@@ -137,3 +137,150 @@ scripts:
   branding:
     run: melos exec --scope="fixtrack,bitrack,bitrack_internal" -- "dart run flutter_native_splash:create && dart run flutter_launcher_icons"
     description: Regenerate splash screen + launcher icon untuk ketiga app.
+
+  # ===========================================================================
+  # SHOREBIRD (code push / patch tanpa lewat store)
+  # ===========================================================================
+  #
+  # Urutan kerja normal: [1] release -> [1b] verify -> [2] preview ->
+  # [3] patch staging -> [4] preview staging -> [5] promote.
+  #
+  # Yang WAJIB diingat:
+  # - AAB/IPA yang di-upload ke store HARUS hasil `*:sb:release:*`, bukan
+  #   `*:aab` / `*:ios:prod` di atas — build biasa tidak membawa engine
+  #   Shorebird, jadi patch tidak akan pernah sampai ke user.
+  # - Patch & preview memakai `version:` pubspec untuk menemukan release-nya:
+  #   jalankan dari commit release itu, dan JANGAN naikkan versi untuk patch.
+  # - PERINGATAN (Windows): `shorebird.bat` SELALU keluar dengan kode 0, walau
+  #   Shorebird-nya gagal. `SUCCESS` dari melos di Windows TIDAK membuktikan
+  #   apa pun — percayai hanya baris `Published Release ...` / `Published
+  #   Patch ...` di output.
+  # - Define dibaca dari apps/<app>/dart_defines.prod.json, BUKAN
+  #   `--dart-define=K=V`: `shorebird.bat` memotong `=` sebagai pemisah
+  #   argumen.
+  # - release, verify, preview & promote lewat tool/shorebird.dart, bukan
+  #   `shorebird` langsung — alasannya ada di komentar file itu.
+
+  # ---- FixTrack ----
+  fixtrack:sb:release:android:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release android
+    description: "[1] FixTrack Android: release ke Shorebird + salin AAB ke rilis/fixtrack-<versi>.aab (file itu yang di-upload ke Play)."
+
+  fixtrack:sb:release:ios:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release ios
+    description: "[1] FixTrack iOS: release ke Shorebird + salin IPA ke rilis/fixtrack-<versi>.ipa (butuh Mac)."
+
+  fixtrack:sb:verify:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart verify
+    description: "[1b] FixTrack: pastikan AAB di rilis/ benar-benar binary release di Shorebird, bukan hasil build patch."
+
+  fixtrack:sb:preview:android:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android
+    description: "[2] FixTrack Android: pasang release ke HP (track stable, seperti user)."
+
+  fixtrack:sb:preview:ios:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios
+    description: "[2] FixTrack iOS: pasang release ke HP (track stable, seperti user)."
+
+  fixtrack:sb:patch:android:staging:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch android staging
+    description: "[3] FixTrack Android: kirim patch ke track staging (hanya HP preview staging)."
+
+  fixtrack:sb:patch:ios:staging:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch ios staging
+    description: "[3] FixTrack iOS: kirim patch ke track staging (butuh Mac)."
+
+  fixtrack:sb:preview:android:staging:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android staging
+    description: "[4] FixTrack Android: pasang release + patch staging untuk dites."
+
+  fixtrack:sb:preview:ios:staging:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios staging
+    description: "[4] FixTrack iOS: pasang release + patch staging untuk dites."
+
+  fixtrack:sb:promote:
+    run: cd apps/fixtrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart promote
+    description: "[5] FixTrack: pindahkan patch (nomornya jadi argumen) ke track stable = semua user."
+
+  # ---- Bitrack ----
+  bitrack:sb:release:android:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release android
+    description: "[1] Bitrack Android: release ke Shorebird + salin AAB ke rilis/bitrack-<versi>.aab (file itu yang di-upload ke Play)."
+
+  bitrack:sb:release:ios:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release ios
+    description: "[1] Bitrack iOS: release ke Shorebird + salin IPA ke rilis/bitrack-<versi>.ipa (butuh Mac)."
+
+  bitrack:sb:verify:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart verify
+    description: "[1b] Bitrack: pastikan AAB di rilis/ benar-benar binary release di Shorebird, bukan hasil build patch."
+
+  bitrack:sb:preview:android:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android
+    description: "[2] Bitrack Android: pasang release ke HP (track stable, seperti user)."
+
+  bitrack:sb:preview:ios:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios
+    description: "[2] Bitrack iOS: pasang release ke HP (track stable, seperti user)."
+
+  bitrack:sb:patch:android:staging:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch android staging
+    description: "[3] Bitrack Android: kirim patch ke track staging (hanya HP preview staging)."
+
+  bitrack:sb:patch:ios:staging:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch ios staging
+    description: "[3] Bitrack iOS: kirim patch ke track staging (butuh Mac)."
+
+  bitrack:sb:preview:android:staging:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android staging
+    description: "[4] Bitrack Android: pasang release + patch staging untuk dites."
+
+  bitrack:sb:preview:ios:staging:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios staging
+    description: "[4] Bitrack iOS: pasang release + patch staging untuk dites."
+
+  bitrack:sb:promote:
+    run: cd apps/bitrack && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart promote
+    description: "[5] Bitrack: pindahkan patch (nomornya jadi argumen) ke track stable = semua user."
+
+  # ---- Bitrack Internal ----
+  internal:sb:release:android:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release android
+    description: "[1] Bitrack Internal Android: release ke Shorebird + salin AAB ke rilis/bitrack_internal-<versi>.aab (file itu yang di-upload ke Play)."
+
+  internal:sb:release:ios:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart release ios
+    description: "[1] Bitrack Internal iOS: release ke Shorebird + salin IPA ke rilis/bitrack_internal-<versi>.ipa (butuh Mac)."
+
+  internal:sb:verify:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart verify
+    description: "[1b] Bitrack Internal: pastikan AAB di rilis/ benar-benar binary release di Shorebird, bukan hasil build patch."
+
+  internal:sb:preview:android:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android
+    description: "[2] Bitrack Internal Android: pasang release ke HP (track stable, seperti user)."
+
+  internal:sb:preview:ios:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios
+    description: "[2] Bitrack Internal iOS: pasang release ke HP (track stable, seperti user)."
+
+  internal:sb:patch:android:staging:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch android staging
+    description: "[3] Bitrack Internal Android: kirim patch ke track staging (hanya HP preview staging)."
+
+  internal:sb:patch:ios:staging:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart patch ios staging
+    description: "[3] Bitrack Internal iOS: kirim patch ke track staging (butuh Mac)."
+
+  internal:sb:preview:android:staging:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview android staging
+    description: "[4] Bitrack Internal Android: pasang release + patch staging untuk dites."
+
+  internal:sb:preview:ios:staging:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart preview ios staging
+    description: "[4] Bitrack Internal iOS: pasang release + patch staging untuk dites."
+
+  internal:sb:promote:
+    run: cd apps/bitrack_internal && dart --packages=../../tool/package_config.json ../../tool/shorebird.dart promote
+    description: "[5] Bitrack Internal: pindahkan patch (nomornya jadi argumen) ke track stable = semua user."
+

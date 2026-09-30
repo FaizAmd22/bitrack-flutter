@@ -1,0 +1,4 @@
+{
+  "ENV_FILE": ".env.prod",
+  "APP_PRIMARY_COLOR": "0xFF386AD8"
+}

@@ -54,9 +54,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    # Kedua file env WAJIB terdaftar di sini — flutter_dotenv membacanya lewat
-    # asset bundle, dan mana yang dipakai ditentukan --dart-define=ENV_FILE
-    # saat run/build (lihat lib/main.dart).
     - .env
     - .env.prod
     - assets/
@@ -65,3 +62,4 @@ flutter:
     - assets/images/
     - assets/images/trucks/
     - assets/images/transparent.png
+    - shorebird.yaml

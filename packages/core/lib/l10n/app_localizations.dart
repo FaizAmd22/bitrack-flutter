@@ -2426,6 +2426,54 @@ abstract class AppLocalizations {
   /// **'Temporary Silence'**
   String get activityTempSilence;
 
+  /// No description provided for @patchDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update…'**
+  String get patchDownloading;
+
+  /// No description provided for @patchReadyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update ready'**
+  String get patchReadyTitle;
+
+  /// No description provided for @patchReadyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart the app to apply this update.'**
+  String get patchReadyMessage;
+
+  /// No description provided for @patchReadyMessageManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Close the app and open it again to apply this update.'**
+  String get patchReadyMessageManual;
+
+  /// No description provided for @patchReadyRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart now'**
+  String get patchReadyRestart;
+
+  /// No description provided for @patchReadyLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get patchReadyLater;
+
+  /// No description provided for @patchReadyRestartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart failed. Please close and reopen the app.'**
+  String get patchReadyRestartFailed;
+
+  /// No description provided for @patchReadyClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get patchReadyClose;
+
   /// No description provided for @activityInRepair.
   ///
   /// In en, this message translates to:

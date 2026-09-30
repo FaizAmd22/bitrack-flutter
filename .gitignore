@@ -77,3 +77,6 @@ android/app/release
 /linux/
 /macos/
 /windows/
+
+# Salinan AAB/IPA hasil `melos run <app>:sb:release:*` (lihat tool/shorebird.dart).
+rilis/

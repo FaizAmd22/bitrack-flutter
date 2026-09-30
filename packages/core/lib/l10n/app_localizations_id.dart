@@ -1202,6 +1202,33 @@ class AppLocalizationsId extends AppLocalizations {
   String get activityTempSilence => 'Silence Sementara';
 
   @override
+  String get patchDownloading => 'Mengunduh pembaruan…';
+
+  @override
+  String get patchReadyTitle => 'Pembaruan siap';
+
+  @override
+  String get patchReadyMessage =>
+      'Mulai ulang aplikasi untuk memakai pembaruan ini.';
+
+  @override
+  String get patchReadyMessageManual =>
+      'Tutup lalu buka lagi aplikasi untuk memakai pembaruan ini.';
+
+  @override
+  String get patchReadyRestart => 'Mulai ulang';
+
+  @override
+  String get patchReadyLater => 'Nanti';
+
+  @override
+  String get patchReadyRestartFailed =>
+      'Gagal memulai ulang. Tutup lalu buka aplikasi secara manual.';
+
+  @override
+  String get patchReadyClose => 'Tutup';
+
+  @override
   String get activityInRepair => 'Dalam Perbaikan';
 
   @override

@@ -1203,6 +1203,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityTempSilence => 'Temporary Silence';
 
   @override
+  String get patchDownloading => 'Downloading update…';
+
+  @override
+  String get patchReadyTitle => 'Update ready';
+
+  @override
+  String get patchReadyMessage => 'Restart the app to apply this update.';
+
+  @override
+  String get patchReadyMessageManual =>
+      'Close the app and open it again to apply this update.';
+
+  @override
+  String get patchReadyRestart => 'Restart now';
+
+  @override
+  String get patchReadyLater => 'Later';
+
+  @override
+  String get patchReadyRestartFailed =>
+      'Restart failed. Please close and reopen the app.';
+
+  @override
+  String get patchReadyClose => 'Close';
+
+  @override
   String get activityInRepair => 'In Repair';
 
   @override

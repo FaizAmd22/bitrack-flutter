@@ -2,7 +2,7 @@ name: fixtrack
 description: "FixTrack - Fleet tracking app."
 publish_to: "none"
 
-version: 1.0.9+10
+version: 1.1.0+11
 
 environment:
   sdk: ^3.8.1
@@ -65,3 +65,4 @@ flutter:
     - assets/images/
     - assets/images/trucks/
     - assets/images/transparent.png
+    - shorebird.yaml

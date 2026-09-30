@@ -56,6 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: FormLogin(),
               ),
+              SizedBox(height: 20),
+              Text('Test Shorebird', style: AppStyles.textSmBold),
               const Expanded(child: SizedBox()),
             ],
           ),

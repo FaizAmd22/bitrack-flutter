@@ -1184,6 +1184,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get activityTempSilence => '一時無通信';
 
   @override
+  String get patchDownloading => '更新をダウンロード中…';
+
+  @override
+  String get patchReadyTitle => '更新の準備ができました';
+
+  @override
+  String get patchReadyMessage => 'この更新を適用するにはアプリを再起動してください。';
+
+  @override
+  String get patchReadyMessageManual => 'アプリを一度終了してから開き直すと、この更新が適用されます。';
+
+  @override
+  String get patchReadyRestart => '再起動';
+
+  @override
+  String get patchReadyLater => '後で';
+
+  @override
+  String get patchReadyRestartFailed => '再起動に失敗しました。アプリを終了してから開き直してください。';
+
+  @override
+  String get patchReadyClose => '閉じる';
+
+  @override
   String get activityInRepair => '修理中';
 
   @override

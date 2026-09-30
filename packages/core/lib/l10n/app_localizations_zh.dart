@@ -1179,6 +1179,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get activityTempSilence => '临时静默';
 
   @override
+  String get patchDownloading => '正在下载更新…';
+
+  @override
+  String get patchReadyTitle => '更新已就绪';
+
+  @override
+  String get patchReadyMessage => '重启应用以应用此更新。';
+
+  @override
+  String get patchReadyMessageManual => '请关闭应用后重新打开，以应用此更新。';
+
+  @override
+  String get patchReadyRestart => '立即重启';
+
+  @override
+  String get patchReadyLater => '稍后';
+
+  @override
+  String get patchReadyRestartFailed => '重启失败，请手动关闭并重新打开应用。';
+
+  @override
+  String get patchReadyClose => '关闭';
+
+  @override
   String get activityInRepair => '维修中';
 
   @override
