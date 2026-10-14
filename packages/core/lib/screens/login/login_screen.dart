@@ -1,5 +1,6 @@
 import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
+import 'package:bitrack_core/base/widgets/app_version_label.dart';
 import 'package:bitrack_core/screens/login/widgets/form_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: FormLogin(),
               ),
               SizedBox(height: 20),
-              Text('Test Shorebird', style: AppStyles.textSmBold),
+              const AppVersionLabel(color: AppStyles.whiteColor),
               const Expanded(child: SizedBox()),
             ],
           ),

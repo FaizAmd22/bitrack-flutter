@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
+import 'package:bitrack_core/base/widgets/app_version_label.dart';
 import 'package:bitrack_core/base/widgets/confirm_dialog.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -200,6 +201,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+
+            const Spacer(),
+
+            const AppVersionLabel(),
           ],
         ),
       ),
