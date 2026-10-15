@@ -5,8 +5,13 @@ import 'package:bitrack_core/base/services/demo_data.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 
+/// Mengambil SEMUA fleet group user dari `/master-option/fleet-groups`,
+/// mengikuti cursor halaman demi halaman.
 class FetchFleetGroup {
   static const _pageLimit = 100;
+
+  /// Batas pengaman (50 x 100 = 5.000 fleet group) supaya loop tidak berjalan
+  /// tanpa akhir.
   static const _maxPages = 50;
 
   Future<List<Map<String, dynamic>>> fetch({String? search}) async {

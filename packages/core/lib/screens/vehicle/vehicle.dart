@@ -16,6 +16,9 @@ import 'package:bitrack_core/screens/vehicle/providers/vehicle_infinite_provider
 import 'package:bitrack_core/screens/vehicle/providers/fleet_group_provider.dart';
 import 'package:bitrack_core/screens/vehicle/widgets/card_vehicle.dart';
 
+/// Tab Vehicle (khusus build Teknisi): daftar kendaraan dengan pencarian
+/// plat, pull-to-refresh, infinite scroll, dan tombol + untuk menambah
+/// kendaraan. Logika datanya ada di [VehicleListNotifier].
 class VehicleScreen extends ConsumerStatefulWidget {
   const VehicleScreen({super.key});
 
@@ -37,6 +40,7 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(vehicleInfiniteProvider.notifier).refresh(query: '');
+      // Muat fleet group lebih awal supaya siap saat dibutuhkan.
       ref.read(fleetGroupProvider.future);
     });
   }
@@ -49,6 +53,7 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
     super.dispose();
   }
 
+  /// Infinite scroll: muat halaman berikutnya saat tersisa 250 px ke bawah.
   void _onScroll() {
     if (!_scroll.hasClients) return;
     final pos = _scroll.position;
@@ -58,6 +63,7 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
     }
   }
 
+  /// Cari plat: request dikirim 250 ms setelah user berhenti mengetik.
   void _onChanged(String val) {
     setState(() => _search = val);
 
@@ -85,6 +91,8 @@ class _VehicleScreenState extends ConsumerState<VehicleScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // Alur tambah kendaraan: sheet cek plat -> halaman tambah
+          // kendaraan. Kalau berhasil dibuat, muat ulang daftar.
           final created = await AddVehicleSheet.open(context);
           if (created == true && mounted) {
             ref

@@ -5,6 +5,9 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/add_vehicle/models/add_vehicle_form_data.dart';
 import 'package:flutter/material.dart';
 
+/// Langkah 2 wizard tambah kendaraan: tanggal pemasangan, merek dan model
+/// device GPS, nomor SIM card, dan IMEI. Perubahan langsung ditulis ke
+/// [data].
 class DeviceInfoStep extends StatefulWidget {
   const DeviceInfoStep({super.key, required this.data, required this.formKey});
 

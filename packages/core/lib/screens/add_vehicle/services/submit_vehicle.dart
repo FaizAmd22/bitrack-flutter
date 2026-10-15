@@ -1,19 +1,29 @@
-// lib/screens/add_vehicle/services/submit_vehicle.dart
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:bitrack_core/screens/add_vehicle/models/add_vehicle_form_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+/// Hasil simpan kendaraan.
 class SubmitVehicleResult {
   final bool success;
   final String? errorMsg;
   const SubmitVehicleResult({required this.success, this.errorMsg});
 }
 
+/// Menyimpan kendaraan baru (`POST /master-vehicle/`) atau mengubah
+/// kendaraan yang ada (`PUT /master-vehicle/{id}`). Di mode demo selalu
+/// dianggap berhasil tanpa memanggil server.
 class SubmitVehicleService {
   const SubmitVehicleService();
 
+  /// Ubah isi form jadi body request.
+  ///
+  /// Beberapa field tidak ada di form dan diisi nilai tetap yang diwarisi dari
+  /// app lama: `vehicle_color` dan `vehicle_category_sensor` = "-",
+  /// `machine_number` = VIN, `stnk_date` = hari ini, `fuel_ratio` = "0",
+  /// `status` = 1, dan `msaccuvehicle_id` berisi ID tetap. Konfirmasi ke
+  /// backend sebelum mengubah nilai-nilai ini.
   Map<String, dynamic> _buildPayload(AddVehicleFormData d) {
     int? toNum(String? x) {
       if (x == null || x.trim().isEmpty) return null;

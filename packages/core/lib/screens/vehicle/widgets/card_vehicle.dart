@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 
+/// Kartu satu kendaraan di tab Vehicle: plat, merek/model/tahun, fleet
+/// group, status aktif, dan tanggal dibuat. Membaca map mentah dari API
+/// (`license_plate`, `brand`, `model`, `year`, `status`, `created_at`,
+/// `fleet_group.name`).
 class CardVehicle extends StatelessWidget {
   final Map<String, dynamic> vehicle;
   final String language;
@@ -17,16 +21,20 @@ class CardVehicle extends StatelessWidget {
     this.onTap,
   });
 
+  /// Status 1 = aktif. Nilai kosong/tidak terbaca dianggap aktif.
   bool _isActive(dynamic status) {
     final s = status is int ? status : int.tryParse('$status') ?? 1;
     return s == 1;
   }
 
+  /// Teks dari nilai apa pun; kosong diganti [fallback].
   String _s(dynamic v, {String fallback = '-'}) {
     final s = (v ?? '').toString().trim();
     return s.isEmpty ? fallback : s;
   }
 
+  /// Tanggal `d MMM yyyy`. Catatan: locale selalu `en_US` apa pun
+  /// [language]-nya (kedua cabang ternary bernilai sama).
   String _formatDateCard(String? dateStr) {
     if (dateStr == null || dateStr.trim().isEmpty) return '-';
     final locale = (language == 'id') ? 'en_US' : 'en_US';

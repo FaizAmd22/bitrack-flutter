@@ -1,5 +1,8 @@
+/// Isi form tambah/ubah kendaraan, dibagi ke langkah-langkah wizard dan
+/// diubah langsung oleh tiap langkah (objek mutable yang sama dipakai
+/// bersama).
 class AddVehicleFormData {
-  // Vehicle
+  // Langkah 1: data kendaraan.
   String plateNumber = '';
   String? brand;
   String? model;
@@ -10,13 +13,15 @@ class AddVehicleFormData {
   String vin = '';
   String? fleetGroupId;
 
-  // Device
+  // Langkah 2: data device GPS.
   DateTime? installationDate;
   String deviceTypeCode = 'TELTONIKA';
   String? deviceModel;
   String simCardNumber = '';
   String imeiObdNumber = '';
 
+  /// Isi form dari data kendaraan yang sudah ada di server (mode ubah, atau
+  /// data ditemukan dari plat). [forcedPlate] menimpa plat dari server.
   void applyFromVehicleApi(Map<String, dynamic> v, {String? forcedPlate}) {
     plateNumber = (forcedPlate ?? v['license_plate'] ?? '').toString().trim();
     vin = (v['vin'] ?? '').toString();

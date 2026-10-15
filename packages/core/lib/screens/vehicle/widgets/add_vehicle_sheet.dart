@@ -6,6 +6,10 @@ import 'package:bitrack_core/screens/vehicle/services/check_license_plate.dart';
 import 'package:bitrack_core/screens/vehicle_detail/models/add_vehicle_args.dart';
 import 'package:flutter/material.dart';
 
+/// Bottom sheet langkah pertama tambah kendaraan: user mengetik plat, app
+/// mengecek plat belum terdaftar, lalu membuka halaman tambah kendaraan.
+///
+/// [open] mengembalikan true kalau kendaraan akhirnya berhasil dibuat.
 class AddVehicleSheet {
   static Future<bool?> open(BuildContext context) {
     return showModalBottomSheet<bool>(
@@ -69,7 +73,8 @@ class _AddVehicleBodyState extends State<_AddVehicleBody> {
         return;
       }
 
-      // Plat belum ada → push screen, tunggu hasil, baru tutup sheet
+      // Plat belum ada: buka halaman tambah kendaraan, tunggu hasilnya,
+      // baru tutup sheet dengan hasil tersebut.
       final created = await Navigator.pushNamed<dynamic>(
         context,
         AppRoutes.addVehicleScreen,

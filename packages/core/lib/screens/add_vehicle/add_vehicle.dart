@@ -16,6 +16,14 @@ import 'package:bitrack_core/screens/add_vehicle/widgets/review_step.dart';
 import 'package:bitrack_core/screens/add_vehicle/widgets/vehicle_info_step.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Halaman tambah atau ubah kendaraan (route `/add-vehicle`), berbentuk
+/// wizard 3 langkah ([AppStepper]): data kendaraan, data device GPS, review.
+///
+/// Mode ditentukan argumen [AddVehicleArgs]:
+/// - `create`: form kosong dengan plat dari sheet cek plat.
+/// - `update`: data kendaraan dimuat dulu dari server (lewat id atau plat).
+///
+/// Mengembalikan `true` lewat `Navigator.pop` kalau berhasil disimpan.
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
 
@@ -36,7 +44,13 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   AddVehicleArgs? _args;
 
   bool _loadingVehicle = false;
+
+  /// Penanda "sumber" data form. Dipakai sebagai bagian key widget tiap
+  /// langkah: kalau data dimuat ulang, key berubah dan langkah-langkah
+  /// dibangun ulang dengan isi baru (controller teks diisi ulang).
   String _initKey = 'create';
+
+  /// Langkah data kendaraan sudah selesai memuat pilihan (merek, fleet group).
   bool _vehicleStepReady = false;
   bool get _pageLoading => _loadingVehicle || !_vehicleStepReady || _submitting;
 
@@ -60,6 +74,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
   }
 
+  /// Siapkan isi form sesuai mode: create langsung, update memuat data
+  /// kendaraan dari server lebih dulu.
   Future<void> _bootstrap() async {
     setState(() => _vehicleStepReady = false);
 
@@ -114,6 +130,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
   }
 
+  /// Minta konfirmasi sebelum menyimpan.
   Future<void> _confirmSubmit() async {
     final t = AppLocalizations.of(context);
     final isUpdate = _args?.status == AddVehicleStatus.update;
@@ -136,6 +153,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     );
   }
 
+  /// Kirim form ke server, tampilkan hasilnya, lalu tutup halaman bila
+  /// berhasil.
   Future<void> _doSubmit(bool isUpdate) async {
     final t = AppLocalizations.of(context);
 
@@ -187,6 +206,9 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
   }
 
+  /// Kenali error validasi "VIN sudah dipakai" (`validation.unique` pada
+  /// field `vin`) dari response 422, dalam beberapa bentuk yang mungkin
+  /// dikirim backend. Null = bukan error itu.
   String? _pickUniqueMessage(DioException e) {
     final t = AppLocalizations.of(context);
     final data = e.response?.data;

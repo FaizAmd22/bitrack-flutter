@@ -1,9 +1,12 @@
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:flutter/foundation.dart';
 
+/// Mengecek apakah plat nomor sudah terdaftar, sebelum menambah kendaraan.
 class CheckLicensePlateService {
   const CheckLicensePlateService();
 
+  /// True kalau plat sudah ada (`metadata.found`). Error jaringan dilempar
+  /// ulang ke pemanggil.
   Future<bool> isPlateExists(String licensePlate) async {
     final plate = licensePlate.trim();
     try {

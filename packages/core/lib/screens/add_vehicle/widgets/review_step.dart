@@ -6,11 +6,14 @@ import 'package:bitrack_core/screens/add_vehicle/models/add_vehicle_form_data.da
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Langkah 3 wizard tambah kendaraan: ringkasan semua isian (hanya baca)
+/// sebelum disimpan.
 class ReviewStep extends StatelessWidget {
   const ReviewStep({super.key, required this.data});
 
   final AddVehicleFormData data;
 
+  /// Nilai tampil; kosong ditulis `-`.
   String _v(String? s) => (s == null || s.trim().isEmpty) ? '-' : s.trim();
 
   @override
@@ -55,6 +58,7 @@ class ReviewStep extends StatelessWidget {
   }
 }
 
+/// Kartu berjudul berisi baris-baris label : nilai.
 class _ReviewCard extends StatelessWidget {
   const _ReviewCard({required this.title, required this.rows});
 
@@ -114,6 +118,7 @@ class _ReviewCard extends StatelessWidget {
   }
 }
 
+/// Satu baris label : nilai di [_ReviewCard].
 class _ReviewRow {
   const _ReviewRow(this.label, this.value);
   final String label;

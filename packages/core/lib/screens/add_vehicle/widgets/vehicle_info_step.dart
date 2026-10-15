@@ -14,6 +14,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Langkah 1 wizard tambah kendaraan: plat, merek -> model -> tipe
+/// (bertingkat dari `/master-vehicle/brands`), tahun, kategori, odometer, VIN,
+/// dan fleet group. Perubahan langsung ditulis ke [data].
 class VehicleInfoStep extends ConsumerStatefulWidget {
   const VehicleInfoStep({
     super.key,
@@ -25,7 +28,12 @@ class VehicleInfoStep extends ConsumerStatefulWidget {
 
   final AddVehicleFormData data;
   final GlobalKey<FormState> formKey;
+  /// Dipanggil setelah pilihan merek dan fleet group selesai dimuat, supaya
+  /// halaman induk bisa menghilangkan loading.
   final VoidCallback? onReady;
+
+  /// True = mode tambah, false = mode ubah. Saat ini tidak memengaruhi
+  /// tampilan (pemakaiannya dikomentari di build).
   final bool status;
 
   @override
@@ -42,6 +50,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
 
   bool _loading = false;
 
+  // Merek, model, dan tipe disimpan sebagai id; nama-nya ditulis ke [data].
   String? _brandId;
   String? _modelId;
   String? _typeId;
@@ -51,6 +60,8 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
   List<Map<String, dynamic>> _fleetGroups = [];
   List<Map<String, dynamic>> _brands = [];
 
+  /// Membatalkan request master data kalau langkah ini ditutup sebelum
+  /// selesai memuat.
   late CancelToken _cancelToken;
 
   @override
@@ -95,6 +106,9 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     return null;
   }
 
+  /// Muat pilihan merek (beserta model & tipe) dan fleet group. Pilihan yang
+  /// sudah terisi (mode ubah) dipertahankan hanya kalau masih ada di daftar
+  /// terbaru.
   Future<void> _loadMasters() async {
     if (!mounted) return;
     setState(() => _loading = true);
@@ -187,6 +201,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     }
   }
 
+  /// Daftar model milik satu merek.
   List<Map<String, dynamic>> _modelsOf(Map<String, dynamic> brand) {
     final models = brand['models'];
     if (models is! List) return [];
@@ -208,6 +223,7 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     return _modelsOf(brand.first);
   }
 
+  /// Daftar tipe milik satu model.
   List<Map<String, dynamic>> _typesOf(Map<String, dynamic> model) {
     final types = model['types'];
     if (types is! List) return [];
@@ -231,6 +247,9 @@ class _VehicleInfoStepState extends ConsumerState<VehicleInfoStep> {
     return _typesOf(model.first);
   }
 
+  // Data dari server (mode ubah) menyimpan NAMA merek/model/tipe, sedangkan
+  // dropdown memakai id. Fungsi di bawah mencari id dari nama (tanpa peduli
+  // huruf besar/kecil).
   String? _findBrandIdByName(String? name) {
     if (name == null) return null;
     final m = _brands.where(

@@ -1,9 +1,13 @@
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:dio/dio.dart';
 
+/// Data master kendaraan untuk pilihan di form tambah kendaraan.
 class VehicleMasterApi {
   const VehicleMasterApi();
 
+  /// `GET /master-vehicle/brands`: daftar merek beserta model/tipe di
+  /// bawahnya (bertingkat). [cancelToken] dipakai untuk membatalkan request
+  /// saat halaman ditutup.
   Future<List<Map<String, dynamic>>> fetchBrandHierarchy({
     CancelToken? cancelToken,
   }) async {

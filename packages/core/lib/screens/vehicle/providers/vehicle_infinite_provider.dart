@@ -3,6 +3,8 @@ import 'package:bitrack_core/screens/vehicle/models/vehicle_page.dart';
 import 'package:bitrack_core/screens/vehicle/services/fetch_vehicle.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+/// Daftar kendaraan yang sudah dimuat untuk tab Vehicle. [page] = nomor
+/// halaman BERIKUTNYA yang akan diminta.
 class VehicleListState {
   final List<Map<String, dynamic>> items;
   final int page;
@@ -43,6 +45,9 @@ class VehicleListState {
   }
 }
 
+/// Logika daftar kendaraan dengan infinite scroll: [refresh] memuat ulang
+/// dari halaman 1 (dengan pencarian plat), [loadMore] menambah halaman
+/// berikutnya tanpa duplikat (dicek dari `id`).
 class VehicleListNotifier extends StateNotifier<AsyncValue<VehicleListState>> {
   VehicleListNotifier(this._api) : super(AsyncData(VehicleListState.initial()));
 
@@ -108,8 +113,10 @@ class VehicleListNotifier extends StateNotifier<AsyncValue<VehicleListState>> {
   }
 }
 
+/// Service daftar kendaraan (bisa diganti versi palsu di tes).
 final vehicleApiProvider = Provider<FetchVehicle>((ref) => FetchVehicle());
 
+/// State daftar kendaraan tab Vehicle.
 final vehicleInfiniteProvider =
     StateNotifierProvider<VehicleListNotifier, AsyncValue<VehicleListState>>((
       ref,

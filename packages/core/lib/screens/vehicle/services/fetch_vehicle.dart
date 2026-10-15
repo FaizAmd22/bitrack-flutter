@@ -6,6 +6,8 @@ import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:bitrack_core/screens/vehicle/models/vehicle_page.dart';
 import 'package:dio/dio.dart';
 
+/// Mengambil daftar kendaraan berhalaman dari `/master-vehicle/` (tab
+/// Vehicle). [licensePlate] dikirim sebagai parameter `search`.
 class FetchVehicle {
   Future<VehiclePage> fetch({
     required int page,

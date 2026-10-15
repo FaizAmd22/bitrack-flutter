@@ -1,6 +1,9 @@
 import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:bitrack_core/base/network/api_response.dart';
 
+/// Satu halaman daftar kendaraan dari `/master-vehicle/` beserta info
+/// paginasinya. [items] dibiarkan berupa map mentah (dibaca langsung oleh
+/// `CardVehicle`).
 class VehiclePage {
   final int currentPage;
   final int lastPage;
@@ -16,6 +19,7 @@ class VehiclePage {
     bool hasMore = false,
   }) : _hasMore = hasMore;
 
+  /// Masih ada halaman berikutnya (dari flag `has_more` atau nomor halaman).
   bool get hasNext => _hasMore || currentPage < lastPage;
 
   /// Sukses/gagal sudah ditentukan HTTP status code sebelum sampai ke sini —
