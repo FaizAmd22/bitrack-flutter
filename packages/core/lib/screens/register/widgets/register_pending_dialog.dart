@@ -1,6 +1,8 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Dialog "pendaftaran sedang dikonfirmasi" (ikon jam pasir) setelah form
+/// register disubmit. Tombol OK menutup dialog lalu memanggil [funcOk].
 class RegisterPendingDialog extends StatelessWidget {
   final String title;
   final String desc;

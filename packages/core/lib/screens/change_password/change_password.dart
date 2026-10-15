@@ -18,6 +18,14 @@ import 'widgets/otp_box.dart';
 import 'widgets/password_field.dart';
 import 'widgets/rule_text.dart';
 
+/// Halaman Ganti Password (dari Profil), dua tahap:
+/// 1. **Verifikasi** — OTP 5 digit dikirim otomatis ke email user saat halaman
+///    dibuka (lewat server OTP, lihat [OtpApi]); user mengetik kodenya.
+/// 2. **Ganti** — user mengisi password baru yang memenuhi semua syarat
+///    (min. 8 karakter, huruf besar, angka, simbol) dan mengulanginya.
+///
+/// Setelah tersimpan, kredensial biometric dihapus dan user di-logout supaya
+/// login ulang dengan password baru.
 class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
@@ -26,6 +34,7 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
       _ChangePasswordScreenState();
 }
 
+/// Tahap yang sedang tampil di halaman Ganti Password.
 enum StepView { verify, change }
 
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
@@ -86,6 +95,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     super.dispose();
   }
 
+  /// Hitung mundur sebelum tombol "kirim ulang OTP" bisa ditekan lagi.
   void _startResendCountdown(int seconds) {
     _resendTimer?.cancel();
     setState(() => _resendSeconds = seconds);
@@ -103,6 +113,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     });
   }
 
+  /// Gabungan digit dari semua kotak OTP.
   String _otpValue() => _otpCtrls.map((e) => e.text).join();
 
   void _clearOtp() {
@@ -163,6 +174,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
   }
 
+  /// Pindahkan fokus ke kotak berikutnya setelah satu digit diketik. Kalau
+  /// kotak menerima lebih dari satu karakter (mis. tempel), ambil karakter
+  /// terakhir saja.
   void _onOtpChanged(int index, String v) {
     setState(() => _otpError = null);
 
@@ -182,6 +196,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
   }
 
+  /// Backspace: hapus isi kotak ini; kalau sudah kosong, mundur ke kotak
+  /// sebelumnya.
   void _onOtpBackspace(int index) {
     if (_otpCtrls[index].text.isNotEmpty) {
       _otpCtrls[index].clear();
@@ -230,6 +246,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
   }
 
+  /// Hitung ulang syarat password setiap teks password baru berubah, untuk
+  /// warna hijau/merah di daftar syarat.
   void _evalPasswordRules() {
     final p = _newPassCtrl.text;
 
@@ -247,6 +265,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     });
   }
 
+  /// Validasi password baru, simpan ke backend, lalu logout.
   Future<void> _submitNewPassword() async {
     final t = AppLocalizations.of(context);
 

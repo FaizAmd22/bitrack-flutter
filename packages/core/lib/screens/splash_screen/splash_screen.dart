@@ -5,6 +5,13 @@ import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Halaman pertama saat app dibuka (route `/`): logo app di atas latar brand.
+///
+/// Tampil minimal [_minSplash] sambil membaca token login dari secure
+/// storage. Ada token -> ke Home; tidak ada -> ke Login.
+///
+/// Splash "native" (sebelum Flutter jalan) berbeda dengan halaman ini; yang
+/// native dibuat oleh `flutter_native_splash` (`melos run branding`).
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -23,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Muat gambar halaman login lebih awal supaya tidak berkedip saat pindah.
     precacheImage(const AssetImage(AppMedia.bgLogin), context);
     precacheImage(const AssetImage(AppMedia.logo), context);
   }
@@ -43,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ]);
       token = (results[1] as String?)?.trim() ?? '';
     } catch (_) {
+      // Gagal membaca storage (mis. Keychain terkunci): anggap belum login.
       await minDelay;
     }
     if (!mounted) return;

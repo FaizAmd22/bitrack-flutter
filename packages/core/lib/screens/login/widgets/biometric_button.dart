@@ -16,6 +16,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_auth/local_auth.dart';
 
+/// Tombol "Login dengan sidik jari / Face ID" di halaman login.
+///
+/// Hanya ditampilkan [FormLogin] kalau user pernah memilih menyimpan
+/// kredensial biometric. Alurnya: verifikasi biometric di HP -> ambil email +
+/// password yang tersimpan -> login biasa lewat [AuthController] -> ke Home.
 class BiometricButton extends ConsumerStatefulWidget {
   const BiometricButton({super.key});
 
@@ -39,6 +44,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
     _detectBiometricType();
   }
 
+  /// Baca email + password yang disimpan saat login sebelumnya.
   Future<void> _loadCreds() async {
     final r = await Future.wait([
       _storage.read(key: 'biometric_email'),
@@ -49,6 +55,8 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
     _savedPassword = (r[1] ?? '').trim();
   }
 
+  /// Tentukan ikon dan teks tombol: Face ID diutamakan, lalu sidik jari.
+  /// Gagal mendeteksi = tetap ikon sidik jari.
   Future<void> _detectBiometricType() async {
     try {
       final available = await _localAuth.getAvailableBiometrics();
@@ -107,6 +115,7 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
         ),
       );
 
+      // User membatalkan atau biometric tidak cocok.
       if (!ok) return;
 
       if (_savedEmail.isEmpty || _savedPassword.isEmpty) {
@@ -140,6 +149,8 @@ class _BiometricButtonState extends ConsumerState<BiometricButton> {
         return;
       }
 
+      // Buang data user sebelumnya (kalau ada) supaya Home dan Notifikasi
+      // memuat data milik user yang baru login.
       ref.invalidate(notificationProvider);
       ref.invalidate(notificationServiceProvider);
       ref.invalidateMonitoring();

@@ -16,6 +16,12 @@ import 'package:bitrack_core/features/auth/providers/auth_providers.dart';
 import 'package:bitrack_core/features/app_config/providers/app_config_providers.dart';
 import 'package:bitrack_core/features/monitoring/providers/monitoring_providers.dart';
 
+/// Isi kartu login: email, password, tombol login, tombol biometric (bila
+/// pernah disimpan), dan tombol demo (bila flag Supabase `show_register`
+/// aktif).
+///
+/// Setelah login sukses, user ditawari menyimpan kredensial untuk login
+/// biometric, lalu diminta izin notifikasi, lalu dibawa ke Home.
 class FormLogin extends ConsumerStatefulWidget {
   const FormLogin({super.key});
 
@@ -28,6 +34,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  /// Validasi format email sederhana: `sesuatu@domain.ext`.
   static final _emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
   bool _showPassword = false;
@@ -52,6 +59,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     });
   }
 
+  /// Tampilkan tombol biometric hanya kalau kredensial pernah disimpan.
   Future<void> _initBiometricFlag() async {
     final controller = ref.read(authControllerProvider.notifier);
     final creds = await controller.readBiometricCredential();
@@ -65,6 +73,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     }
   }
 
+  /// Jenis biometric HP, untuk teks dialog "simpan Face ID / sidik jari".
   Future<void> _detectBiometricType() async {
     try {
       final available = await LocalAuthentication().getAvailableBiometrics();
@@ -113,6 +122,8 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     return null;
   }
 
+  /// Ke Home dan buang seluruh tumpukan halaman (tombol back tidak kembali
+  /// ke login).
   Future<void> _goHome() async {
     if (!mounted) return;
 
@@ -137,10 +148,14 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     );
     if (result == null || !mounted) return;
 
+    // Buang cache data user sebelumnya supaya Home dan Notifikasi memuat ulang
+    // untuk user yang baru login.
     ref.invalidate(notificationProvider);
     ref.invalidate(notificationServiceProvider);
     ref.invalidateMonitoring();
 
+    // Tawarkan simpan kredensial untuk login biometric. Kedua pilihan tetap
+    // berakhir di Home.
     await showDialog(
       context: context,
       builder: (_) => ConfirmDialog(
@@ -170,6 +185,7 @@ class _FormLoginState extends ConsumerState<FormLogin> {
     unawaited(PushNotificationService.requestPermission());
   }
 
+  /// Masuk mode demo (data dummy) tanpa akun; lihat [DemoMode].
   Future<void> _handleDemoLogin() async {
     await DemoMode.activate();
     if (!mounted) return;

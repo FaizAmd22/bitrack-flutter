@@ -5,6 +5,11 @@ import 'package:bitrack_core/screens/login/widgets/form_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Halaman login (route `/login-screen`): latar brand, logo, kartu
+/// [FormLogin], dan label versi + nomor patch di bawahnya.
+///
+/// Dibungkus `GuestGuard` di `main.dart`, jadi user yang sudah login langsung
+/// dipindah ke Home.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -12,12 +17,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  /// True untuk build dev (`VITE_APP_TYPES` berisi "dev"): tampilkan label
+  /// DEVELOPMENT di bawah logo supaya build dev tidak tertukar dengan prod.
   bool get _isDevEnv =>
       (dotenv.env['VITE_APP_TYPES'] ?? '').toLowerCase().contains('dev');
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // Dibungkus SingleChildScrollView supaya kartu bisa digeser saat keyboard
+    // muncul; tingginya dikunci setinggi layar supaya isi tetap di tengah.
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

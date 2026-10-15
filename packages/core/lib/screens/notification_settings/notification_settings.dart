@@ -3,6 +3,12 @@ import 'package:bitrack_core/base/widgets/tx_toggle_tile.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Halaman Pengaturan Notifikasi (dari Profil): toggle Alert dan Software
+/// Update.
+///
+/// Catatan: belum terhubung ke mana pun. Nilai toggle hanya disimpan di
+/// memori halaman ini (kembali ke `true` saat halaman dibuka lagi) dan tidak
+/// dikirim ke server maupun OneSignal.
 class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key});
 

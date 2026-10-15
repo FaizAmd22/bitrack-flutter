@@ -4,6 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Halaman pilih bahasa (dari Profil). Pilihan langsung berlaku di seluruh
+/// app dan disimpan untuk pembukaan berikutnya (lihat [LocaleNotifier]).
+///
+/// Menambah bahasa baru: buat file `.arb`-nya di `lib/l10n/`, tambahkan ke
+/// [LocaleNotifier.supportedLocales], lalu tambah satu baris `item(...)` di
+/// sini.
 class LanguageScreen extends ConsumerWidget {
   const LanguageScreen({super.key});
 

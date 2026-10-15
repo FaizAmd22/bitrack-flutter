@@ -3,6 +3,8 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Satu baris syarat password (mis. "minimal 8 karakter"): hijau kalau
+/// sudah terpenuhi ([ok]), merah kalau belum.
 class RuleText extends StatelessWidget {
   final String text;
   final bool ok;

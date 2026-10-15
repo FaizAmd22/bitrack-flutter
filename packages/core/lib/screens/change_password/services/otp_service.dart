@@ -3,6 +3,9 @@ import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Hasil kirim OTP. [cooldown] true = server menolak karena OTP baru saja
+/// dikirim (HTTP 429); user harus menunggu sebelum minta lagi. [reason] =
+/// alasan dari server, bila ada.
 class OtpSendResult {
   final bool ok;
   final bool cooldown;
@@ -10,12 +13,21 @@ class OtpSendResult {
   const OtpSendResult({required this.ok, this.cooldown = false, this.reason});
 }
 
+/// Hasil verifikasi OTP: [ok] true kalau kode benar dan belum kedaluwarsa.
 class OtpVerifyResult {
   final bool ok;
   final String? reason;
   const OtpVerifyResult({required this.ok, this.reason});
 }
 
+/// Klien server OTP (repo terpisah `bitrack-be-otp`: Node.js + Redis +
+/// Brevo untuk email), dipakai di alur Ganti Password.
+///
+/// Server ini BUKAN backend tracking utama, jadi memakai `Dio` sendiri
+/// (bukan [ApiClient]) dan alamatnya ditulis langsung di sini, tidak di
+/// `.env`. Server di-host di Render; setelah lama idle, respons pertamanya
+/// bisa lebih lama dari timeout 10 detik (lihat
+/// `docs/16-masalah-dan-hal-terbuka.md`).
 class OtpApi {
   OtpApi()
     : _dio = Dio(
@@ -33,7 +45,8 @@ class OtpApi {
 
   final Dio _dio;
 
-  /// POST /otp/send  { email }
+  /// `POST /otp/send {email}`: kirim kode OTP ke email user. Di mode demo
+  /// selalu dianggap berhasil tanpa memanggil server.
   Future<OtpSendResult> sendOtp(String email) async {
     if (DemoMode.isActive) return const OtpSendResult(ok: true);
 
@@ -53,7 +66,8 @@ class OtpApi {
     return OtpSendResult(ok: false, reason: data['reason'] as String?);
   }
 
-  /// POST /otp/verify  { email, otp }
+  /// `POST /otp/verify {email, otp}`: cocokkan kode yang diketik user. Di mode
+  /// demo selalu dianggap benar.
   Future<OtpVerifyResult> verifyOtp(String email, String otp) async {
     if (DemoMode.isActive) return const OtpVerifyResult(ok: true);
 
@@ -70,4 +84,5 @@ class OtpApi {
   }
 }
 
+/// Provider [OtpApi] (bisa diganti versi palsu di tes).
 final otpApiProvider = Provider<OtpApi>((ref) => OtpApi());

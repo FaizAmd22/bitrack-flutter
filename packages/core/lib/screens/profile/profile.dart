@@ -11,6 +11,12 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Tab Profil: avatar inisial, nama dan role user, menu ke Ganti Password /
+/// Pengaturan Notifikasi / Bahasa, tombol Sign Out, dan label versi + nomor
+/// patch di bagian bawah.
+///
+/// Nama dan role dibaca dari secure storage (disimpan saat login), bukan dari
+/// API.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -25,6 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _name = '-';
   String _role = '-';
 
+  /// Hash sederhana yang selalu sama untuk teks yang sama (beda dengan
+  /// `String.hashCode` yang tidak dijamin stabil antar-proses), supaya warna
+  /// avatar user tidak berganti tiap app dibuka.
   int _stableHash(String value) {
     var hash = 0;
     for (final unit in value.codeUnits) {
@@ -33,6 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return hash;
   }
 
+  /// Warna avatar acak tapi tetap per nama. Nilai RGB dibatasi 0-199 supaya
+  /// cukup gelap untuk teks putih.
   Color get _avatarColor {
     final random = Random(_stableHash(_name));
     return Color.fromARGB(
@@ -43,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  /// Inisial nama: huruf pertama kata pertama + huruf pertama kata terakhir.
   String get _initials {
     final parts = _name
         .trim()
@@ -82,6 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  /// Konfirmasi lalu logout lewat [ApiClient.logout] (yang juga memindahkan
+  /// user ke halaman login).
   Future<void> _signOut(AppLocalizations t) async {
     await showDialog(
       context: context,
@@ -212,6 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+/// Satu baris menu di Profil: teks + route tujuan.
 class _ProfileMenuItem {
   final String title;
   final String route;

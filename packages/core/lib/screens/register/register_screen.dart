@@ -3,6 +3,10 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/register/widgets/form_register.dart';
 import 'package:flutter/material.dart';
 
+/// Halaman pendaftaran akun (route `/register-screen`).
+///
+/// Belum aktif: form-nya masih dummy (lihat [FormRegister]) dan saat ini tidak
+/// ada tombol di halaman lain yang membuka halaman ini.
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 

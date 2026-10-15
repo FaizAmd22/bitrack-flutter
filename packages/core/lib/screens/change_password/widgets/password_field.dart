@@ -3,6 +3,8 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Kolom password dengan tombol mata untuk menampilkan/menyembunyikan teks.
+/// Status tampil/sembunyi ([obscure]) diatur oleh halaman pemanggil.
 class TxPasswordField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
