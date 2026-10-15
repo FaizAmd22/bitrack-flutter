@@ -1,17 +1,27 @@
-// lib/base/widgets/picker_field.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/option_picker_sheet.dart';
 import 'package:flutter/material.dart';
 
+/// Kolom form berbentuk dropdown: menampilkan label pilihan terpilih, dan
+/// membuka [OptionPickerSheet] saat diketuk. Bisa divalidasi seperti
+/// `TextFormField` lewat [validator] (ikut `Form.validate()`).
+///
+/// Dipakai di form tambah kendaraan dan form work order.
 class PickerField extends StatelessWidget {
   final String label;
   final String hintText;
-  final String? value; // selected value
+
+  /// `value` dari pilihan yang sedang terpilih (bukan label-nya); null =
+  /// belum memilih, [hintText] yang tampil.
+  final String? value;
   final List<PickerOption> options;
   final ValueChanged<PickerOption> onSelected;
   final String? Function(String?)? validator;
   final bool enabled;
+  /// Tampilkan kolom cari di sheet pilihan (berguna untuk daftar panjang).
   final bool searchable;
+
+  /// Judul sheet pilihan; default sama dengan [label].
   final String pickerTitle;
   final String? searchHint;
 
@@ -43,7 +53,9 @@ class PickerField extends StatelessWidget {
       initialValue: value,
       validator: validator,
       builder: (state) {
-        // sinkronkan nilai eksternal ke FormField
+        // Nilai dikontrol dari luar (prop [value]). Kalau berbeda dengan nilai
+        // internal FormField, samakan setelah frame ini selesai (tidak boleh
+        // memanggil didChange saat build).
         if (state.value != value) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             state.didChange(value);

@@ -10,6 +10,15 @@ import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/plate_input_formatter.dart';
 
+/// Kolom cari plat nomor dengan daftar saran yang muncul di bawahnya.
+///
+/// Input otomatis diformat jadi `B-1234-ABC` ([PlateInputFormatter]). Saran
+/// diambil dari [suggestionPlates] yang cocok dengan teks (tanpa memedulikan
+/// tanda `-` dan huruf besar/kecil), maksimal [maxSuggestions]. Daftar saran
+/// digambar di `Overlay` supaya bisa melayang di atas widget lain; mengetuk di
+/// luar daftar menutupnya.
+///
+/// Biasanya tidak dipakai langsung; halaman memakai [SearchBarBase].
 class PlateSearchBar extends StatefulWidget {
   final String? value;
   final ValueChanged<String>? onChanged;
@@ -17,6 +26,9 @@ class PlateSearchBar extends StatefulWidget {
   final List<String>? suggestionPlates;
   final int maxSuggestions;
 
+  /// Tidak dipakai lagi: tombol filter di sini dimatikan (lihat
+  /// `showFilterButton` di build). Tombol filter sekarang ada di
+  /// [SearchBarBase].
   final VoidCallback? onTapFilter;
 
   /// Null berarti pakai teks terjemahan bawaan.
@@ -40,9 +52,12 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
   late final TextEditingController _controller;
   final FocusNode _focusNode = FocusNode();
 
+  /// Menunda penghitungan ulang saran sampai user berhenti mengetik sejenak.
   Timer? _debounce;
   List<String> _suggestions = const [];
 
+  // Overlay daftar saran "menempel" ke posisi kolom input lewat LayerLink,
+  // dan lebarnya disamakan dengan kolom input (diukur lewat _fieldKey).
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
 
@@ -65,6 +80,9 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
   @override
   void didUpdateWidget(covariant PlateSearchBar oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // Teks bisa diubah dari luar (mis. tombol reset filter); samakan isi
+    // kolom input dan saran dengan nilai baru.
 
     final newText = widget.value ?? '';
     if (oldWidget.value != widget.value && newText != _controller.text) {
@@ -101,6 +119,7 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
     _maybeShowOverlay();
   }
 
+  /// Bentuk pembanding: huruf besar, tanpa `-`. `b 1234` dan `B-1234` setara.
   String _normalize(String s) => s.toUpperCase().replaceAll('-', '').trim();
 
   void _recomputeSuggestions(String value) {
@@ -164,6 +183,9 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
     _removeOverlay();
   }
 
+  /// Tampilkan daftar saran hanya bila kolom sedang fokus DAN ada saran.
+  /// [forceRefresh] menggambar ulang overlay yang sudah tampil (isi saran
+  /// berubah).
   void _maybeShowOverlay({bool forceRefresh = false}) {
     final hasFocus = _focusNode.hasFocus;
     final hasSuggestions = _suggestions.isNotEmpty;
@@ -199,6 +221,8 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
 
         return Stack(
           children: [
+            // Lapisan transparan penuh layar: ketukan di luar daftar menutup
+            // daftar saran.
             Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -270,6 +294,7 @@ class _PlateSearchBarState extends State<PlateSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    // Tombol filter bawaan sengaja dimatikan (lihat [onTapFilter]).
     // final showFilterButton = widget.onTapFilter != null;
     final showFilterButton = false;
 

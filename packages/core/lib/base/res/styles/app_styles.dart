@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// Semua warna dan gaya teks app. Pakai konstanta di sini, jangan menulis
+/// warna atau ukuran font langsung di widget.
+///
+/// Konvensi nama gaya teks: `textL` 22, `textMd` 16, `textSm` 14, `textXs` 12;
+/// akhiran `Bold` / `Semibold` untuk ketebalan.
 class AppStyles {
   // Warna brand di-set saat compile lewat --dart-define, BUKAN lewat static
   // mutable + configure() saat runtime: primaryColor dipakai di ~139 tempat,
@@ -16,6 +21,7 @@ class AppStyles {
     defaultValue: 0xFF386AD8,
   );
   static const Color primaryColor = Color(_primaryValue);
+  // Warna di bawah ini SAMA di ketiga app (tidak ikut warna brand).
   static const Color darkRedColor = Color(0xFFC43A3A);
   static const Color bgColor = Color(0xFFFCFCFC);
   static const Color whiteColor = Colors.white;
@@ -30,6 +36,8 @@ class AppStyles {
   static const Color borderLightGray = Color(0xFFDEDEDE);
   static const Color inputDisableBg = Color(0xFFEEEEEE);
 
+  // Warna status. Versi `bg...` adalah warna yang sama dengan transparansi
+  // ~10% (alpha 26 dari 255), untuk latar badge/label status.
   static const Color redColor = Color(0xFFD84040);
   static const Color bgRedColor = Color.fromARGB(26, 216, 64, 64);
   static const Color darkGrayColor = Color(0xFF7B7B7B);

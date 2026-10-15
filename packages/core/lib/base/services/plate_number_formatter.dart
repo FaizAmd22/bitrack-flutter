@@ -1,5 +1,10 @@
 import 'package:flutter/services.dart';
 
+/// Memformat input plat nomor Indonesia saat diketik: `b1234abc` -> `B-1234-ABC`.
+///
+/// Pola: [maxPrefix] huruf kode wilayah, [maxNumbers] angka, [maxSuffix]
+/// huruf akhir, dipisah [separator]. Karakter yang tidak cocok dengan pola di
+/// posisinya dibuang. Kursor selalu dipindah ke akhir teks.
 class PlateNumberFormatter extends TextInputFormatter {
   const PlateNumberFormatter({
     this.maxPrefix = 2,
@@ -23,6 +28,7 @@ class PlateNumberFormatter extends TextInputFormatter {
       '',
     );
 
+    // Ambil berurutan: huruf (kode wilayah), angka, lalu huruf (seri).
     String prefix = '';
     String numbers = '';
     String suffix = '';

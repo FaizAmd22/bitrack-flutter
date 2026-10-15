@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Kartu berjudul yang isinya bisa di-scroll, tingginya dibatasi
+/// [maxHeightFactor] x tinggi layar. Dipakai di bottom sheet informasi
+/// kendaraan.
 class TabContainer extends StatelessWidget {
   final Widget child;
   final String? title;

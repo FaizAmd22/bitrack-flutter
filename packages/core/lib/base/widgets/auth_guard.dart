@@ -2,6 +2,12 @@ import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Pembungkus semua halaman yang butuh login.
+///
+/// Membaca `auth_token` dari secure storage; kalau kosong, user dilempar ke
+/// halaman Login dan seluruh tumpukan halaman dibuang. Selama membaca,
+/// spinner yang tampil. Kebalikan dari [GuestGuard]. Dipasang di `routes:`
+/// dan `onGenerateRoute` di `main.dart` tiap app.
 class AuthGuard extends StatefulWidget {
   final Widget child;
   const AuthGuard({super.key, required this.child});

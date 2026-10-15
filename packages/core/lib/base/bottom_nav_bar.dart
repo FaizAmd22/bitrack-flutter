@@ -15,6 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/// Halaman Home setelah login: bottom navigation dengan tab Tracker,
+/// Notifikasi, (Work Order dan Vehicle khusus build Teknisi), dan Profil.
+///
+/// Route `/home-screen` di `main.dart` tiap app mengarah ke widget ini.
+/// Semua tab dibangun sekaligus di dalam `IndexedStack`, jadi state tiap tab
+/// (posisi peta, scroll daftar) tidak hilang saat berpindah tab.
 class BottomNavBar extends ConsumerStatefulWidget {
   const BottomNavBar({super.key});
 
@@ -25,15 +31,19 @@ class BottomNavBar extends ConsumerStatefulWidget {
 class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int _selectedIndex = 0;
 
+  /// Akses ke state halaman Notifikasi, untuk menyegarkan daftarnya setiap
+  /// kali tab Notifikasi dibuka.
   final GlobalKey<NotificationScreenState> _notifKey =
       GlobalKey<NotificationScreenState>();
 
-  /// Sama seperti layout.jsx di bitrack-mobile: tab Work Order & Vehicle
-  /// hanya ada pada build dengan VITE_APP_USERS="Teknisi".
+  /// Tab Work Order & Vehicle hanya ada pada build dengan
+  /// `VITE_APP_USERS="Teknisi"` (lihat [AppUsers]).
   bool get _isTechnicianApp => AppUsers.isTechnicianApp;
 
+  /// Teks badge notifikasi; di atas 99 ditulis "99+".
   String _badgeLabel(int count) => count > 99 ? '99+' : '$count';
 
+  /// Ikon tab Notifikasi dengan bulatan jumlah notifikasi belum dibaca.
   Widget _notifBadge(int count, Widget child) {
     return Badge(
       backgroundColor: Colors.transparent, // matikan stadium bawaan
@@ -64,6 +74,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     );
   }
 
+  /// Item tab berikon SVG; ikon aktif diwarnai warna primer brand.
   BottomNavigationBarItem _svgItem({
     required String icon,
     required String activeIcon,
@@ -91,7 +102,11 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
       notificationProvider.select((s) => s.badgeTotal),
     );
 
+    // Urutan [screens] dan [items] harus sama persis: indeks tab menunjuk ke
+    // keduanya sekaligus.
     final screens = <Widget>[
+      // isActive dipakai Home untuk menghentikan polling peta saat tab lain
+      // yang tampil.
       HomeScreen(isActive: _selectedIndex == 0),
       NotificationScreen(key: _notifKey),
       if (_isTechnicianApp) ...[const WorkOrderScreen(), const VehicleScreen()],
@@ -153,6 +168,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
             if (i == _selectedIndex) return;
             setState(() => _selectedIndex = i);
 
+            // Indeks 1 selalu Notifikasi (di build Customer maupun Teknisi).
             if (i == 1) {
               _notifKey.currentState?.refreshFromOutside();
             }

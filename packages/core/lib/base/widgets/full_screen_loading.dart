@@ -5,8 +5,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+/// Lapisan loading penuh layar: latar gelap transparan + animasi Lottie.
+///
+/// Ditaruh di atas konten dengan `Stack` saat menunggu proses yang memblokir
+/// layar (memuat data awal, menyimpan form).
 class FullScreenLoading extends StatelessWidget {
+  /// Kegelapan latar, 0 (bening) sampai 1 (hitam pekat).
   final double opacity;
+
+  /// Buramkan konten di belakang loading.
   final bool withBackgroundBlur;
 
   const FullScreenLoading({

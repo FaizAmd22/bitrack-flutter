@@ -13,27 +13,48 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Klien HTTP utama ke backend tracking (`BASE_URL` di `.env`).
+///
+/// Semua service API memakai [ApiClient.dio], bukan membuat `Dio` sendiri,
+/// supaya tiga hal berlaku seragam:
+/// - header `Authorization: Bearer <token>` ditempel otomatis,
+/// - respons 401 (sesi habis) langsung memicu [logout],
+/// - request dicatat waktunya ([attachRequestTiming]) dan, di debug, isinya
+///   ([attachApiLogger]).
+///
+/// Token disimpan di memori ([_token]) untuk dipakai request, dan di secure
+/// storage (`auth_token`) supaya sesi tetap ada setelah app ditutup. Token
+/// dimuat ulang dari storage di `main()` lewat [loadTokenFromStorage].
 class ApiClient {
   ApiClient._();
 
   static String? _token;
+
+  /// True selama proses logout berjalan. Dipakai untuk menolak request baru
+  /// (kecuali login) supaya tidak ada request yang membawa token lama dan
+  /// memicu logout kedua.
   static bool _isLoggingOut = false;
-  // Use first_unlock_this_device so the token survives device lock/sleep
-  // without requiring the screen to be unlocked at app launch.
+
+  // Mode `first_unlock_this_device` (iOS) membuat token tetap terbaca walau
+  // app dibuka saat HP terkunci (mis. dari notifikasi), asal HP sudah pernah
+  // dibuka sekali sejak dinyalakan.
   static const _storage = FlutterSecureStorage(
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock_this_device,
     ),
   );
 
+  /// Simpan token baru (dipanggil setelah login sukses atau masuk mode demo).
   static Future<void> setToken(String token) async {
     _token = token;
     _isLoggingOut = false;
     await _storage.write(key: 'auth_token', value: token);
   }
 
+  /// Hapus token dari memori saja; storage dihapus oleh [logout].
   static void clearToken() => _token = null;
 
+  /// Muat token tersimpan ke memori. Dipanggil sekali di `main()`.
   static Future<void> loadTokenFromStorage() async {
     final token = await _storage.read(key: 'auth_token');
     if (token != null && token.isNotEmpty) {
@@ -72,6 +93,8 @@ class ApiClient {
     });
   }
 
+  /// Instance Dio bersama. Dibuat saat pertama dipakai, setelah `.env` dimuat
+  /// di `main()` (karena `BASE_URL` dibaca di sini).
   static final Dio dio = _createDio();
 
   static Dio _createDio() {
@@ -98,7 +121,7 @@ class ApiClient {
             return;
           }
 
-          // Reject request non-login saat sedang logout
+          // Tolak request selain login selama logout berjalan.
           if (_isLoggingOut) {
             handler.reject(
               DioException(
@@ -116,6 +139,9 @@ class ApiClient {
           handler.next(options);
         },
         onError: (DioException e, handler) async {
+          // 401 = token tidak berlaku lagi. Pengecualian untuk endpoint login:
+          // di sana error berarti kredensial salah (ditangani AuthApi), bukan
+          // sesi habis.
           if (e.response?.statusCode == 401 &&
               !e.requestOptions.path.endsWith('/login')) {
             await logout();

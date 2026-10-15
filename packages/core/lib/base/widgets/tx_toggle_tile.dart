@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 
+/// Baris judul + switch on/off (dipakai di halaman Pengaturan Notifikasi).
+/// [enabled] false membuat teks abu-abu dan switch tidak bisa ditekan.
 class TxToggleTile extends StatelessWidget {
   const TxToggleTile({
     super.key,

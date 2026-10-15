@@ -1,7 +1,10 @@
-// lib/base/widgets/segmented_tab_bar.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Tab bar bergaya "segmented control": satu indikator putih yang bergeser
+/// ke tab aktif dengan animasi. Tab diidentifikasi lewat indeks (0, 1, ...).
+///
+/// Dipakai di bottom sheet informasi kendaraan dan detail work order.
 class SegmentedTabBar extends StatelessWidget {
   final List<String> labels;
   final int activeIndex;
@@ -23,7 +26,8 @@ class SegmentedTabBar extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Lebar area dalam (setelah padding) dibagi rata per tab
+        // Lebar area dalam (setelah padding) dibagi rata per tab, supaya
+        // posisi indikator bisa dihitung dari indeks tab aktif.
         final innerWidth = constraints.maxWidth - resolved.horizontal;
         final tabWidth = innerWidth / count;
 

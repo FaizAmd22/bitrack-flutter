@@ -2,6 +2,11 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Kolom input berlabel dengan gaya app: border hijau saat terisi, abu-abu
+/// saat kosong, dan warna primer saat validasi gagal.
+///
+/// Dipakai di form login, register, dan tambah kendaraan (sheet). Untuk input
+/// di form lain lihat `tx_inputs.dart`.
 class AppInputField extends StatelessWidget {
   final String label;
   final String placeholder;
@@ -13,8 +18,8 @@ class AppInputField extends StatelessWidget {
   final bool obscureText;
   final Color? prefixIconColor;
   final Color? suffixIconColor;
-  final ValueChanged<String>? onChanged; // ← tambah
-  final bool enabled; // ← tambah
+  final ValueChanged<String>? onChanged;
+  final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
 
   const AppInputField({
@@ -29,8 +34,8 @@ class AppInputField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIconColor,
     this.suffixIconColor,
-    this.onChanged, // ← tambah
-    this.enabled = true, // ← tambah
+    this.onChanged,
+    this.enabled = true,
     this.inputFormatters,
   });
 
@@ -43,6 +48,8 @@ class AppInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dibangun ulang setiap teks berubah, supaya warna border ikut berganti
+    // antara kosong dan terisi.
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, _) {

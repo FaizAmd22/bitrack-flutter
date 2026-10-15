@@ -2,6 +2,11 @@ import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Pembungkus halaman khusus tamu (Login, Register).
+///
+/// Kalau user ternyata sudah login (ada `auth_token` di secure storage), ia
+/// langsung dipindah ke Home. Kebalikan dari [AuthGuard]. Dipasang di
+/// `routes:` `main.dart` tiap app.
 class GuestGuard extends StatefulWidget {
   final Widget child;
   const GuestGuard({super.key, required this.child});
@@ -31,7 +36,7 @@ class _GuestGuardState extends State<GuestGuard> {
     if (!mounted) return;
 
     if (token.isNotEmpty) {
-      // sudah login → redirect ke home
+      // Sudah login: ganti seluruh tumpukan halaman dengan Home.
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.homeScreen,

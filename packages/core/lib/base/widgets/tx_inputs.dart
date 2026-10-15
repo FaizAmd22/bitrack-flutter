@@ -6,6 +6,14 @@ import 'package:bitrack_core/base/widgets/tx_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+// Kumpulan input form bergaya seragam (label tebal di atas, border abu-abu
+// saat kosong, hijau saat terisi, merah saat error). Dipakai di form-form
+// work order, tambah kendaraan, filter, dan Periodic Track.
+//
+// Semua input di sini bisa divalidasi lewat `Form.validate()` (`validator`).
+
+/// Input teks biasa. [visible] false menyembunyikan field tanpa membuangnya
+/// dari tree (nilai controller tetap ada).
 class TxInputText extends StatelessWidget {
   const TxInputText({
     super.key,
@@ -65,6 +73,7 @@ class TxInputText extends StatelessWidget {
   }
 }
 
+/// Input angka saja (keyboard numerik, karakter selain digit ditolak).
 class TxInputNumber extends StatelessWidget {
   const TxInputNumber({
     super.key,
@@ -115,6 +124,7 @@ class TxInputNumber extends StatelessWidget {
   }
 }
 
+/// Dropdown bawaan Material dengan gaya Tx.
 class TxInputDropdown<T> extends StatelessWidget {
   const TxInputDropdown({
     super.key,
@@ -137,6 +147,8 @@ class TxInputDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // DropdownButton melempar error kalau `value` tidak ada di `items`
+    // (mis. daftar pilihan dimuat ulang). Dalam kasus itu tampilkan kosong.
     final hasItem = value != null && items.any((it) => it.value == value);
     final safeValue = hasItem ? value : null;
 
@@ -175,6 +187,9 @@ class TxInputDropdown<T> extends StatelessWidget {
   }
 }
 
+/// Pemilih tanggal (tanpa jam). Mengetuk field membuka kalender Material;
+/// teks ditampilkan dengan format Indonesia ([displayFormat], locale
+/// `id_ID`). Rentang default: tahun 2000 sampai 20 tahun ke depan.
 class TxInputDate extends FormField<DateTime> {
   TxInputDate({
     super.key,
@@ -257,6 +272,10 @@ class TxInputDate extends FormField<DateTime> {
        );
 }
 
+/// Pemilih tanggal + jam: kalender Material untuk tanggal, lalu roda jam ala
+/// iOS ([showTxTimePicker]) untuk jam dan menit. [firstDate] / [lastDate]
+/// membatasi sampai ke menit. Dipakai di filter Periodic Track dan form yang
+/// butuh waktu.
 class TxInputDateTime extends FormField<DateTime> {
   TxInputDateTime({
     super.key,
@@ -289,6 +308,8 @@ class TxInputDateTime extends FormField<DateTime> {
 
            Future<void> pickDateTime() async {
              final now = DateTime.now();
+             // Tanggal awal kalender dijepit ke rentang yang diizinkan, karena
+             // showDatePicker melempar error kalau initialDate di luar rentang.
              final effectiveFirst = firstDate ?? DateTime(2000);
              final effectiveLast = lastDate ?? DateTime(now.year + 20);
 
@@ -379,6 +400,7 @@ class TxInputDateTime extends FormField<DateTime> {
        );
 }
 
+/// Label tebal di atas input + jarak bawah antar-field.
 class _TxFieldWrapper extends StatelessWidget {
   const _TxFieldWrapper({required this.label, required this.child});
 
@@ -404,6 +426,7 @@ class _TxFieldWrapper extends StatelessWidget {
   }
 }
 
+/// Dekorasi standar semua input Tx (sudut 12, latar abu-abu saat disabled).
 InputDecoration _txInputDecoration(
   String? hintText, {
   required bool enabled,
@@ -434,6 +457,7 @@ InputDecoration _txInputDecoration(
   );
 }
 
+/// Warna border: disabled > error (merah) > terisi (hijau) > kosong (abu-abu).
 Color _borderColorByValue({
   required bool enabled,
   required bool hasValue,

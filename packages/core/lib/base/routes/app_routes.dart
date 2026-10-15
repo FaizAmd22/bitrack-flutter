@@ -1,3 +1,9 @@
+/// Nama semua route (halaman) app.
+///
+/// Halaman-nya didaftarkan di `routes:` / `onGenerateRoute` di `main.dart`
+/// TIAP app (fixtrack, bitrack, bitrack_internal). Menambah halaman baru
+/// berarti menambah konstanta di sini DAN mendaftarkannya di ketiga
+/// `main.dart`.
 class AppRoutes {
   static const splashScreen = '/';
   static const loginScreen = '/login-screen';

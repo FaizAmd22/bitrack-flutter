@@ -3,9 +3,12 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Ditaruh di MaterialApp.builder supaya menutupi semua route (termasuk yang
-// di-push di luar BottomNavBar seperti vehicle detail/periodic track), dan
-// reaktif lewat demoModeProvider tanpa perlu restart app.
+/// Pita oranye "versi demo" di bawah layar selama mode demo aktif.
+///
+/// Ditaruh di `MaterialApp.builder` supaya tampil di semua halaman (termasuk
+/// yang di-push di luar BottomNavBar seperti Vehicle Detail dan Periodic
+/// Track), dan reaktif lewat [demoModeProvider] tanpa perlu restart app.
+/// `IgnorePointer` membuat pita tidak menghalangi sentuhan ke halaman.
 class DemoBanner extends ConsumerWidget {
   final Widget child;
   const DemoBanner({super.key, required this.child});

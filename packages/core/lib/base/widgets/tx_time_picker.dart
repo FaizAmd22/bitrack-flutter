@@ -48,6 +48,8 @@ DateTime clampDateTime(DateTime value, DateTime? min, DateTime? max) {
   return value;
 }
 
+/// Isi bottom sheet [showTxTimePicker]: baris Batal / judul / Konfirmasi
+/// di atas roda jam-menit Cupertino.
 class _TxTimePickerSheet extends StatefulWidget {
   const _TxTimePickerSheet({
     required this.initial,

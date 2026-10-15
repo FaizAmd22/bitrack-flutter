@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 
 enum _ToastKind { success, failed }
 
+/// Notifikasi singkat melayang di bawah layar (SnackBar), dipakai di seluruh
+/// app untuk hasil aksi user.
+///
+/// Hanya satu toast tampil sekaligus: toast baru menutup toast lama.
 class AppToast {
+  /// Toast sukses/informasi: putih, hilang setelah 2 detik.
   static void show(BuildContext context, String message) {
     _show(context, message, _ToastKind.success, const Duration(seconds: 2));
   }
 
+  /// Toast gagal: merah, tampil 5 detik supaya pesannya sempat dibaca.
   static void showFailed(BuildContext context, String message) {
     _show(context, message, _ToastKind.failed, const Duration(seconds: 5));
   }

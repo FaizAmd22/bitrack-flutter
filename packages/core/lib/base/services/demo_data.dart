@@ -1,8 +1,14 @@
 import 'dart:math' as math;
 
-// Data dummy untuk mode demo (lihat demo_mode.dart). Bentuknya meniru
-// persis response API asli supaya model/parsing existing tetap jalan
-// tanpa perubahan.
+/// Data dummy untuk mode demo (lihat `demo_mode.dart`).
+///
+/// Bentuknya meniru persis response API asli supaya model dan parsing yang
+/// sudah ada tetap jalan tanpa perubahan. Setiap service mengembalikan data
+/// dari sini saat `DemoMode.isActive`.
+///
+/// Menambah endpoint baru? Tambahkan juga fungsi data dummy-nya di sini,
+/// dengan bentuk yang sama seperti response server, supaya mode demo (dipakai
+/// reviewer App Store) tidak rusak.
 class DemoData {
   DemoData._();
 

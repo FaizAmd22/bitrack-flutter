@@ -4,8 +4,21 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
-enum PeriodicFilterNavMode { push, replaceCurrent }
+/// Cara membuka halaman Periodic Track setelah filter disubmit.
+enum PeriodicFilterNavMode {
+  /// Tumpuk di atas halaman saat ini (dibuka dari Vehicle Detail).
+  push,
 
+  /// Ganti halaman Periodic Track yang sedang terbuka (mengubah filter dari
+  /// dalam Periodic Track), supaya tidak menumpuk dua halaman yang sama.
+  replaceCurrent
+}
+
+/// Bottom sheet pemilih rentang waktu (Start Date dan End Date, sampai menit)
+/// sebelum membuka halaman Periodic Track untuk satu kendaraan.
+///
+/// Rentang maksimal 3 hari kalender (lihat [_maxEndDate]) dan tidak boleh
+/// melewati hari ini. Buka dengan [PeriodicTrackFilterSheet.open].
 class PeriodicTrackFilterSheet extends StatefulWidget {
   final String licensePlate;
   final PeriodicFilterNavMode navMode;
@@ -46,6 +59,7 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
   DateTime? _start;
   DateTime? _end;
 
+  /// Jumlah hari SETELAH tanggal start yang masih boleh dipilih.
   static const _maxRangeDays = 2;
 
   // Batas End Date: tanggal start + 2 hari kalender = 3 hari total (inklusif start).
@@ -74,12 +88,14 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
 
     Navigator.of(context).pop();
 
+    // Argumen ini dibaca halaman Periodic Track dari `ModalRoute.settings`.
     final args = {
       'startDate': _start,
       'endDate': _end,
       'licensePlate': widget.licensePlate,
     };
 
+    // Pindah halaman setelah sheet benar-benar tertutup (frame berikutnya).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final nav = Navigator.of(context);
 
@@ -143,6 +159,9 @@ class _PeriodicTrackFilterSheetState extends State<PeriodicTrackFilterSheet> {
                   onChanged: (v) {
                     setState(() {
                       _start = v;
+                      // End Date yang sudah dipilih jadi tidak valid kalau
+                      // start digeser melewatinya atau rentangnya terlalu
+                      // panjang; kosongkan supaya user memilih ulang.
                       if (_end != null &&
                           (_end!.isBefore(_start!) ||
                               _end!.isAfter(_maxEndDate))) {

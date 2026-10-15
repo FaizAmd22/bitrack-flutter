@@ -3,8 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Key SharedPreferences tempat kode bahasa pilihan user disimpan.
 const String kPrefLocaleCode = 'app_language_code';
 
+/// Bahasa aktif app. Default Inggris sampai pilihan user selesai dibaca dari
+/// SharedPreferences (sangat cepat, tapi asinkron).
+///
+/// Mengganti bahasa: [setLocale], dipanggil dari halaman Bahasa. `MaterialApp`
+/// di `main.dart` me-watch [localeProvider], jadi seluruh UI ikut berganti.
 class LocaleNotifier extends Notifier<Locale> {
   static const supportedLocales = <Locale>[
     Locale('en'),
@@ -14,9 +20,9 @@ class LocaleNotifier extends Notifier<Locale> {
     Locale('ko'),
   ];
 
-  /// Tracks the active locale outside of the widget tree so plain Dart
-  /// classes (e.g. API/service layers) can resolve translated strings
-  /// without a BuildContext.
+  /// Salinan bahasa aktif di luar widget tree, supaya kelas Dart biasa
+  /// (service/API) bisa mengambil teks terjemahan tanpa BuildContext.
+  /// Lihat [currentL10n].
   static Locale current = const Locale('en');
 
   @override
@@ -40,12 +46,13 @@ class LocaleNotifier extends Notifier<Locale> {
   }
 }
 
+/// Provider bahasa aktif; di-watch `MaterialApp.locale`.
 final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
   return LocaleNotifier();
 });
 
-/// Resolves [AppLocalizations] for the currently active locale without
-/// requiring a BuildContext — for use in service/API classes that need to
-/// surface a translated error message.
+/// Teks terjemahan untuk bahasa aktif tanpa BuildContext. Dipakai di
+/// service/API untuk menyusun pesan error. Di dalam widget, pakai
+/// `AppLocalizations.of(context)`.
 AppLocalizations currentL10n() =>
     lookupAppLocalizations(LocaleNotifier.current);

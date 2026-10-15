@@ -1,6 +1,11 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Dialog konfirmasi standar: judul, deskripsi, tombol batal (outline) dan
+/// tombol setuju (warna primer).
+///
+/// Kedua tombol menutup dialog dulu, baru memanggil [funcCancel] /
+/// [funcSubmit]. Tampilkan dengan `showDialog(builder: (_) => ConfirmDialog(...))`.
 class ConfirmDialog extends StatelessWidget {
   final String title;
   final String desc;

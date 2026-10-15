@@ -4,6 +4,14 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Form bertahap (wizard): header nomor langkah di atas, isi langkah aktif di
+/// tengah, tombol Sebelumnya / Berikutnya di bawah. Di langkah terakhir tombol
+/// kanan berubah jadi tombol submit yang memanggil [onSubmit].
+///
+/// Tombol Berikutnya dan submit memvalidasi `Form` langkah aktif lebih dulu
+/// (lewat [formKeys]); kalau gagal, tidak pindah langkah.
+///
+/// Saat ini dipakai di halaman tambah kendaraan.
 class AppStepper extends StatefulWidget {
   const AppStepper({
     super.key,
@@ -24,9 +32,14 @@ class AppStepper extends StatefulWidget {
     this.topGap = 0,
   });
 
+  /// Judul tiap langkah (tampil di header).
   final List<String> steps;
+
+  /// Isi tiap langkah; jumlahnya harus sama dengan [steps].
   final List<Widget> stepContents;
 
+  /// Key `Form` tiap langkah untuk validasi; isi null untuk langkah tanpa
+  /// form (mis. langkah review). Jumlahnya harus sama dengan [steps].
   final List<GlobalKey<FormState>?> formKeys;
 
   final int initialStep;
@@ -36,6 +49,9 @@ class AppStepper extends StatefulWidget {
   /// Null berarti pakai teks terjemahan bawaan (lihat build).
   final String? nextLabel;
   final String? prevLabel;
+
+  /// Teks tombol di langkah terakhir. Default-nya teks "Tambah Kendaraan"
+  /// (`t.addVehicleTitle`), jadi halaman lain wajib mengisinya.
   final String? submitLabel;
 
   final Color activeColor;
@@ -63,6 +79,7 @@ class _AppStepperState extends State<AppStepper> {
     _activeStep = widget.initialStep.clamp(0, _lastIndex);
   }
 
+  /// Validasi form langkah aktif. Langkah tanpa form selalu dianggap valid.
   bool _validateCurrentStep() {
     if (_activeStep >= widget.formKeys.length) return true;
     final key = widget.formKeys[_activeStep];
@@ -211,6 +228,8 @@ class _AppStepperState extends State<AppStepper> {
   }
 }
 
+/// Satu item header: lingkaran nomor (atau centang bila sudah lewat), judul,
+/// dan garis putus-putus penghubung ke langkah berikutnya.
 class _TxStepHeaderItem extends StatelessWidget {
   const _TxStepHeaderItem({
     required this.title,
@@ -298,6 +317,7 @@ class _TxStepHeaderItem extends StatelessWidget {
   }
 }
 
+/// Menggambar garis horizontal putus-putus selebar area yang diberikan.
 class _DashedLinePainter extends CustomPainter {
   _DashedLinePainter({
     required this.color,

@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 
+/// Bottom sheet yang bisa ditarik naik-turun dan berhenti di beberapa
+/// ketinggian ([snapSizes], dalam pecahan tinggi layar). Menarik sampai
+/// ukuran minimum menutup sheet.
+///
+/// Isi sheet dibangun lewat [sliverBuilder], yang WAJIB memakai
+/// `ScrollController` yang diberikan pada list/scroll view-nya, supaya gerakan
+/// scroll dan tarik sheet tersambung. [bottom] (opsional) menempel di bawah,
+/// mis. tombol aksi.
+///
+/// Dipakai oleh bottom sheet informasi kendaraan.
 class AppDraggableSheet extends StatelessWidget {
+  /// Catatan: saat ini [title] tidak ditampilkan; [_SheetHeader] sengaja
+  /// kosong (lihat [_HeaderText]). Halaman pemakai menggambar judulnya
+  /// sendiri di dalam [sliverBuilder].
   final String title;
   final List<double> snapSizes;
   final double initialChildSize;
@@ -22,6 +35,8 @@ class AppDraggableSheet extends StatelessWidget {
     this.maxChildSize = 0.92,
   });
 
+  /// Tutup sheet begitu ditarik sampai ukuran minimum. Mengembalikan false
+  /// supaya notifikasi tetap diteruskan ke atas.
   static bool _handleDismissOnMin(
     BuildContext context,
     DraggableScrollableNotification n,
@@ -67,6 +82,7 @@ class AppDraggableSheet extends StatelessWidget {
   }
 }
 
+/// Latar putih bersudut bulat atas untuk bottom sheet.
 class SheetSurface extends StatelessWidget {
   final Widget child;
   const SheetSurface({super.key, required this.child});
@@ -87,6 +103,7 @@ class SheetSurface extends StatelessWidget {
   }
 }
 
+/// Garis abu-abu kecil di atas sheet, penanda bahwa sheet bisa ditarik.
 class _DragHandle extends StatelessWidget {
   const _DragHandle();
 
@@ -116,6 +133,8 @@ class _SheetHeader extends StatelessWidget {
   }
 }
 
+/// Placeholder judul yang sengaja tidak menggambar apa pun (lihat
+/// [AppDraggableSheet.title]).
 class _HeaderText extends StatelessWidget {
   const _HeaderText();
 

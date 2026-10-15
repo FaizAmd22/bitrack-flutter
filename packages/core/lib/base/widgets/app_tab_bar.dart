@@ -3,6 +3,11 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Tab bar sederhana: tab aktif berlatar putih di atas latar abu-abu.
+/// Setiap tab diwakili [AppTabItem] dengan [value] bertipe [T].
+///
+/// Saat ini tidak dipakai di halaman mana pun (digantikan [SegmentedTabBar]
+/// yang indikatornya beranimasi geser).
 class AppTabBar<T> extends StatelessWidget {
   final List<AppTabItem<T>> tabs;
   final T activeValue;
@@ -67,6 +72,8 @@ class AppTabBar<T> extends StatelessWidget {
   }
 }
 
+/// Satu tab untuk [AppTabBar]: isi dengan [label] (teks) atau [child]
+/// (widget bebas), minimal salah satunya.
 class AppTabItem<T> {
   final T value;
   final String? label;

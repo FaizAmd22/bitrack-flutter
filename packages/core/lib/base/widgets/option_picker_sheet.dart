@@ -1,14 +1,21 @@
-// lib/base/widgets/option_picker_sheet.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Satu pilihan di [OptionPickerSheet]: [value] untuk disimpan/dikirim,
+/// [label] untuk ditampilkan.
 class PickerOption {
   final String value;
   final String label;
   const PickerOption({required this.value, required this.label});
 }
 
+/// Bottom sheet daftar pilihan (opsional dengan kolom cari).
+///
+/// Panggil [open]; hasilnya pilihan yang diketuk user, atau null kalau sheet
+/// ditutup tanpa memilih. Pilihan yang sedang terpilih ([selected]) diberi
+/// tanda centang. Dipakai oleh [PickerField], sheet assign teknisi, dan
+/// filter work order.
 class OptionPickerSheet {
   static Future<PickerOption?> open(
     BuildContext context, {
@@ -38,6 +45,8 @@ class OptionPickerSheet {
   }
 }
 
+/// Isi sheet: handle, judul, kolom cari (bila [searchable]), dan daftar.
+/// Pencarian mencocokkan label tanpa peduli huruf besar/kecil.
 class _PickerBody extends StatefulWidget {
   final String title;
   final List<PickerOption> options;
@@ -75,6 +84,7 @@ class _PickerBodyState extends State<_PickerBody> {
               .toList();
 
     final maxHeight = MediaQuery.of(context).size.height * 0.7;
+    // Tinggi keyboard: sheet didorong naik supaya kolom cari tidak tertutup.
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Padding(

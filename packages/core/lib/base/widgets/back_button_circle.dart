@@ -1,6 +1,8 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Tombol kembali bulat putih yang melayang di atas peta (Vehicle Detail,
+/// Periodic Track). Tanpa [onPressed], menutup halaman saat ini.
 class BackButtonCircle extends StatelessWidget {
   final VoidCallback? onPressed;
 

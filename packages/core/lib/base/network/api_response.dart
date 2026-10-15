@@ -2,18 +2,21 @@ import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:dio/dio.dart';
 
-/// Helper baca response backend TANPA bergantung pada field `status` di body.
-///
-/// Sumber kebenaran sukses/gagal cuma satu: HTTP status code. Dio sudah
-/// menolak semua respons non-2xx jadi DioException lewat `validateStatus`
-/// bawaannya, jadi kalau eksekusi sampai ke parser berarti request-nya sukses
-/// — tidak perlu diverifikasi ulang lewat body.
-///
-/// Ini disengaja: bentuk field `status` berubah-ubah antar-endpoint dan
-/// antar-versi backend (pernah boolean `true`, sekarang string `"success"`).
-/// Setiap kali app ikut mengunci nilainya, perubahan kecil di backend memaksa
-/// rilis ulang aplikasi. Body sekarang cuma dibaca untuk dua hal: mengambil
-/// `data`, dan mengambil `message` saat request-nya memang gagal.
+// Helper untuk membaca response backend dan mengubah error jadi teks untuk
+// user. Dipakai oleh semua service API di app.
+//
+// Prinsip file ini: sukses/gagal ditentukan HTTP status code, BUKAN field
+// `status` di body. Dio sudah menolak semua respons non-2xx jadi
+// DioException lewat `validateStatus` bawaannya, jadi kalau eksekusi sampai
+// ke parser berarti request-nya sukses — tidak perlu diverifikasi ulang lewat
+// body.
+//
+// Ini disengaja: bentuk field `status` berubah-ubah antar-endpoint dan
+// antar-versi backend (pernah boolean `true`, sekarang string `"success"`).
+// Setiap kali app ikut mengunci nilainya, perubahan kecil di backend memaksa
+// rilis ulang aplikasi. Body hanya dibaca untuk dua hal: mengambil `data`,
+// dan mengambil `message` saat request-nya memang gagal. Satu pengecualian
+// ada di [ApiRejectedException] di bawah.
 
 /// Ambil `data` sebagai list of map.
 ///
@@ -77,6 +80,8 @@ String apiErrorText(Object error, [String? fallback]) {
   return generic;
 }
 
+/// Pesan untuk respons HTTP gagal (4xx/5xx): dari `code` backend dulu, lalu
+/// dari HTTP status, terakhir [fallback].
 String _badResponseText(DioException e, AppLocalizations t, String fallback) {
   final data = e.response?.data;
 

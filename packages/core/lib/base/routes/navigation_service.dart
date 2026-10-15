@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Akses navigasi dari luar widget, plus observer route yang dipasang di
+/// `MaterialApp` tiap app.
 class NavigationService {
+  /// Dipasang di `MaterialApp.navigatorKey`. Dipakai untuk pindah halaman dari
+  /// kode yang tidak punya BuildContext, mis. logout otomatis saat API
+  /// membalas 401 (`ApiClient.logout`).
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 

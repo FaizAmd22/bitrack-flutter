@@ -2,6 +2,11 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/plate_search_bar.dart';
 import 'package:flutter/material.dart';
 
+/// Baris pencarian standar di atas halaman daftar/peta: kolom cari plat
+/// nomor ([PlateSearchBar], dengan saran plat) + tombol filter opsional, dan
+/// slot widget tambahan di bawahnya ([below]).
+///
+/// Dipakai di Home, Notifikasi, Vehicle, dan Work Order.
 class SearchBarBase extends StatelessWidget {
   final String? value;
   final ValueChanged<String>? onChanged;
@@ -10,10 +15,11 @@ class SearchBarBase extends StatelessWidget {
   final bool showFilter;
   final EdgeInsetsGeometry padding;
 
-  /// Padanan `renderFilter` Cordova — tiap halaman membuka sheet-nya sendiri.
+  /// Dipanggil saat tombol filter ditekan; tiap halaman membuka bottom sheet
+  /// filternya sendiri. Null = tombol tampil tapi tidak bisa ditekan.
   final Future<void> Function(BuildContext context)? onOpenFilter;
 
-  /// Padanan `renderBelow` Cordova — mis. activity chips di HomeScreen.
+  /// Widget tambahan di bawah baris pencarian, mis. chip aktivitas di Home.
   final Widget? below;
 
   const SearchBarBase({
@@ -62,6 +68,7 @@ class SearchBarBase extends StatelessWidget {
   }
 }
 
+/// Tombol kotak berikon filter di sebelah kanan kolom cari.
 class _FilterButton extends StatelessWidget {
   final VoidCallback? onTap;
   const _FilterButton({this.onTap});
