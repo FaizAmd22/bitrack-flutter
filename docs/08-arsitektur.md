@@ -68,7 +68,7 @@ Tidak ada socket untuk posisi kendaraan; app memakai polling:
 
 - Peta Home memuat ulang posisi tiap 30 detik, dan berhenti saat halaman tertutup halaman lain.
 - Detail kendaraan memuat ulang tiap 10 detik, melambat sampai 60 detik bila request lambat atau gagal (poll berikutnya baru dijadwalkan setelah request sebelumnya selesai).
-- Notifikasi memuat ulang badge tiap 30 detik.
+- Notifikasi (dan angka badge-nya) tidak di-polling: dimuat ulang saat tab Notifikasi dibuka, saat ditarik ke bawah (pull-to-refresh), saat filter diganti, dan setelah login.
 - WebSocket hanya dipakai untuk audio intercom dashcam.
 
 ## 8.6 Fitur lintas halaman

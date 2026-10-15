@@ -45,7 +45,7 @@ build berikutnya.
 - **Register** masih dummy (tidak mengirim ke backend) dan tidak ditautkan dari Login.
 - **Pengaturan notifikasi** (toggle Alert / Software Update) belum tersimpan ke mana pun.
 - **Bitrack Internal** belum punya `ONESIGNAL_APP_ID`, jadi push notification nonaktif di app itu.
-- `API_METTAXIOT_URL` dibaca kode dashcam tapi tidak ada di `.env.example`; pastikan ada di `.env` bila dashcam dipakai.
+- **Intercom dashcam** (tombol mikrofon di sheet Dashcam) belum diimplementasikan: tombolnya hanya mengubah status ON/OFF tanpa mengirim suara. Lihat TODO di `_handleMicrophone` (`vehicle_detail/widgets/dashcam_bottom_sheet.dart`).
 
 ## 16.5 Risiko keamanan dan operasional
 
@@ -63,6 +63,7 @@ build berikutnya.
 - Branch remote `monorepo` dan `google-maps` sudah lama tidak dipakai; `features/ota-shorebird` sudah ter-merge ke `main`. Boleh dihapus setelah dikonfirmasi.
 - `apps/fixtrack/android/build/` (2 file) ter-commit tidak sengaja; boleh dihapus dari git.
 - Folder `web/`, `linux/`, `macos/`, `windows/` di `apps/fixtrack` tidak dipakai.
+- Kode yang tidak dipakai di mana pun (sudah ditandai di komentarnya, aman dihapus setelah dicek): `DashcamService` dan `StonkamStreamService` (vehicle_detail/services), `MonitoringSearchBar` (home/widgets), `AppTabBar` (base/widgets), `models/dashcam_data.dart` (kosong), `fleetGroupMapProvider`, `isLikelyPlate` / `normalizePlateForApi`, serta beberapa fungsi di `vehicle_detail/utils/format_helpers.dart`.
 
 ## 16.7 Masalah umum dan solusinya
 

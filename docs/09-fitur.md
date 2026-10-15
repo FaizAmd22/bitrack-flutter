@@ -44,13 +44,13 @@ adalah build Customer.
 | Login | `login` | Login email + password, login biometric, tombol demo (flag Supabase), label versi + patch. | `POST /mobile/auth/login` |
 | Register | `register` | Form pendaftaran. **Masih dummy**, tidak ditautkan dari Login. | - |
 | Home / Tracker | `home` | Peta semua kendaraan, pencarian plat, filter, chip aktivitas, geofence. | `/monitoring/position`, `/monitoring/`, `/vehicle-monitoring/child/fleet-group/{userId}` |
-| Detail kendaraan | `vehicle_detail` | Posisi real-time, info, sensor, alamat, dashcam live. | `/monitoring/{id}`, `/vehicle/{id}`, `/dashcam/token` |
+| Detail kendaraan | `vehicle_detail` | Posisi real-time, info, sensor, alamat, dashcam live. | `/monitoring/{id}` (tab DASHBOARD dan INFORMATION), API Mettaxiot untuk dashcam |
 | Periodic track | `periodic_track` | Putar ulang rute kendaraan dengan chart dan alert. | `/monitoring/playback` |
 | Notifikasi | `notification` | Daftar alert, filter, catatan, lokasi alert. | `/transaction-alert/`, `/mw-mapping-alert/mark-all-as-read`, `/master-option/alert` |
 | Pengaturan notifikasi | `notification_settings` | Toggle Alert dan Software Update (belum tersimpan). | - |
 | Work Order (Teknisi) | `work_order` | Daftar, buat, detail, assign, evidence, catatan WO. | `/work-order`, `/work-order/detail`, `/work-order/evidence`, `/work-order/notes` |
-| Vehicle (Teknisi) | `vehicle` | Daftar kendaraan, filter fleet group, tambah kendaraan. | `/mobile/vehicle`, `/master-option/fleet-groups` |
-| Tambah kendaraan | `add_vehicle` | Wizard 3 langkah. | `/master-vehicle/`, `/master-vehicle/brands`, `/master-vehicle/check-fleetify` |
+| Vehicle (Teknisi) | `vehicle` | Daftar kendaraan, filter fleet group, tambah kendaraan. | `/master-vehicle/`, `/master-option/fleet-groups`, `/master-vehicle/check-fleetify` |
+| Tambah kendaraan | `add_vehicle` | Wizard 3 langkah. | `POST /master-vehicle/`, `/master-vehicle/brands`, `/mobile/vehicle` (cari data kendaraan dari plat) |
 | Profil | `profile` | Data user, menu pengaturan, Sign Out, label versi. | - |
 | Ganti password | `change_password` | OTP lalu password baru. | `/otp/send`, `/otp/verify`, `/users/update-password/{id}` |
 | Bahasa | `language` | Pilih bahasa app. | - |
@@ -90,11 +90,15 @@ adalah build Customer.
   `status_label.dart`, `vehicle_information_bottom_sheet.dart`: peta, sensor
   (mesin, BBM, chiller), status, dan info kendaraan.
 - `services/fetch_address.dart`: alamat dari koordinat (`GEO_REVERSE`).
-- **Dashcam:** `services/dashcam_service.dart` (token dan status),
-  `mettaxiot_stream_service.dart` / `stonkam_stream_service.dart` (dua vendor
-  kamera), `widgets/flv_player.dart` (video FLV lewat media_kit),
-  `widgets/dashcam_bottom_sheet.dart` (pilih channel, audio intercom lewat
-  WebSocket), `services/g711_decoder.dart` (decoder audio).
+- **Dashcam:** tombol Dashcam aktif kalau data detail berisi konfigurasi
+  `dashcam` yang valid (`models/dashcam_models.dart`).
+  `widgets/dashcam_bottom_sheet.dart` (pilih channel, speaker, intercom) memanggil
+  `services/mettaxiot_api.dart`, yang memakai `mettaxiot_stream_service.dart`
+  (token + URL stream Mettaxiot) atau membentuk URL Stonkam langsung dari
+  `CAMERA_URL`. Video diputar `widgets/flv_player.dart` (media_kit), audio
+  kabin lewat WebSocket + `services/g711_decoder.dart`. Catatan:
+  `services/dashcam_service.dart` dan `stonkam_stream_service.dart` adalah kode
+  lama yang tidak dipakai lagi.
 - Periodic track dibuka lewat sheet pemilih rentang waktu
   `base/widgets/periodic_track_filter_sheet.dart`, yang lalu membuka route
   `/periodic-track`.
@@ -115,7 +119,8 @@ adalah build Customer.
 ## 9.7 Notifikasi (`screens/notification`)
 
 - `notification_screen.dart` + `providers/notification_provider.dart`:
-  daftar alert, refresh badge tiap 30 detik, tandai semua sudah dibaca.
+  daftar alert berhalaman, angka badge, tandai semua sudah dibaca. Dimuat
+  ulang saat tab dibuka atau ditarik ke bawah (tidak di-polling).
 - `widgets/filter_notif_bottom_sheet.dart`: filter jenis alert
   (`providers/alert_type_provider.dart`, `/master-option/alert`).
 - `pages/notes_screen.dart`: catatan untuk satu alert.

@@ -34,7 +34,9 @@ Di halaman login, build dev menampilkan tulisan **DEVELOPMENT** di bawah logo (d
 | `VITE_APP_TYPES` | `DEV` atau `PROD`. `DEV` memunculkan label DEVELOPMENT di login. |
 | `GEO_REVERSE` | Server reverse geocoding (koordinat ke alamat) di detail kendaraan. |
 | `GOOGLE_MAP_KEY` | Key untuk tile peta Google di flutter\_map. |
-| `CAMERA_URL`, `METTAXIOT_*`, `API_METTAXIOT_URL`, `TOKEN_METTAX` | Streaming video/audio dashcam (vendor Mettaxiot dan Stonkam). Catatan: `API_METTAXIOT_URL` dibaca kode tapi tidak ada di `.env.example`; tanpa nilai ini status dashcam selalu "tidak tersedia". |
+| `METTAXIOT_KEY`, `METTAXIOT_SECRET`, `METTAXIOT_CREATE_TOKEN`, `METTAXIOT_VIDEO`, `METTAXIOT_AUDIO` | Dashcam Mettaxiot: token, URL video live, dan audio (speaker). |
+| `CAMERA_URL` | Server stream dashcam Stonkam. |
+| `API_METTAXIOT_URL`, `TOKEN_METTAX` | Hanya dibaca kode dashcam lama yang tidak dipakai lagi (`dashcam_service.dart`); boleh kosong. |
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Membaca flag remote dari tabel `app_settings`. Saat ini satu flag: `show_register`, yang memunculkan tombol "Lanjut dengan demo" di login (dipakai reviewer App Store). |
 | `ONESIGNAL_APP_ID` | Push notification. Kosong = push nonaktif tanpa error. |
 | `ONESIGNAL_AUTH_KEY` | Tidak dibaca app. Kemungkinan catatan untuk backend; jangan andalkan ada di app. |
@@ -51,7 +53,6 @@ kode Dart):
 | Alamat | File | Untuk |
 | --- | --- | --- |
 | `https://bitrack-otp-be.onrender.com` | `packages/core/lib/screens/change_password/services/otp_service.dart` | Kirim dan verifikasi OTP saat ganti password (server `bitrack-be-otp`, lihat [2.2](02-akses-dan-rahasia.md#22-proyek-lain-yang-terkait)). Timeout 10 detik. |
-| `https://tile.openstreetmap.org` | `packages/core/lib/screens/home/widgets/monitoring_map.dart` | Tile peta OpenStreetMap di peta Home. |
 
 App juga mengizinkan koneksi `http://` (tanpa SSL): `android:usesCleartextTraffic="true"` di `AndroidManifest.xml` dan `NSAllowsArbitraryLoads` di `Info.plist`. Ini dibutuhkan karena `CAMERA_URL` dashcam masih `http://` ke alamat IP. Jangan dihapus sebelum server kamera memakai HTTPS.
 
