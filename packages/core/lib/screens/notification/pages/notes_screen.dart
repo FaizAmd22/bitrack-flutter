@@ -1,4 +1,3 @@
-// lib/screens/notification/notes/notes_screen.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/notification/models/alert_model.dart';
@@ -6,6 +5,11 @@ import 'package:bitrack_core/screens/notification/models/notes_screen_args.dart'
 import 'package:bitrack_core/screens/notification/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
+/// Halaman catatan + foto lampiran satu alert (route `/notes`).
+///
+/// Argumen: [NotesScreenArgs] (atau [AlertModel] saja). `isValidation`
+/// memilih catatan tahap validasi atau tahap tindak lanjut. Foto bisa diketuk
+/// untuk dilihat penuh.
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
 
@@ -21,6 +25,8 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // didChangeDependencies bisa terpanggil berkali-kali; ambil data sekali
+    // saja.
     if (_future != null) return;
 
     final args = ModalRoute.of(context)?.settings.arguments;
@@ -118,6 +124,7 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
+  /// Tampilkan foto lampiran layar penuh; ketuk di mana saja untuk menutup.
   void _openFullImage(BuildContext context, String url) {
     showDialog(
       context: context,

@@ -1,4 +1,3 @@
-// lib/screens/notification/widgets/card_notif_popup.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/routes/app_routes.dart';
 import 'package:bitrack_core/base/utils/string_utils.dart';
@@ -7,6 +6,8 @@ import 'package:bitrack_core/screens/notification/models/alert_model.dart';
 import 'package:bitrack_core/screens/notification/models/notes_screen_args.dart';
 import 'package:flutter/material.dart';
 
+/// Bottom sheet menu untuk satu alert (dibuka dari kartu notifikasi): lihat
+/// catatan verifikasi, lihat catatan validasi, atau lihat lokasi di peta.
 class CardNotifPopup {
   static Future<void> open(BuildContext context, AlertModel item) {
     return showModalBottomSheet(
@@ -24,6 +25,7 @@ class _CardNotifPopupBody extends StatelessWidget {
   final AlertModel item;
   const _CardNotifPopupBody({required this.item});
 
+  /// Tutup sheet lalu buka halaman Notes.
   void _goNotes(BuildContext context, {required bool isValidation}) {
     Navigator.pop(context); // tutup sheet dulu
     Navigator.pushNamed(
@@ -33,6 +35,7 @@ class _CardNotifPopupBody extends StatelessWidget {
     );
   }
 
+  /// Tutup sheet lalu buka peta lokasi alert.
   void _goMapCoordinate(BuildContext context) {
     Navigator.pop(context);
     Navigator.pushNamed(

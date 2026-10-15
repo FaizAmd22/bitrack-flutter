@@ -1,3 +1,10 @@
+/// Satu notifikasi alert kendaraan (mis. ngebut, keluar geofence, mesin
+/// menyala di luar jam), dari `/transaction-alert`.
+///
+/// Semua field opsional karena bentuk response tidak selalu lengkap.
+/// Pasangan field `note`/`attachment` dan `noteValidation`/
+/// `attachmentValidation` adalah catatan + foto dari dua tahap berbeda:
+/// tindak lanjut alert, dan validasi atas tindak lanjut itu.
 class AlertModel {
   final String? id;
   final String? licensePlate;
@@ -5,17 +12,21 @@ class AlertModel {
   final String? eventName;
   final double? latitude;
   final double? longitude;
+  /// Alamat lokasi alert; tidak datang dari API alert, diisi belakangan
+  /// lewat reverse geocoding ([copyWith]).
   final String? address;
   final String? deviceTime;
   final String? verifiedBy;
   final String? driverName;
   final String? fleetGroupName;
   final double? speed;
+  /// Lama kejadian (satuan mengikuti backend).
   final int? duration;
   final String? note;
   final List<String>? attachment;
   final String? noteValidation;
   final List<String>? attachmentValidation;
+  /// Kode status tindak lanjut dan teks tampilnya.
   final String? status;
   final String? statusText;
   final String? statusValidation;
@@ -97,6 +108,7 @@ class AlertModel {
     return null;
   }
 
+  /// Salinan dengan [address] terisi (hanya alamat yang bisa diganti).
   AlertModel copyWith({String? address}) {
     return AlertModel(
       id: id,

@@ -8,8 +8,12 @@ import 'package:bitrack_core/screens/notification/widgets/card_notif_popup.dart'
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Tahap tindak lanjut sebuah alert: belum diverifikasi -> belum divalidasi
+/// -> sudah divalidasi. Menentukan warna dan teks badge di kartu.
 enum _CardStatus { needVerify, needValidate, validated }
 
+/// Tentukan tahap alert dari field status. Kalau `status` kosong, alert
+/// dianggap belum diverifikasi selama `verified_by` kosong.
 _CardStatus _getStatus(AlertModel item) {
   // Verifikasi diprioritaskan: selama belum diverifikasi, status validasi diabaikan.
   final status = item.status?.trim().toUpperCase();
@@ -24,6 +28,7 @@ _CardStatus _getStatus(AlertModel item) {
       : _CardStatus.needValidate;
 }
 
+/// Warna latar, warna teks, dan label badge status.
 class _StatusStyle {
   final Color bg;
   final Color fg;
@@ -60,6 +65,8 @@ _StatusStyle _styleFor(
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/// Tanggal tampil (`d MMM yyyy`) dari waktu server. Mencoba format
+/// `yyyy-MM-dd HH:mm:ss` dulu, lalu ISO 8601; gagal = `-`.
 String _fmtDate(String? raw) {
   if (raw == null || raw.trim().isEmpty) return '-';
   try {
@@ -75,6 +82,8 @@ String _fmtDate(String? raw) {
   }
 }
 
+/// Jam tampil (`HH:mm`) dari waktu server, dengan aturan parsing yang sama
+/// seperti [_fmtDate].
 String _fmtTime(String? raw) {
   if (raw == null || raw.trim().isEmpty) return '';
   try {
@@ -90,6 +99,7 @@ String _fmtTime(String? raw) {
   }
 }
 
+/// Durasi dalam detik -> `1h 5m` atau `5m`.
 String _fmtDuration(int? secs) {
   if (secs == null || secs <= 0) return '-';
   final h = secs ~/ 3600;
@@ -98,9 +108,13 @@ String _fmtDuration(int? secs) {
   return '${m}m';
 }
 
+/// Alert "terlalu lama berhenti" (mesin hidup/mati) menampilkan durasi.
 bool _isOverstay(String? eventType) =>
     eventType == 'OVERSTAY_ENGINE_ON' || eventType == 'OVERSTAY_ENGINE_OFF';
 
+/// Kartu satu alert di daftar Notifikasi: plat, jenis alert, waktu, alamat,
+/// badge status, dan (untuk alert overstay) durasinya. Mengetuk kartu membuka
+/// [CardNotifPopup].
 class CardNotif extends StatelessWidget {
   final AlertModel item;
 

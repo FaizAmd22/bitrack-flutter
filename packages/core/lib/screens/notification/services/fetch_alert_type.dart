@@ -5,6 +5,7 @@ import 'package:bitrack_core/base/services/demo_data.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 
+/// Mengambil daftar jenis alert dari `/master-option/alert` (untuk filter).
 class FetchAlertType {
   Future<List<Map<String, dynamic>>> fetch() async {
     if (DemoMode.isActive) return DemoData.alertTypes();

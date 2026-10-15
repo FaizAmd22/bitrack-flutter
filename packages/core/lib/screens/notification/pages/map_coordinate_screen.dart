@@ -1,4 +1,3 @@
-// lib/screens/notification/map_coordinate/map_coordinate_screen.dart
 import 'package:bitrack_core/base/config/app_branding.dart';
 import 'package:bitrack_core/base/constants/map_urls.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
@@ -9,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+/// Halaman peta lokasi satu alert (route `/map-coordinate`, argumen
+/// [AlertModel]). Menampilkan marker di titik alert dan koordinatnya dalam
+/// format derajat-menit-detik yang bisa disalin.
 class MapCoordinateScreen extends StatefulWidget {
   const MapCoordinateScreen({super.key});
 
@@ -19,6 +21,8 @@ class MapCoordinateScreen extends StatefulWidget {
 class _MapCoordinateScreenState extends State<MapCoordinateScreen> {
   bool _copied = false;
 
+  /// Ubah koordinat desimal jadi derajat-menit-detik, mis.
+  /// `-6.2` -> `6°12'0.0"S`. [isLat] menentukan arah N/S atau E/W.
   String _toDMS(double dec, bool isLat) {
     final direction = dec >= 0 ? (isLat ? 'N' : 'E') : (isLat ? 'S' : 'W');
     final absDec = dec.abs();
@@ -34,6 +38,7 @@ class _MapCoordinateScreenState extends State<MapCoordinateScreen> {
     return '${_toDMS(lat, true)} ${_toDMS(lng, false)}';
   }
 
+  /// Salin koordinat ke clipboard dan tampilkan tanda "tersalin" 2 detik.
   Future<void> _copy(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;

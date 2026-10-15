@@ -15,6 +15,9 @@ import 'package:bitrack_core/screens/vehicle/providers/fleet_group_provider.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Tab Notifikasi: daftar alert kendaraan dengan pencarian plat, filter
+/// (tanggal, fleet group, status, jenis alert), pull-to-refresh, dan infinite
+/// scroll. Logika datanya ada di [NotificationNotifier].
 class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
 
@@ -22,6 +25,8 @@ class NotificationScreen extends ConsumerStatefulWidget {
   ConsumerState<NotificationScreen> createState() => NotificationScreenState();
 }
 
+/// Sengaja publik (tanpa `_`) supaya BottomNavBar bisa memanggil
+/// [refreshFromOutside] lewat GlobalKey saat tab ini dibuka.
 class NotificationScreenState extends ConsumerState<NotificationScreen> {
   late final ScrollController _scroll;
 
@@ -55,12 +60,14 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
         .refresh(search: _search, filter: _filter);
   }
 
+  /// Muat ulang paksa; dipanggil BottomNavBar setiap tab Notifikasi dibuka.
   void refreshFromOutside() {
     ref
         .read(notificationProvider.notifier)
         .refresh(search: _search, filter: _filter, force: true);
   }
 
+  /// Cari plat: request dikirim 400 ms setelah user berhenti mengetik.
   void _onSearchChanged(String val) {
     setState(() => _search = val);
     _debounce?.cancel();
@@ -72,6 +79,7 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
     });
   }
 
+  /// Infinite scroll: muat halaman berikutnya saat tersisa 250 px ke bawah.
   void _onScroll() {
     if (!_scroll.hasClients) return;
     final pos = _scroll.position;
@@ -86,6 +94,9 @@ class NotificationScreenState extends ConsumerState<NotificationScreen> {
         .refresh(search: _search, filter: _filter, force: true);
   }
 
+  /// Siapkan pilihan fleet group dan jenis alert, lalu buka sheet filter.
+  /// Kalau salah satunya gagal dimuat, sheet tetap dibuka dengan pilihan
+  /// kosong dan error ditampilkan sebagai SnackBar.
   Future<void> _openFilter() async {
     List<Map<String, dynamic>> fleetGroupRaw = const [];
     try {

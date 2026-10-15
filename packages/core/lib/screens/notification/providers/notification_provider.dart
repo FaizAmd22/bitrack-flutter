@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+/// Filter daftar notifikasi. Field `...Label` hanya untuk ditampilkan di
+/// UI; yang dikirim ke API adalah nilai tanpa `Label`.
 class NotificationFilter {
   final DateTime? startDate;
   final DateTime? endDate;
@@ -28,6 +30,7 @@ class NotificationFilter {
     this.alertTypeLabel,
   });
 
+  /// Catatan: field `...Label` tidak ikut disalin (menjadi null).
   NotificationFilter copyWith({
     DateTime? startDate,
     DateTime? endDate,
@@ -47,6 +50,7 @@ class NotificationFilter {
   NotificationFilter clear() => const NotificationFilter();
 }
 
+/// Isi daftar notifikasi yang sudah dimuat (halaman 1 sampai [page]).
 class NotificationListState {
   final List<AlertModel> items;
   final int page;
@@ -87,6 +91,8 @@ class NotificationListState {
   }
 }
 
+/// Seluruh state halaman Notifikasi: daftar, filter, teks cari, dan angka
+/// badge.
 class NotificationState {
   final bool isLoading;
   final NotificationListState list;
@@ -129,6 +135,11 @@ class NotificationState {
   }
 }
 
+/// Logika halaman Notifikasi: muat ulang, muat halaman berikutnya (infinite
+/// scroll), angka badge, dan pengisian alamat tiap alert.
+///
+/// Tidak ada polling: [refresh] dipanggil saat tab Notifikasi dibuka, saat
+/// pull-to-refresh, dan saat filter/cari berubah.
 class NotificationNotifier extends StateNotifier<NotificationState> {
   NotificationNotifier(this._service) : super(NotificationState.initial());
 
@@ -137,6 +148,9 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
   // Guard: cegah refresh beruntun yang memicu loading terus-menerus.
   DateTime? _lastRefresh;
 
+  /// Muat ulang dari halaman 1, lalu tandai semua sudah dibaca dan perbarui
+  /// badge. Tanpa [force], diabaikan bila refresh terakhir kurang dari 3 detik
+  /// lalu.
   Future<void> refresh({
     String? search,
     NotificationFilter? filter,
@@ -195,6 +209,7 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     }
   }
 
+  /// Muat halaman berikutnya (dipanggil saat daftar di-scroll sampai bawah).
   Future<void> loadMore() async {
     final list = state.list;
     if (list.isLoadingMore || !list.hasMore) return;
@@ -204,6 +219,8 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     await _loadPage(page: list.page + 1, existing: list.items);
   }
 
+  /// Ambil satu halaman, gabungkan dengan [existing], lalu isi alamatnya di
+  /// latar belakang. Item yang gagal di-parse diganti AlertModel kosong.
   Future<void> _loadPage({
     required int page,
     required List<AlertModel> existing,
@@ -257,6 +274,9 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     }
   }
 
+  /// Isi alamat tiap alert lewat reverse geocoding secara paralel. Setiap
+  /// alamat dipasang hanya kalau item di posisi itu masih alert yang sama
+  /// (daftar bisa sudah dimuat ulang saat alamat datang).
   Future<void> _attachAddressesParallel(
     List<AlertModel> items, {
     required int offset,
@@ -288,10 +308,13 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
   }
 }
 
+/// Service API notifikasi (bisa diganti versi palsu di tes).
 final notificationServiceProvider = Provider<NotificationService>(
   (ref) => NotificationService(),
 );
 
+/// State halaman Notifikasi + badge di bottom navigation. Di-invalidate saat
+/// login/logout supaya tidak membawa data user sebelumnya.
 final notificationProvider =
     StateNotifierProvider<NotificationNotifier, NotificationState>((ref) {
       return NotificationNotifier(ref.watch(notificationServiceProvider));

@@ -7,8 +7,16 @@ import 'package:bitrack_core/screens/notification/providers/notification_provide
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Tampilan di dalam sheet filter: halaman utama, atau salah satu daftar
+/// pilihan (fleet group, status, jenis alert) yang menggantikannya.
 enum _View { main, fleet, status, alertType }
 
+/// Bottom sheet filter Notifikasi: rentang tanggal, fleet group, status
+/// verifikasi, dan jenis alert.
+///
+/// Memilih fleet group/status/jenis alert tidak membuka sheet baru; isi sheet
+/// berganti ke daftar pilihan (lihat [_View]) dan tombol back kembali ke
+/// halaman utama. [open] mengembalikan filter baru, atau null bila ditutup.
 class FilterNotifBottomSheet extends StatefulWidget {
   final NotificationFilter initialFilter;
   final List<FilterOption> fleetGroups;
@@ -53,6 +61,7 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
   FilterOption? _status;
   FilterOption? _alertType;
 
+  /// Teks cari di daftar pilihan yang sedang terbuka.
   String _search = '';
 
   final _dateFmt = DateFormat('d MMM yyyy');
@@ -83,6 +92,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
     }
   }
 
+  /// Back: dari daftar pilihan kembali ke halaman utama; dari halaman utama
+  /// menutup sheet.
   void _back() {
     if (_view != _View.main) {
       setState(() {
@@ -94,6 +105,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
     Navigator.pop(context);
   }
 
+  /// Terapkan filter. Tanggal mulai dibulatkan ke 00:00:00 dan tanggal akhir
+  /// ke 23:59:59, supaya seluruh hari terpilih ikut.
   void _apply() {
     final normalizedStart = _startDate != null
         ? DateTime(
@@ -171,6 +184,8 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
     }
   }
 
+  /// Pilihan untuk daftar yang sedang terbuka, diawali pilihan "Semua".
+  /// Nilai status (`need_verified`, dst.) dikirim apa adanya ke API.
   List<FilterOption> _currentOptions(AppLocalizations t) {
     switch (_view) {
       case _View.fleet:
@@ -484,7 +499,7 @@ class _FilterNotifBottomSheetState extends State<FilterNotifBottomSheet> {
   }
 }
 
-// ── Private reusable tiles ────────────────────────────────────────────────────
+// ── Komponen kecil yang hanya dipakai di sheet ini ──────────────────────────
 
 class _Header extends StatelessWidget {
   final String title;

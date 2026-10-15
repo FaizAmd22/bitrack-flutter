@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 
+/// Satu halaman hasil daftar alert beserta info paginasinya.
 class AlertPageResult {
   final List<dynamic> items;
   final int page;
@@ -20,14 +21,23 @@ class AlertPageResult {
   });
 }
 
+/// Panggilan API notifikasi alert: daftar (berhalaman), detail, dan tandai
+/// semua sudah dibaca.
+///
+/// Berbeda dari service lain, kegagalan di sini TIDAK dilempar: dicatat ke
+/// log lalu dikembalikan sebagai hasil kosong/null, supaya daftar notifikasi
+/// tidak menampilkan error setiap polling gagal.
 class NotificationService {
   final _storage = const FlutterSecureStorage();
   final _fmt = DateFormat('yyyy-MM-dd HH:mm:ss');
 
+  /// Jumlah alert per halaman.
   static const _limit = 20;
 
   String _fmtDate(DateTime dt) => _fmt.format(dt);
 
+  /// `GET /transaction-alert/` dengan filter. Tanpa [startDate]/[endDate],
+  /// rentang default = hari ini (00:00:01 sampai 23:59:59).
   Future<AlertPageResult> fetchAlerts({
     required int page,
     DateTime? startDate,
@@ -103,6 +113,7 @@ class NotificationService {
     }
   }
 
+  /// `GET /transaction-alert/{id}`; null kalau gagal.
   Future<AlertModel?> fetchAlertDetail(String id) async {
     if (DemoMode.isActive) {
       final items = DemoData.notificationAlerts();
@@ -127,6 +138,10 @@ class NotificationService {
     }
   }
 
+  /// Tandai semua alert milik user sudah dibaca (badge jadi nol).
+  ///
+  /// Catatan: `fleet_group_ids` diisi nilai `user_id`, sama seperti kode
+  /// aslinya. Konfirmasi ke backend kalau perilaku endpoint ini berubah.
   Future<void> markAllAsRead() async {
     if (DemoMode.isActive) return;
 
