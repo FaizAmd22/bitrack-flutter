@@ -1,3 +1,7 @@
+// Model response `/vehicle-monitoring/child/fleet-group/{userId}`: daftar
+// fleet group milik user, masing-masing dengan daftar geofence-nya.
+
+/// Satu area geofence (wilayah yang dipantau).
 class GeofenceItem {
   final String id;
   final String name;
@@ -12,6 +16,7 @@ class GeofenceItem {
   }
 }
 
+/// Satu fleet group (kelompok armada) beserta geofence-nya.
 class FleetGroupItem {
   final String id;
   final String name;
@@ -39,6 +44,7 @@ class FleetGroupItem {
   }
 }
 
+/// Seluruh response endpoint fleet group.
 class FleetGeofenceResponse {
   final List<FleetGroupItem> data;
 

@@ -2,12 +2,15 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Satu chip activity: [value] = kunci internal (diterjemahkan ke parameter
+/// server oleh `MonitoringApi.activityParam`), [label] = teks chip.
 class ActivityOption {
   final String value;
   final String label;
   const ActivityOption(this.value, this.label);
 }
 
+/// Daftar chip activity di peta Home, sesuai urutan tampil.
 List<ActivityOption> activityOptions(AppLocalizations t) => [
   ActivityOption('allVehicle', t.activityAllVehicle),
   ActivityOption('inOperation', t.activityInOperation),
@@ -19,6 +22,9 @@ List<ActivityOption> activityOptions(AppLocalizations t) => [
   ActivityOption('repair', t.activityInRepair),
 ];
 
+/// Deretan chip activity yang bisa digeser horizontal di bawah search bar
+/// Home. Chip aktif berwarna primer dan menampilkan jumlah kendaraannya
+/// ([totalVehicle]).
 class ActivityChips extends StatelessWidget {
   final String selectedActivity;
   final ValueChanged<String> onActivityChanged;

@@ -1,9 +1,10 @@
-// lib/screens/home/widgets/filter_tracker_bottom_sheet.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/home/models/filter_model.dart';
 import 'package:flutter/material.dart';
 
+/// Hasil sheet filter peta Home. Setiap field selalu terisi; `value` null
+/// berarti "Semua" / belum dipilih.
 class TrackerFilterResult {
   final FilterOption selectedType;
   final FilterOption selectedFleetGroup;
@@ -16,6 +17,11 @@ class TrackerFilterResult {
   });
 }
 
+/// Bottom sheet filter peta Home: pilih jenis filter, lalu nilai filternya
+/// (saat ini hanya fleet group).
+///
+/// [open] mengembalikan pilihan baru saat user menekan Terapkan atau Reset,
+/// atau null kalau sheet ditutup tanpa memilih.
 class FilterTrackerBottomSheet {
   static Future<TrackerFilterResult?> open(
     BuildContext context, {
@@ -43,8 +49,10 @@ class FilterTrackerBottomSheet {
   }
 }
 
-// Jenis filter yang tersedia. Geofence di-comment di Cordova; di sini
-// aktif tapi kamu bisa hapus dari list ini kalau belum dipakai.
+// Jenis filter yang bisa dipilih. Geofence sengaja belum diaktifkan (baris
+// dikomentari); untuk mengaktifkannya, buka komentar baris itu DAN kirim
+// daftar geofence asli dari HomeScreen._openFilterSheet (saat ini hanya
+// berisi "Semua Geofence").
 List<FilterOption> _typeOptions(AppLocalizations t) => [
   FilterOption(value: 'fleetgroup', label: t.filterFleetGroup),
   // FilterOption(value: 'geofence', label: t.filterGeofence),
@@ -74,6 +82,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
   late FilterOption? _fleetGroup = widget.initialFleetGroup;
   late FilterOption? _geofence = widget.initialGeofence;
 
+  /// Tombol Reset: kembalikan semua filter ke "Semua" lalu tutup sheet.
   void _clear() {
     final t = AppLocalizations.of(context);
     Navigator.pop(
@@ -89,6 +98,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
     );
   }
 
+  /// Tombol Terapkan: kirim pilihan saat ini ke HomeScreen.
   void _apply() {
     final t = AppLocalizations.of(context);
     Navigator.pop(
@@ -257,6 +267,7 @@ class _FilterSheetBodyState extends State<_FilterSheetBody> {
   }
 }
 
+/// Judul kecil di atas setiap baris pilihan.
 class _Label extends StatelessWidget {
   final String text;
   const _Label(this.text);
@@ -268,6 +279,8 @@ class _Label extends StatelessWidget {
   );
 }
 
+/// Baris berbingkai yang menampilkan pilihan terpilih (atau [placeholder])
+/// dan membuka picker saat diketuk.
 class _SelectRow extends StatelessWidget {
   final String? value;
   final String placeholder;
@@ -314,7 +327,8 @@ class _SelectRow extends StatelessWidget {
   }
 }
 
-// Bagian bawah file filter_tracker_bottom_sheet.dart (atau file sendiri)
+/// Sheet daftar pilihan dengan kolom cari, khusus sheet filter ini (mirip
+/// `OptionPickerSheet` di base/widgets, tapi bertipe [FilterOption]).
 class _SearchablePicker extends StatefulWidget {
   final String title;
   final List<FilterOption> options;

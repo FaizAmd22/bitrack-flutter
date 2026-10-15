@@ -1,14 +1,29 @@
+/// Satu kendaraan di peta Home, dari `/monitoring/position`.
+///
+/// Parsing sengaja toleran: angka bisa datang sebagai string, field bisa
+/// bernama beda antar-endpoint (`_id`/`id`, `direction`/`bearing`), dan nilai
+/// kosong diganti default (0 / string kosong) supaya satu data rusak tidak
+/// membuat seluruh peta gagal.
 class Vehicle {
   final String id;
   final String vehicleId;
   final double latitude;
   final double longitude;
+  /// Arah hadap kendaraan dalam derajat (0 = utara), untuk memutar ikon.
   final double bearing;
+
+  /// Aktivitas dari server, huruf besar: `MOVING`, `IDLE`, `STOP`, dst.
   final String activity;
+
+  /// Waktu data terakhir dari device GPS (string dari server).
   final String deviceTime;
+
+  /// Status mesin: 1 = menyala, 0 = mati.
   final int ignition;
   final String licensePlate;
   final String fleetGroupName;
+  /// URL ikon kategori kendaraan custom (boleh kosong), lihat
+  /// [VehicleMarkerIcon].
   final String vehicleCategoryIcon;
 
   const Vehicle({
@@ -36,6 +51,8 @@ class Vehicle {
     return 0.0;
   }
 
+  /// Server bisa mengirim ignition sebagai angka, `"ON"`/`"OFF"`, atau
+  /// string angka.
   static int _toIgnition(dynamic v) {
     if (v == null) return 0;
     if (v is num) return v.toInt();

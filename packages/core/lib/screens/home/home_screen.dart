@@ -24,7 +24,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // menumpuk dan overlay loading tidak pernah sempat mati.
 const _pollInterval = Duration(seconds: 30);
 
+/// Tab Tracker: peta seluruh armada user.
+///
+/// Isi layar (dari bawah ke atas): peta [MonitoringMap], overlay loading,
+/// search bar + chip activity, tombol tampil/sembunyi plat, dan teks error.
+/// Data diambil lewat `monitoringProvider` (lihat
+/// `features/monitoring/providers/monitoring_providers.dart`) dan diperbarui
+/// tiap [_pollInterval] selama tab ini terlihat.
 class HomeScreen extends ConsumerStatefulWidget {
+  /// True kalau tab Tracker sedang dipilih di bottom navigation. Polling
+  /// hanya berjalan saat true.
   final bool isActive;
   const HomeScreen({super.key, required this.isActive});
 
@@ -33,13 +42,19 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
+  /// Kunci chip activity terpilih (lihat [ActivityChips]).
   String _selectedActivity = 'allVehicle';
 
+  /// Teks di kolom cari, diperbarui tiap ketikan.
   String? _searchQuery;
+
+  /// Teks cari yang benar-benar dipakai untuk request, diperbarui 400 ms
+  /// setelah user berhenti mengetik (lihat [_onSearchChanged]).
   String? _debouncedQuery;
   Timer? _debounce;
   Timer? _polling;
 
+  /// Tampilkan label plat nomor di atas setiap marker.
   bool _showPlate = false;
 
   final MonitoringMapController _mapController = MonitoringMapController();
@@ -49,9 +64,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
   FilterOption? _selectedGeofence;
 
   String? selectedFleetgroupId;
+
+  /// Disimpan tapi belum dipakai untuk menyaring data (filter geofence belum
+  /// aktif, lihat [_openFilterSheet]).
   String? selectedGeofenceId;
 
   bool _showLoading = false;
+
+  /// Penjaga supaya refresh tidak berjalan dobel (lihat [_refresh]).
   bool _isRefreshing = false;
 
   @override
@@ -209,6 +229,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
     }
   }
 
+  /// Ketikan di kolom cari: perbarui teks langsung, tapi request baru dikirim
+  /// 400 ms setelah user berhenti mengetik.
   void _onSearchChanged(String val) {
     setState(() => _searchQuery = val);
 
@@ -220,6 +242,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
     });
   }
 
+  /// Pilihan fleet group untuk sheet filter, diawali "Semua Fleet Group".
   List<FilterOption> _buildFleetGroupOptions(
     List<Map<String, dynamic>> fleetGroups,
   ) {
@@ -240,6 +263,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
     return out;
   }
 
+  /// Buka sheet filter; kalau user menerapkan filter, muat ulang peta.
   Future<void> _openFilterSheet(List<FilterOption> fleetGroups) async {
     // Geofence belum bisa dipilih sebagai jenis filter (lihat _typeOptions
     // di filter_tracker_bottom_sheet.dart), jadi tidak perlu data geofence.
@@ -298,6 +322,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
     return out;
   }
 
+  /// Kendaraan terakhir yang berhasil dimuat. Dipakai selama request baru
+  /// berjalan, supaya marker tidak hilang sesaat setiap polling.
   List<Vehicle> _lastMapVehicles = const [];
 
   @override
@@ -406,6 +432,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with RouteAware {
   }
 }
 
+/// Tombol melayang "Tampilkan/Sembunyikan Plat" di pojok kanan bawah peta.
 class _TogglePlateButton extends StatelessWidget {
   final bool showPlate;
   final VoidCallback onTap;

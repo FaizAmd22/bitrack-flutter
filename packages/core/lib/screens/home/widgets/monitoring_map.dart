@@ -12,12 +12,20 @@ import 'package:bitrack_core/screens/home/models/vehicle.dart';
 import 'package:bitrack_core/screens/vehicle_detail/models/vehicle_detail_args.dart';
 import 'package:bitrack_core/base/constants/map_urls.dart';
 
+/// Pengendali kecil supaya [HomeScreen] bisa menyuruh peta "pas-kan kamera ke
+/// kendaraan ini" tanpa memegang state peta secara langsung.
 class MonitoringMapController {
   void Function(List<Vehicle> vehicles)? _fit;
 
   void fitToVehicles(List<Vehicle> vehicles) => _fit?.call(vehicles);
 }
 
+/// Peta Home (flutter_map + tile Google): marker setiap kendaraan, dikelompokkan
+/// jadi lingkaran angka (cluster) saat berdekatan. Mengetuk marker membuka
+/// Vehicle Detail.
+///
+/// Rotasi peta dimatikan supaya utara selalu di atas (ikon kendaraan sudah
+/// diputar sesuai arah hadapnya).
 class MonitoringMap extends StatefulWidget {
   final List<Vehicle> vehicles;
   final bool showPlate;
@@ -42,9 +50,14 @@ class _MonitoringMapState extends State<MonitoringMap> {
     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
   );
 
+  // Marker hanya dibangun ulang kalau datanya benar-benar berubah. Polling
+  // tiap 30 detik sering mengembalikan data yang sama; membangun ulang ratusan
+  // marker tanpa perlu membuat peta tersendat.
   List<Marker> _cachedMarkers = const [];
   int _cacheKey = 0;
 
+  /// Geser dan zoom kamera supaya semua [vehicles] terlihat. Satu kendaraan =
+  /// zoom 16 ke posisinya. Padding atas lebih besar karena tertutup search bar.
   void fitToVehicles(List<Vehicle> vehicles) {
     if (vehicles.isEmpty) return;
 
@@ -93,6 +106,8 @@ class _MonitoringMapState extends State<MonitoringMap> {
 
   void _rebuildMarkersIfNeeded() {
     final vehicles = widget.vehicles;
+    // Arah dibulatkan ke kelipatan 5 derajat: perubahan arah kecil tidak perlu
+    // membangun ulang marker.
     int roundedBearing(double b) => ((b / 5).round() * 5) % 360;
 
     final key = Object.hash(
@@ -190,6 +205,8 @@ class _MonitoringMapState extends State<MonitoringMap> {
       ),
       children: [
         TileLayer(
+          // Tile Google (key dari GOOGLE_MAP_KEY di .env). Baris OSM di bawah
+          // adalah alternatif lama yang tidak dipakai.
           // urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: AppBranding.mapUserAgentPackageName,
           // key: '',
@@ -227,6 +244,7 @@ class _MonitoringMapState extends State<MonitoringMap> {
   }
 }
 
+/// Label plat nomor hitam transparan di atas ikon kendaraan.
 class _PlateBubble extends StatelessWidget {
   final String text;
   const _PlateBubble({required this.text});

@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/plate_search_bar.dart';
 
+/// Versi lama search bar + chip activity peta Home.
+///
+/// Saat ini TIDAK dipakai: Home memakai `SearchBarBase` + [ActivityChips].
+/// Label chip di sini juga belum diterjemahkan (teks Inggris tetap).
 class MonitoringSearchBar extends StatelessWidget {
   final String? searchQuery;
   final ValueChanged<String>? onSearchChanged;

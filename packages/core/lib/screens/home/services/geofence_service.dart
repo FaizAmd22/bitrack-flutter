@@ -2,10 +2,13 @@ import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:bitrack_core/screens/home/models/filter_model.dart';
 import 'package:dio/dio.dart';
 
+/// Mengambil daftar geofence user untuk pilihan filter di peta Home.
 class GeofenceRepo {
   final Dio dio;
   GeofenceRepo(this.dio);
 
+  /// Semua geofence dari seluruh fleet group milik [userId], tanpa duplikat,
+  /// diawali pilihan "Semua Geofence" (value null).
   Future<List<FilterOption>> fetchGeofenceOptions(String userId) async {
     final res = await dio.get('/vehicle-monitoring/child/fleet-group/$userId');
     final data = res.data;

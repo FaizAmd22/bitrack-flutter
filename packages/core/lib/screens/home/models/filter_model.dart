@@ -1,3 +1,5 @@
+/// Satu pilihan filter: [value] dikirim ke API, [label] ditampilkan.
+/// [value] null berarti "Semua" (tanpa filter).
 class FilterOption {
   final String? value;
   final String label;
@@ -5,6 +7,8 @@ class FilterOption {
   const FilterOption({required this.value, required this.label});
 }
 
+/// Pilihan filter peta Home dari bottom sheet filter: jenis/kategori,
+/// fleet group, dan geofence.
 class FilterResult {
   final FilterOption selectedType;
   final FilterOption selectedFleetGroup;
