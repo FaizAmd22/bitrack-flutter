@@ -3,6 +3,12 @@ import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/services/demo_data.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 
+/// API data peta Home: status kendaraan (`/monitoring`) dan posisinya
+/// (`/monitoring/position`). Hasilnya diolah di `monitoring_providers.dart`.
+///
+/// Kunci activity di app (`allVehicle`, `inOperation`, `moving`, ...) sama
+/// dengan kunci chip di `screens/home/widgets/activity_chips.dart`, lalu
+/// diterjemahkan ke kosakata server lewat [activityParam] dan [summaryKey].
 class MonitoringApi {
   // Kosakata server. Nilainya huruf kecil + underscore, persis seperti yang
   // dipakai web tracking-dev (mis. `/monitoring?activity=in_operation`).
@@ -32,9 +38,11 @@ class MonitoringApi {
     'repair': 'REPAIR',
   };
 
+  /// Nilai query `activity` untuk server; string kosong = semua kendaraan.
   static String activityParam(String activity) =>
       _activityParams[activity] ?? '';
 
+  /// Kunci jumlah kendaraan di `metadata.summary` untuk sebuah activity.
   static String summaryKey(String activity) => _summaryKeys[activity] ?? 'ALL';
 
   /// `GET /monitoring` — daftar status kendaraan (tanpa koordinat) plus

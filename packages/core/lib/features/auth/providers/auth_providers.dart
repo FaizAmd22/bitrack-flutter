@@ -9,12 +9,15 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bitrack_core/features/auth/data/auth_api.dart';
 
+/// State proses login untuk UI: sedang memuat atau tidak, dan pesan error.
 class AuthState {
   final bool isLoading;
   final String? errorMessage;
 
   const AuthState({this.isLoading = false, this.errorMessage});
 
+  /// Catatan: [errorMessage] TIDAK ikut disalin; tidak mengisinya berarti
+  /// menghapus pesan error.
   AuthState copyWith({bool? isLoading, String? errorMessage}) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
@@ -23,15 +26,23 @@ class AuthState {
   }
 }
 
+/// Secure storage untuk data login (bisa diganti versi palsu di tes).
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage();
 });
 
+/// Logika login dan kredensial biometric. Dipakai form login lewat
+/// [authControllerProvider].
 class AuthController extends StateNotifier<AuthState> {
   AuthController(this._secureStorage) : super(const AuthState());
 
   final FlutterSecureStorage _secureStorage;
 
+  /// Login, lalu simpan token (lewat [ApiClient.setToken]) dan data user ke
+  /// secure storage, lalu tautkan HP ke OneSignal.
+  ///
+  /// Mengembalikan response mentah bila sukses, atau null bila gagal (pesan
+  /// errornya ada di `state.errorMessage`).
   Future<Map<String, dynamic>?> loginAndPersist({
     required String email,
     required String password,
@@ -41,6 +52,8 @@ class AuthController extends StateNotifier<AuthState> {
     try {
       final result = await AuthApi.login(email: email, password: password);
 
+      // Pengecekan `status` di body sengaja dimatikan: sukses ditentukan HTTP
+      // status saja (alasannya di base/network/api_response.dart).
       // final rawStatus = result['status'];
       // final bool status =
       //     rawStatus == true ||
@@ -65,6 +78,7 @@ class AuthController extends StateNotifier<AuthState> {
       final dataUser = data?['user'] as Map<String, dynamic>?;
 
       if (token != null && token.isNotEmpty) {
+        // ApiClient.setToken juga menyimpan token ke secure storage.
         // await _secureStorage.write(key: 'auth_token', value: token);
         ApiClient.setToken(token);
       }
@@ -104,6 +118,9 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
+  /// Simpan email + password untuk login biometric berikutnya. Disimpan di
+  /// secure storage (Keychain / Android Keystore) dan TIDAK dihapus saat
+  /// logout, supaya user bisa login lagi dengan sidik jari / Face ID.
   Future<void> saveBiometricCredential({
     required String email,
     required String password,
@@ -112,11 +129,13 @@ class AuthController extends StateNotifier<AuthState> {
     await _secureStorage.write(key: 'biometric_password', value: password);
   }
 
+  /// Hapus kredensial biometric (user mematikan login biometric).
   Future<void> clearBiometricCredential() async {
     await _secureStorage.delete(key: 'biometric_email');
     await _secureStorage.delete(key: 'biometric_password');
   }
 
+  /// Kredensial biometric tersimpan; string kosong kalau belum ada.
   Future<Map<String, String>> readBiometricCredential() async {
     final email = await _secureStorage.read(key: 'biometric_email') ?? '';
     final password = await _secureStorage.read(key: 'biometric_password') ?? '';
@@ -128,6 +147,7 @@ class AuthController extends StateNotifier<AuthState> {
   }
 }
 
+/// Provider [AuthController]; di-watch form login untuk loading dan error.
 final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
   (ref) {
     final storage = ref.watch(secureStorageProvider);

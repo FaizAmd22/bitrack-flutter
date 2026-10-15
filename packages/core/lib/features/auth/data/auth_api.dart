@@ -4,12 +4,19 @@ import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Panggilan API autentikasi (saat ini hanya login).
+///
+/// Hasil mentah dipakai [AuthController], yang menyimpan token dan data user.
+/// Semua kegagalan dilempar sebagai `Exception` berisi pesan siap tampil.
 class AuthApi {
+  /// Nama field dari backend -> label terjemahan, untuk pesan validasi.
   static Map<String, String> _fieldLabels(AppLocalizations t) => {
     'email': t.email,
     'password': t.password,
   };
 
+  /// `POST /mobile/auth/login`. Response sukses berbentuk
+  /// `{data: {token, user: {id, name, email, role, permission_allowed}}}`.
   static Future<Map<String, dynamic>> login({
     required String email,
     required String password,
@@ -41,6 +48,10 @@ class AuthApi {
     return apiErrorText(e, t.loginFailedTryAgain);
   }
 
+  /// Kenali dua bentuk penolakan khas endpoint login: `Validation error`
+  /// (field kosong/salah format, dengan daftar field di `detail`) dan
+  /// `Invalid credentials` (email atau password salah). Null = bukan kasus
+  /// khas login.
   static String? _loginResponseError(DioException e, AppLocalizations t) {
     final data = e.response?.data;
 

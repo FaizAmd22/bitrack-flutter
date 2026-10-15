@@ -7,11 +7,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// bawaannya (PostgREST), bukan lewat backend utama (ApiClient) karena
 /// key/base URL-nya beda dan hanya butuh 1 endpoint baca sederhana.
 ///
-/// Toggle nilainya dilakukan lewat Postman langsung ke Supabase REST API
-/// pakai service_role key (lihat README/instruksi setup Supabase).
+/// Mengubah nilai flag dilakukan langsung ke Supabase (dashboard atau REST API
+/// dengan service_role key), bukan dari app. Caranya ada di
+/// `docs/05-konfigurasi.md` bagian "Mengubah flag remote di Supabase".
 class AppConfigApi {
   static const _table = 'app_settings';
 
+  /// Nilai boolean flag [key] dari kolom `value`. Mengembalikan [fallback]
+  /// kalau Supabase belum dikonfigurasi di `.env`, request gagal (offline,
+  /// project ter-pause), atau baris/nilainya tidak ada. Tidak pernah melempar.
   static Future<bool> fetchFlag(String key, {bool fallback = false}) async {
     final url = dotenv.env['SUPABASE_URL'];
     final anonKey = dotenv.env['SUPABASE_ANON_KEY'];

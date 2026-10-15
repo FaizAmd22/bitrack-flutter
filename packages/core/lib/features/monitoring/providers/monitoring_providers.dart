@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // next_cursor sampai habis; sebelumnya limit 1000 dipakai sebagai batas keras
 // sehingga armada di atas 1000 kendaraan terpotong diam-diam.
 const _statusPageLimit = 1000;
+
+/// Batas pengaman jumlah halaman (20 x 1000 = 20.000 kendaraan) supaya loop
+/// tidak berjalan tanpa akhir kalau server terus mengembalikan cursor.
 const _statusMaxPages = 20;
 
 /// Filter yang mempengaruhi DUA endpoint sekaligus (/monitoring dan
@@ -20,12 +23,17 @@ class MonitoringFilter {
 
   const MonitoringFilter({this.licensePlate, this.fleetGroupId});
 
+  /// Tanpa filter.
   static const none = MonitoringFilter();
 
+  /// True kalau ada pencarian plat atau fleet group yang dipilih.
   bool get isActive =>
       (licensePlate?.trim().isNotEmpty ?? false) ||
       (fleetGroupId?.trim().isNotEmpty ?? false);
 
+  // == dan hashCode wajib di-override: objek ini dipakai sebagai kunci
+  // provider `.family`, dan dua filter dengan isi sama harus dianggap sama
+  // supaya cache provider terpakai ulang (tidak request ulang).
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -37,6 +45,7 @@ class MonitoringFilter {
   int get hashCode => Object.hash(licensePlate, fleetGroupId);
 }
 
+/// Kunci provider status: chip activity yang dipilih + [MonitoringFilter].
 class MonitoringQuery {
   final String activity;
   final MonitoringFilter filter;
@@ -46,6 +55,7 @@ class MonitoringQuery {
     this.filter = MonitoringFilter.none,
   });
 
+  /// Chip "All Vehicle" (tanpa filter activity).
   bool get isAllVehicle => MonitoringApi.activityParam(activity).isEmpty;
 
   @override
@@ -85,6 +95,8 @@ class MonitoringStatus {
   });
 }
 
+/// Hasil akhir untuk layar Home: kendaraan yang digambar di peta + angka
+/// untuk chip activity yang sedang dipilih.
 class MonitoringData {
   final List<Vehicle> vehicles;
 
@@ -230,6 +242,7 @@ int _resolveTotal(MonitoringQuery query, MonitoringStatus status, int shown) {
   return shown;
 }
 
+/// Angka dari JSON yang bisa berupa int, double, atau string.
 int _asInt(dynamic value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
