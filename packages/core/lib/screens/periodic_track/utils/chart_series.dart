@@ -29,9 +29,13 @@ class SeriesPoint {
 /// Titik alert pada seri grafik. Lihat [PeriodicPoint.isAlert].
 bool isAlertPoint(SeriesPoint p) => p.source?.isAlert ?? false;
 
+/// Waktu dari `device_time` server (`yyyy-MM-dd HH:mm:ss`). Gagal dibaca =
+/// waktu sekarang.
 DateTime parseDeviceTime(String s) =>
     DateTime.tryParse(s.replaceFirst(' ', 'T')) ?? DateTime.now();
 
+/// Nilai numerik titik untuk digambar di grafik. Ignition jadi 1/0; untuk
+/// suhu, hanya sensor chiller pertama yang digambar.
 double valueForMetric(PeriodicPoint p, PeriodicMetric metric) {
   switch (metric) {
     case PeriodicMetric.speed:

@@ -19,6 +19,13 @@ import 'models/periodic_point.dart';
 import 'widgets/periodic_chart.dart';
 import 'widgets/periodic_map.dart';
 
+/// Halaman Periodic Track (route `/periodic-track`): putar ulang perjalanan
+/// satu kendaraan pada rentang waktu yang dipilih.
+///
+/// Argumen route (map dari `PeriodicTrackFilterSheet`): `startDate`,
+/// `endDate`, `licensePlate`. Isi layar: [PeriodicMap] di atas, lalu
+/// [PlayerCard] dan [PeriodicChart]. Data dimuat bertahap per halaman, jadi
+/// peta dan grafik sudah tampil sebelum semua data selesai dimuat.
 class PeriodicTrackScreen extends StatefulWidget {
   const PeriodicTrackScreen({super.key});
 
@@ -32,7 +39,10 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
   bool _isLoading = false;
   List<PeriodicPoint> _data = [];
 
+  /// Indeks titik yang sedang aktif (diputar atau dipilih user).
   int _currentIndex = 0;
+
+  /// Data yang ditampilkan di grafik dan tooltip.
   PeriodicMetric _metric = PeriodicMetric.speed;
 
   bool _isPlaying = true;
@@ -49,6 +59,8 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
 
   late final PeriodicApi _periodicApi;
   bool _argLoaded = false;
+
+  /// True selama user menggeser slider (label waktu ditampilkan).
   bool _isScrubbing = false;
 
   @override
@@ -76,6 +88,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     _fetchData();
   }
 
+  /// Muat semua titik untuk rentang waktu dari argumen route.
   Future<void> _fetchData() async {
     if (_startDate == null || _endDate == null || _licensePlate == null) return;
 
@@ -128,6 +141,8 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     }
   }
 
+  /// User memilih titik (ketuk peta, geser slider, tombol prev/next):
+  /// jeda pemutaran dan pindah ke titik itu.
   void _onPickIndex(int idx) {
     if (_data.isEmpty) return;
 
@@ -178,6 +193,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     _onPickIndex(idx);
   }
 
+  /// Ubah rentang waktu: buka sheet filter yang akan mengganti halaman ini.
   void _openFilter() {
     final plate = _licensePlate;
     if (plate == null || plate.trim().isEmpty) return;
@@ -193,6 +209,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     setState(() => _isSatellite = !_isSatellite);
   }
 
+  /// Kembali ke titik pertama.
   void _resetToStart() {
     if (_data.isEmpty) return;
 
@@ -216,6 +233,7 @@ class _PeriodicTrackScreenState extends State<PeriodicTrackScreen> {
     return DateTime.tryParse(fixed);
   }
 
+  /// Dipanggil PeriodicMap saat animasi melewati titik baru.
   void _onPlaybackIndexChanged(int idx) {
     if (!mounted) return;
     if (_data.isEmpty) return;

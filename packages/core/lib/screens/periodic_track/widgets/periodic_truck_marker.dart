@@ -5,6 +5,8 @@ import 'package:bitrack_core/base/res/media.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Marker truk yang bergerak di peta Periodic Track: ikon truk diputar sesuai
+/// arah, lingkaran transparan di belakangnya, dan tooltip nilai di atasnya.
 class PeriodicTruckMarker extends StatelessWidget {
   final String tooltipText;
   final double bearingDeg;

@@ -15,12 +15,14 @@ enum PlaybackSpeed {
 
   const PlaybackSpeed(this.multiplier);
 
+  /// Pengali kecepatan (2 = dua kali lebih cepat).
   final double multiplier;
 
   /// Durasi animasi per segmen (antar dua titik) pada 1x. Sama dengan default
   /// sebelumnya, jadi pemutaran awal terasa persis seperti dulu.
   static const int baseSegmentMs = 1000;
 
+  /// Durasi animasi per segmen pada kecepatan ini.
   int get segmentDurationMs => (baseSegmentMs / multiplier).round();
 
   /// "0.5x", "1x", "2x", "4x".

@@ -32,6 +32,13 @@ const _alertPinSize = 26.0;
 /// Urutan seri: garis (0), alert (1), lalu penanda titik aktif.
 const _alertSeriesIndex = 1;
 
+/// Grafik garis Periodic Track (syncfusion_flutter_charts) untuk metrik yang
+/// dipilih, dengan pin alert yang bisa diketuk dan garis penanda waktu titik
+/// yang sedang diputar.
+///
+/// Seri dirangkum ([downsampleM4]) bila titiknya terlalu banyak, dan diberi
+/// jeda ([insertGaps]) di rentang tanpa data. Logika seri ada di
+/// `utils/chart_series.dart`.
 class PeriodicChart extends StatefulWidget {
   final List<PeriodicPoint> points;
   final PeriodicMetric metric;
@@ -177,6 +184,7 @@ class _PeriodicChartState extends State<PeriodicChart> {
     super.dispose();
   }
 
+  /// Susun ulang seri dari data dan metrik saat ini (dirangkum + diberi jeda).
   void _rebuildSeries() {
     _normalized = normalizeSeries(widget.points, widget.metric);
     _series = downsampleM4(
@@ -381,6 +389,8 @@ class _PeriodicChartState extends State<PeriodicChart> {
     return x is DateTime ? nearestByTime(_normalized, x) : null;
   }
 
+  // Batas dan interval sumbu Y disesuaikan per metrik (mis. ignition hanya
+  // 0/1, bahan bakar 0-100%).
   double _minY(PeriodicMetric m) {
     switch (m) {
       case PeriodicMetric.speed:
@@ -425,6 +435,7 @@ class _PeriodicChartState extends State<PeriodicChart> {
 }
 
 /// Pin alert di grafik.
+/// Pin merah penanda titik alert di grafik.
 class _AlertPin extends StatelessWidget {
   const _AlertPin();
 

@@ -20,6 +20,11 @@ import '../utils/periodic_value.dart';
 import 'periodic_truck_marker.dart';
 import 'package:bitrack_core/screens/periodic_track/models/playback_speed.dart';
 
+/// Peta Periodic Track: garis rute, titik-titik data (biru), pin alert, dan
+/// marker truk yang bergerak sesuai pemutaran ([PeriodicPlaybackController]).
+///
+/// Mengetuk titik memilihnya dan membuka [PeriodicAlertSheet]. Kecepatan dan
+/// titik aktif dikontrol dari halaman lewat parameter widget.
 class PeriodicMap extends StatefulWidget {
   final MapController mapController;
   final List<PeriodicPoint> points;
@@ -123,6 +128,7 @@ class _PeriodicMapState extends State<PeriodicMap>
     }
   }
 
+  /// Ganti durasi segmen saja (kecepatan berubah) tanpa memindah truk.
   void _updatePlaybackSpeedOnly() {
     if (_coords.length < 2) return;
 
@@ -269,6 +275,8 @@ class _PeriodicMapState extends State<PeriodicMap>
     );
   }
 
+  /// Pasang titik ke mesin animasi dengan durasi segmen sesuai kecepatan;
+  /// [resetPos] memindahkan truk ke titik aktif.
   void _setupPlaybackData({required bool resetPos}) {
     if (_coords.length < 2) return;
 
@@ -287,6 +295,7 @@ class _PeriodicMapState extends State<PeriodicMap>
     }
   }
 
+  /// Arah (derajat dari utara) dari titik [a] ke [b], untuk memutar truk.
   double _bearingLatLng(LatLng a, LatLng b) {
     final lat1 = a.latitude * math.pi / 180;
     final lat2 = b.latitude * math.pi / 180;
@@ -301,6 +310,7 @@ class _PeriodicMapState extends State<PeriodicMap>
     return (brng + 360) % 360;
   }
 
+  /// Titik diketuk: pilih titik itu dan tampilkan detailnya.
   void _handlePointTap(int index) {
     if (index < 0 || index >= widget.points.length) return;
 

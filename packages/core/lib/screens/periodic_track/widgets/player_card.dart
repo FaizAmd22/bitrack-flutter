@@ -3,6 +3,9 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/periodic_track/models/playback_speed.dart';
 import 'package:flutter/material.dart';
 
+/// Kartu kontrol pemutar di Periodic Track: tombol titik sebelumnya/
+/// berikutnya, putar/jeda, pilihan kecepatan, dan slider posisi titik.
+/// Hanya menampilkan dan meneruskan aksi; state-nya ada di halaman.
 class PlayerCard extends StatelessWidget {
   final bool isPlaying;
 

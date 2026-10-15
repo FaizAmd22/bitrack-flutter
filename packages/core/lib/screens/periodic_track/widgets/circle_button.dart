@@ -1,6 +1,7 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
+/// Tombol bulat putih berikon warna primer (kontrol di atas peta).
 class CircleBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;

@@ -1,15 +1,17 @@
-// lib/screens/periodic_track/widgets/periodic_alert_sheet.dart
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/periodic_track/models/periodic_point.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Bottom sheet detail satu titik Periodic Track (dibuka saat titik/alert
+/// di peta diketuk): waktu GPS, jenis alert, kecepatan, koordinat, dan tautan
+/// buka di Google Maps.
 class PeriodicAlertSheet {
   static Future<void> open(BuildContext context, PeriodicPoint point) {
     return showModalBottomSheet(
       context: context,
-      // backdrop=false di Cordova → biar map tetap terlihat
+      // Latar dibuat sangat tipis supaya peta di belakang tetap terlihat.
       barrierColor: AppStyles.blackColor.withValues(alpha: 0.2),
       backgroundColor: AppStyles.whiteColor,
       shape: const RoundedRectangleBorder(
@@ -76,6 +78,7 @@ class _AlertSheetBody extends StatelessWidget {
   }
 }
 
+/// Satu baris label (kiri) : nilai (kanan).
 class _Row extends StatelessWidget {
   final String label;
   final String value;
@@ -104,6 +107,7 @@ class _Row extends StatelessWidget {
   }
 }
 
+/// Baris berisi tautan yang membuka lokasi titik di aplikasi Google Maps.
 class _GoogleMapRow extends StatelessWidget {
   final String label;
   final String text;

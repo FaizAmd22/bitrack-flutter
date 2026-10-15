@@ -22,8 +22,10 @@ class PeriodicPointLabel extends StatelessWidget {
   final PeriodicPoint point;
   final PeriodicMetric metric;
 
+  /// Titik ini alert (diberi ikon peringatan merah).
   bool get isAlert => point.isAlert;
 
+  /// Nama event; kalau kosong, pakai kode `eventType`.
   String get eventText =>
       point.eventName.trim().isNotEmpty ? point.eventName : point.eventType;
 

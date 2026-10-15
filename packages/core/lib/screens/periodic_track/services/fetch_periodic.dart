@@ -4,13 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../models/periodic_point.dart';
 
+/// Mengambil seluruh titik riwayat perjalanan satu kendaraan pada rentang
+/// waktu tertentu dari `/monitoring/playback`, halaman demi halaman
+/// (cursor).
 class PeriodicApi {
   final Dio dio;
   PeriodicApi(this.dio);
 
   static const _pageLimit = 500;
+
+  /// Batas pengaman (200 x 500 = 100.000 titik).
   static const _maxPages = 200;
 
+  /// Semua titik pada rentang [startDate]..[endDate]. [onPage] dipanggil
+  /// setiap satu halaman tiba, supaya peta dan grafik bisa mulai digambar
+  /// sebelum semua halaman selesai dimuat.
   Future<List<PeriodicPoint>> fetchPeriodic({
     required DateTime startDate,
     required DateTime endDate,
@@ -106,6 +114,8 @@ class PeriodicApi {
     return points;
   }
 
+  /// Daftar titik dari response, yang bisa terbungkus `data` satu atau dua
+  /// tingkat.
   List<dynamic> _extractList(dynamic body) {
     if (body is Map) {
       final d = body['data'];
@@ -116,6 +126,7 @@ class PeriodicApi {
     return [];
   }
 
+  /// Format waktu yang diminta API: `yyyy-MM-dd HH:mm:ss`.
   String _formatDate(DateTime d) {
     String two(int v) => v.toString().padLeft(2, '0');
     return '${d.year}-${two(d.month)}-${two(d.day)} ${two(d.hour)}:${two(d.minute)}:${two(d.second)}';

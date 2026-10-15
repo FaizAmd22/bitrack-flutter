@@ -1,6 +1,9 @@
 import '../models/periodic_metric.dart';
 import '../models/periodic_point.dart';
 
+/// Teks nilai satu titik untuk metrik yang sedang dipilih (mis. `45 KM/H`,
+/// `ON`, `12.4 V`). Dipakai tooltip peta dan label grafik supaya formatnya
+/// sama. Catatan: satuan dan teks "Chiller" belum diterjemahkan.
 String getDisplayValue(PeriodicPoint p, PeriodicMetric metric) {
   switch (metric) {
     case PeriodicMetric.speed:

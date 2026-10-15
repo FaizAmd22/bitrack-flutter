@@ -2,9 +2,18 @@ import 'dart:math' as math;
 import 'package:flutter/scheduler.dart';
 import 'package:latlong2/latlong.dart';
 
+/// Dipanggil setiap frame animasi dengan posisi marker saat ini, indeks
+/// segmen (antara titik [segmentIndex] dan berikutnya), dan seberapa jauh
+/// marker di segmen itu (0..1).
 typedef OnTick =
     void Function(LatLng position, int segmentIndex, double fraction);
 
+/// Mesin animasi pemutaran ulang Periodic Track.
+///
+/// Menggerakkan marker sepanjang daftar titik dengan interpolasi posisi
+/// antar-titik, memakai Ticker Flutter (sinkron dengan refresh layar) dan
+/// dibatasi [targetFps]. Durasi tiap segmen diatur [setData] (mengikuti
+/// kecepatan playback yang dipilih).
 class PeriodicPlaybackController {
   PeriodicPlaybackController({
     required TickerProvider vsync,
@@ -31,6 +40,8 @@ class PeriodicPlaybackController {
 
   bool get isPlaying => _isPlaying;
 
+  /// Pasang titik dan durasi tiap segmen (`segmentDurationsMs[i]` = lama
+  /// animasi dari titik i ke i+1).
   void setData({
     required List<LatLng> points,
     required List<int> segmentDurationsMs,
@@ -39,6 +50,7 @@ class PeriodicPlaybackController {
     _segmentDurationsMs = segmentDurationsMs;
   }
 
+  /// Mulai/lanjutkan pemutaran dari titik [startIndex].
   void play({required int startIndex}) {
     if (_points.length < 2) return;
 
@@ -61,6 +73,7 @@ class PeriodicPlaybackController {
     _ticker.dispose();
   }
 
+  /// Total durasi dari titik awal sampai akhir.
   void _recalcTotal() {
     int total = 0;
     for (int i = _startIndex; i < _points.length - 1; i++) {
@@ -72,7 +85,7 @@ class PeriodicPlaybackController {
   void _tick(Duration ts) {
     if (!_isPlaying) return;
 
-    // throttle FPS (mirip targetFPS di Cordova)
+    // Batasi jumlah frame per detik (sama seperti targetFPS di app lama).
     final frameIntervalMs = (1000 / targetFps).floor();
     if (_lastFrameTs != Duration.zero) {
       final deltaMs = (ts - _lastFrameTs).inMilliseconds;
@@ -117,7 +130,8 @@ class PeriodicPlaybackController {
     final a = _points[seg];
     final b = _points[seg + 1];
 
-    // Interpolasi posisi (INI YANG BIKIN SMOOTH)
+    // Interpolasi linear posisi antara dua titik; inilah yang membuat
+    // gerakan marker halus.
     final lat = a.latitude + (b.latitude - a.latitude) * t;
     final lng = a.longitude + (b.longitude - a.longitude) * t;
 

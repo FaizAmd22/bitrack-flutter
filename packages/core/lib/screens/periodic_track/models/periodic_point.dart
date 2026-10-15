@@ -1,3 +1,5 @@
+/// Satu titik riwayat perjalanan dari `/monitoring/playback`: posisi, waktu,
+/// dan nilai sensor saat itu.
 class PeriodicPoint {
   final double latitude;
   final double longitude;
@@ -6,11 +8,14 @@ class PeriodicPoint {
   final double speed;
   final bool ignition;
   final double externalPowerVoltage;
+  /// Level bahan bakar dalam persen (field `fuel_level_1_x`).
   final double fuelLevel;
+  /// Suhu dua sensor chiller (sensor Dallas), dalam °C.
   final double dallasTemp1;
   final double dallasTemp2;
 
-  final String eventType; // "SAMPLING" atau alert
+  /// `SAMPLING` untuk data rutin; nilai lain berarti titik ini adalah alert.
+  final String eventType;
   final String eventName;
 
   /// Titik alert, bukan data rutin. Aturan yang sama dipakai peta, grafik,
