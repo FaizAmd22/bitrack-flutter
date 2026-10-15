@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+/// Konfigurasi dashcam sebuah kendaraan: merek, id device, dan nomor channel
+/// kamera yang tersedia.
 class DashcamConfig {
-  final String type; // 'METTAX' | 'STONKAM'
+  /// Merek dashcam: `'METTAX'` atau `'STONKAM'` (default METTAX).
+  final String type;
   final String deviceId;
-  final List<int> channels; // contoh: [0, 1, 2, 3]
+
+  /// Nomor channel kamera, mis. `[0, 1, 2, 3]`.
+  final List<int> channels;
 
   const DashcamConfig({
     required this.type,

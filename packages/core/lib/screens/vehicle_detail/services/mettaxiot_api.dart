@@ -3,8 +3,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:bitrack_core/screens/vehicle_detail/services/mettaxiot_stream_service.dart';
 
-/// Thin wrapper di atas [MettaxiotStreamService] untuk semua API call dashcam.
-/// Menggunakan Dio dari [MettaxiotStreamService] agar `followRedirects: true` berlaku.
+/// Pintu masuk semua panggilan API dashcam (video live dan intercom), di
+/// atas [MettaxiotStreamService].
+///
+/// Memakai Dio milik [MettaxiotStreamService] supaya pengaturan
+/// `followRedirects: true` (server Mettaxiot membalas redirect 302) ikut
+/// berlaku.
 class MettaxiotApi {
   MettaxiotApi._();
 
@@ -14,7 +18,9 @@ class MettaxiotApi {
   /// Token via [MettaxiotStreamService] (cached 10 menit).
   static Future<String> createToken() => _service.createToken();
 
-  /// Ambil stream URL berdasarkan tipe kamera.
+  /// URL stream video satu channel. Dashcam Stonkam: URL dibentuk langsung
+  /// dari `CAMERA_URL` (tanpa token). Dashcam Mettaxiot: URL diminta ke API
+  /// Mettaxiot.
   static Future<String> getLiveStreamUrl({
     required String deviceId,
     required int channelId,
@@ -28,7 +34,9 @@ class MettaxiotApi {
     return _service.getLiveStreamUrl(deviceId: deviceId, channelId: channelId);
   }
 
-  /// Ambil WebSocket talk URL untuk fitur speaker/intercom.
+  /// URL WebSocket untuk intercom (bicara ke kabin kendaraan lewat speaker
+  /// dashcam), dari `METTAXIOT_AUDIO`. `talkChannel` server Mettaxiot
+  /// ditetapkan ke `singapore-1`.
   static Future<String> getTalkUrl({required String deviceId}) async {
     final token = await createToken();
     final url = dotenv.env['METTAXIOT_AUDIO'] ?? '';

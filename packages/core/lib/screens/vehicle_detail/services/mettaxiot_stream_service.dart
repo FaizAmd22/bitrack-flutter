@@ -6,6 +6,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Klien API dashcam Mettaxiot: membuat token akses dan meminta URL stream
+/// video live. Kredensial dan alamatnya dari `.env` (`METTAXIOT_KEY`,
+/// `METTAXIOT_SECRET`, `METTAXIOT_CREATE_TOKEN`, `METTAXIOT_VIDEO`).
+///
+/// Singleton ([I]) supaya token yang sudah dibuat bisa dipakai ulang.
 class MettaxiotStreamService {
   MettaxiotStreamService._internal()
     : _dio = Dio(
@@ -14,7 +19,8 @@ class MettaxiotStreamService {
           connectTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 15),
           sendTimeout: const Duration(seconds: 15),
-          followRedirects: true, // ← fix 302 redirect
+          // Server Mettaxiot membalas redirect 302; ikuti otomatis.
+          followRedirects: true,
           maxRedirects: 5,
           validateStatus: (c) => c != null && c >= 200 && c < 400,
         ),
@@ -48,6 +54,8 @@ class MettaxiotStreamService {
     return v.trim();
   }
 
+  /// Token akses Mettaxiot. Disimpan dan dipakai ulang selama 10 menit,
+  /// setelah itu dibuat baru.
   Future<String> createToken() async {
     if (_cachedToken != null &&
         _tokenTime != null &&
@@ -72,6 +80,8 @@ class MettaxiotStreamService {
     return _cachedToken!;
   }
 
+  /// Minta URL stream video live satu channel. Catatan: channel di app
+  /// dimulai dari 0, sedangkan API Mettaxiot dari 1 (karena itu `+ 1`).
   Future<String> getLiveStreamUrl({
     required String deviceId,
     required int channelId,

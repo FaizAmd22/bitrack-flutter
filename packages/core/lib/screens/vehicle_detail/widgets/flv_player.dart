@@ -10,12 +10,12 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 
 import 'fullscreen_player.dart';
 
-/// Live FLV player via media_kit (support FLV / RTMP / HLS).
+/// Pemutar video live dashcam lewat media_kit (mendukung FLV, RTMP, HLS).
 ///
-/// pubspec.yaml dependencies:
-///   media_kit: ^1.1.11
-///   media_kit_video: ^1.2.4
-///   media_kit_libs_video: ^1.0.5
+/// Video selalu tanpa suara: audio kabin diputar terpisah lewat WebSocket
+/// (tombol Speaker di sheet Dashcam). Kalau stream belum mulai dalam
+/// [_timeoutDuration], kamera dianggap offline. Tombol di pojok membuka
+/// [FullscreenPlayer].
 class FlvPlayer extends StatefulWidget {
   final String streamUrl;
 
@@ -32,7 +32,7 @@ class _FlvPlayerState extends State<FlvPlayer> {
   bool _error = false;
   bool _loading = true;
 
-  // Timeout fallback jika player tidak kunjung playing
+  // Batas tunggu sampai video mulai diputar.
   static const _timeoutDuration = Duration(seconds: 15);
 
   @override
@@ -44,8 +44,8 @@ class _FlvPlayerState extends State<FlvPlayer> {
     _initPlayer();
   }
 
-  /// Listen ke stream state player — lebih reliable daripada await open().
-  /// Untuk live stream, open() bisa hang tanpa resolve/reject.
+  /// Pantau status player lewat stream, bukan dengan menunggu `open()`:
+  /// untuk live stream, `open()` bisa menggantung tanpa selesai maupun gagal.
   void _listenToPlayerState() {
     // Selesai loading saat player mulai playing
     _player.stream.playing.listen((isPlaying) {
@@ -96,6 +96,7 @@ class _FlvPlayerState extends State<FlvPlayer> {
   @override
   void didUpdateWidget(FlvPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
+    // URL stream berganti (mis. token baru): buka ulang dengan URL baru.
     if (oldWidget.streamUrl != widget.streamUrl) {
       setState(() {
         _loading = true;

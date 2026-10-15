@@ -27,6 +27,15 @@ const _detailInterval = Duration(seconds: 10);
 /// dan memperbesar peluang timeout berikutnya.
 const _maxDetailInterval = Duration(seconds: 60);
 
+/// Halaman Vehicle Detail (route `/vehicle-detail`, argumen
+/// [VehicleDetailArgs]): peta yang mengikuti kendaraan di atas, panel info
+/// di bawah ([VehicleDetailContent]).
+///
+/// Alur data:
+/// 1. Langsung tampil memakai data awal dari marker yang ditekan.
+/// 2. Memuat detail lengkap (`/monitoring/{id}?tab=DASHBOARD`), lalu alamat.
+/// 3. Polling detail tiap 10 detik selama halaman terbuka; jeda melebar
+///    sampai 60 detik bila request gagal beruntun.
 class VehicleDetail extends ConsumerStatefulWidget {
   const VehicleDetail({super.key});
 
@@ -130,6 +139,7 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     ref.read(vehicleDashboardCacheProvider.notifier).state = detail;
   }
 
+  /// Muat detail pertama kali (dipakai FutureBuilder layar).
   Future<Map<String, dynamic>> _loadInitial() async {
     // Diukur di level layar, bukan cuma di interceptor: angka ini mencakup
     // parsing, logging, dan antrean UI. Selisihnya terhadap angka [API]
@@ -194,6 +204,8 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     _startDetailPolling();
   }
 
+  /// Ambil detail terbaru dan perbarui layar; gagal = tampilkan banner tanpa
+  /// membuang data lama, dan perlebar jeda polling.
   Future<void> _fetchDetailData() async {
     if (_detailId.isEmpty) return;
 
@@ -256,6 +268,7 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     _fetchDetailData();
   }
 
+  /// Coba lagi dari layar error penuh (belum ada data sama sekali).
   void _retry() {
     setState(() {
       _address = '-';
@@ -279,6 +292,9 @@ class _VehicleDetailState extends ConsumerState<VehicleDetail> {
     return double.tryParse(s);
   }
 
+  /// Alamat hanya diambil ulang kalau koordinat bergeser lebih dari 0,0001
+  /// derajat (sekitar 11 meter), supaya server geocoding tidak dipanggil
+  /// setiap polling saat kendaraan diam.
   bool _shouldFetch(double lat, double lng) {
     if (_lastLat == null || _lastLng == null) return true;
     final dLat = (lat - _lastLat!).abs();

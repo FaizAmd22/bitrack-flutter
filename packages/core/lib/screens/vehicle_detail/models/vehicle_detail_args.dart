@@ -37,8 +37,11 @@ class VehicleDetailArgs {
   /// sejak frame pertama, tanpa menunggu response detail.
   final String vehicleCategoryIcon;
 
+  /// Koordinat awal tersedia (peta bisa langsung digambar).
   bool get hasCoordinate => latitude != null && longitude != null;
 
+  /// Data awal untuk layar detail, sebelum response API tiba.
+  ///
   /// Bentuknya sengaja mengikuti keluaran `flattenMonitoringDetail` supaya
   /// `VehicleDetailContent` tidak perlu tahu datanya berasal dari seed atau
   /// dari response API.

@@ -16,6 +16,11 @@ enum VehicleInfoTab { information, status, sensor }
 
 enum RowTextType { text, url }
 
+/// Sheet "Informasi Kendaraan" (dari menu Vehicle Detail) dengan tiga tab
+/// yang bisa digeser: Informasi, Status (baterai, aki, odometer), Sensor.
+///
+/// Id kendaraan dibaca dari `vehicleIdProvider`; datanya dari
+/// `vehicleDetailByVehicleIdProvider`.
 class VehicleInformationBottomSheet extends ConsumerStatefulWidget {
   const VehicleInformationBottomSheet({super.key});
 
@@ -35,6 +40,8 @@ class _VehicleInformationBottomSheetState
     super.dispose();
   }
 
+  // Tab bar dan PageView disinkronkan dua arah: ketuk tab menggeser halaman,
+  // geser halaman memindah tab aktif.
   void _onTabChanged(int i) {
     setState(() => _activeTab = VehicleInfoTab.values[i]);
     _pageController.animateToPage(
@@ -277,6 +284,8 @@ class _VehicleInformationBottomSheetState
   }
 }
 
+/// Satu baris label : nilai di sheet informasi. [type] menentukan gaya
+/// nilainya (teks biasa, tautan, dll.).
 class RowText extends StatelessWidget {
   final String text1;
   final String text2;

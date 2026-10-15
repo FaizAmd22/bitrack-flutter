@@ -19,6 +19,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 
+/// Sheet Dashcam: daftar channel kamera ([ChannelCard]) yang bisa dinyalakan
+/// satu per satu, plus tombol Speaker dan Intercom ([BottomActions]).
+///
+/// - Video: setiap channel yang dinyalakan meminta URL stream lewat
+///   [MettaxiotApi] dan tayang 30 detik, lalu mati sendiri.
+/// - Speaker: membuka WebSocket audio, menerima audio G.711 A-law,
+///   mengubahnya ke WAV, lalu memutarnya potong demi potong.
+/// - Intercom (mikrofon): BELUM diimplementasikan; tombolnya hanya mengubah
+///   status ON/OFF (lihat TODO di [_handleMicrophone]).
 class DashcamBottomSheet extends StatefulWidget {
   final DashcamConfig dashcamConfig;
 
@@ -44,7 +53,7 @@ class DashcamBottomSheet extends StatefulWidget {
 class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
   final Map<int, ChannelState> _channels = {};
 
-  // Speaker / Intercom
+  // Status speaker dan intercom.
   bool _isSpeaker = false;
   bool _isSpeakerLoading = false;
   bool _isMicrophone = false;
@@ -55,12 +64,14 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  // PCM buffer: accumulate chunks, flush every 250ms so iOS has enough
-  // audio data per play() call (~2000 samples = 250ms at 8kHz).
+  // Penampung audio PCM: potongan dikumpulkan lalu diputar tiap 250 ms,
+  // supaya iOS mendapat cukup data per pemutaran (~2000 sampel = 250 ms pada
+  // 8 kHz).
   final List<Int16List> _pcmChunks = [];
   Timer? _audioFlushTimer;
 
-  // Ping-pong WAV files with .wav extension so iOS AVPlayer detects the format.
+  // Dua file WAV bergantian (berekstensi .wav supaya AVPlayer iOS mengenali
+  // formatnya).
   String? _audioCacheDir;
   int _wavFileIndex = 0;
 
@@ -106,6 +117,8 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
     }
   }
 
+  /// Hitung mundur 30 detik untuk satu channel; saat habis, channel
+  /// dimatikan dan kembali ke status idle.
   void _startTimer(int channelId) {
     final s = _channels[channelId]!;
     s.countdown?.cancel();
@@ -136,6 +149,7 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
     s.timer = 30;
   }
 
+  /// Detik -> `mm:ss`.
   String _formatTimer(int seconds) {
     final m = seconds ~/ 60;
     final s = seconds % 60;
@@ -144,6 +158,7 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   // ── Channel toggle ─────────────────────────────────────────────────────────
 
+  /// Nyalakan/matikan satu channel kamera.
   Future<void> _handleToggle(int channelId) async {
     final s = _channels[channelId]!;
 
@@ -183,6 +198,7 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   // ── Speaker ────────────────────────────────────────────────────────────────
 
+  /// Nyalakan/matikan audio kabin (minta URL WebSocket lalu streaming).
   Future<void> _handleSpeaker() async {
     if (_isSpeaker) {
       _stopAudioStream();
@@ -279,10 +295,10 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   // ── Audio playback ────────────────────────────────────────────────────────
 
-  // audioplayers on iOS writes BytesSource to a temp file with no extension,
-  // which AVPlayer can't identify. Write the WAV ourselves with a .wav
-  // extension using a ping-pong pair so we never overwrite a file that's
-  // still being read.
+  // Di iOS, audioplayers menulis BytesSource ke file sementara TANPA
+  // ekstensi, yang tidak dikenali AVPlayer. Karena itu WAV ditulis sendiri
+  // berekstensi .wav, bergantian ke dua file supaya file yang masih diputar
+  // tidak tertimpa.
   Future<void> _playWavBytes(Uint8List wav) async {
     try {
       _audioCacheDir ??= (await getTemporaryDirectory()).path;
@@ -297,6 +313,8 @@ class _DashcamBottomSheetState extends State<DashcamBottomSheet> {
 
   // ── Microphone ─────────────────────────────────────────────────────────────
 
+  /// Tombol Intercom. Belum mengirim suara (lihat TODO di bawah); saat ini
+  /// hanya mengubah status tombol, dan mensyaratkan Speaker menyala.
   void _handleMicrophone() {
     if (!_isSpeaker) {
       setState(

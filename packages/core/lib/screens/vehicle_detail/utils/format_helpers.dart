@@ -1,8 +1,11 @@
 import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:intl/intl.dart';
 
-/// Pengganti src/functions/getHoursMinutes.js, formatDate.js,
-/// getRelativeTime.js, getPlainText.js.
+// Helper format tanggal/teks, porting dari fungsi-fungsi JS app Cordova lama
+// (src/functions/getHoursMinutes.js, formatDate.js, getRelativeTime.js,
+// getPlainText.js). Yang dipakai saat ini: [getRelativeTime] (Vehicle Detail)
+// dan [formatDate] (Periodic Track). Fungsi lain ikut terporting tapi belum
+// dipakai di mana pun.
 
 /// Bahasa yang dipakai kalau pemanggil tidak menyebutkannya.
 ///
@@ -36,6 +39,7 @@ String getHoursMinutes(String? isoString) {
   return '$hours:$minutes';
 }
 
+/// Gaya tanggal untuk [formatDate].
 enum DateFormatType { standard, withWeekdays, monthYear, withTime, cardShort }
 
 /// Pengganti formatDate(date, language, type).
@@ -130,17 +134,17 @@ String formatPeriodLabel(String period, [String? language]) {
   ).format(DateTime(year, month.clamp(1, 12)));
 }
 
-/// Pengganti src/functions/calculateDays.js — selisih hari inklusif.
+/// Pengganti src/functions/calculateDays.js — selisih hari inklusif
+/// (tanggal yang sama = 1 hari).
 int calculateDays(DateTime start, DateTime end) {
   final startDate = DateTime(start.year, start.month, start.day);
   final endDate = DateTime(end.year, end.month, end.day);
   return endDate.difference(startDate).inDays + 1;
 }
 
-/// Pengganti TZ_OFFSET='+07:00' / buildISO(date, time) di
-/// usePermissionSubmission.js dan useLeaveSubmission.js — waktu dikirim
-/// sebagai WIB (+07:00) eksplisit, bukan berdasarkan timezone lokal device,
-/// supaya konsisten dengan zona waktu server.
+/// Tanggal + jam sebagai string ISO dengan zona WIB (+07:00) eksplisit,
+/// bukan zona waktu HP, supaya konsisten dengan zona waktu server. Porting
+/// dari buildISO() di kode JS lama; saat ini tidak dipakai.
 String toWibIso(DateTime date, {String time = '18:00'}) {
   final y = date.year.toString().padLeft(4, '0');
   final m = date.month.toString().padLeft(2, '0');

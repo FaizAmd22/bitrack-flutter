@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Dua tombol di bawah sheet Dashcam: Speaker (dengar audio kabin) dan
+/// Intercom (bicara ke kabin). Status nyala/mati dan aksinya diatur oleh
+/// sheet Dashcam.
 class BottomActions extends StatelessWidget {
   final bool isSpeaker;
   final bool isSpeakerLoading;
   final bool isMicrophone;
   final VoidCallback onSpeakerTap;
   final VoidCallback onMicrophoneTap;
+  /// Tinggi area aman bawah layar (mis. gesture bar), ditambahkan ke padding.
   final double bottomInset;
 
   const BottomActions({
@@ -57,6 +61,7 @@ class BottomActions extends StatelessWidget {
   }
 }
 
+/// Satu tombol: ikon, label, dan teks ON/OFF (atau spinner saat memuat).
 class _ActionButton extends StatelessWidget {
   final IconData icon;
   final String label;

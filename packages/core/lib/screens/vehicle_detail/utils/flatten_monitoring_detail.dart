@@ -1,3 +1,11 @@
+/// Ratakan response bertingkat `/monitoring/{id}?tab=DASHBOARD` jadi satu
+/// map datar yang dibaca widget Vehicle Detail.
+///
+/// Response asli memecah data ke `unit_detail`, `live_tracking`, `speed`,
+/// `sensor`, dll. Catatan: dari `fuel_consumption` (riwayat per jam) hanya
+/// entri TERAKHIR yang dipakai, dan `average_speed` tidak dipakai sama sekali,
+/// padahal keduanya yang membuat endpoint ini lambat (lihat
+/// `fetch_monitoring_detail.dart`).
 Map<String, dynamic> flattenMonitoringDetail(
   Map<String, dynamic> data, {
   String? detailId,
@@ -31,6 +39,8 @@ Map<String, dynamic> flattenMonitoringDetail(
   };
 }
 
+/// Ambil baterai internal, tegangan aki, dan odometer dari response
+/// `?tab=INFORMATION`.
 Map<String, dynamic> flattenInformationStatus(Map<String, dynamic> data) {
   final status = (data['status'] as Map?)?.cast<String, dynamic>() ?? {};
 

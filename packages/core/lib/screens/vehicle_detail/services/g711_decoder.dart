@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
-/// G.711 A-law decoder — mirrors G711AToWAVConverter in Cordova.
+/// Decoder audio G.711 A-law (format audio dashcam) ke PCM 16-bit / WAV.
+/// Logikanya sama dengan `G711AToWAVConverter` di app Cordova lama.
 class G711Decoder {
   G711Decoder._();
 
+  /// Tabel 256 entri: byte A-law -> sampel PCM. Dihitung sekali.
   static final List<int> _table = _buildTable();
 
   static List<int> _buildTable() {
@@ -23,7 +25,7 @@ class G711Decoder {
     return t;
   }
 
-  /// Decodes G.711 A-law bytes → PCM Int16 samples.
+  /// Ubah byte A-law menjadi sampel PCM 16-bit.
   static Int16List decode(Uint8List alaw) {
     final pcm = Int16List(alaw.length);
     for (int i = 0; i < alaw.length; i++) {
@@ -32,7 +34,8 @@ class G711Decoder {
     return pcm;
   }
 
-  /// Wraps PCM samples in a WAV header and returns raw bytes.
+  /// Bungkus sampel PCM dengan header WAV (mono, 16-bit, [sampleRate] Hz)
+  /// dan kembalikan byte file WAV-nya.
   static Uint8List toWav(Int16List pcm, {int sampleRate = 8000}) {
     final dataLen = pcm.length * 2;
     final buf = ByteData(44 + dataLen);

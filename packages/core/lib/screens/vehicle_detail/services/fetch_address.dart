@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// Klien HTTP terpisah untuk server reverse geocoding (`GEO_REVERSE`), karena
+// berbeda dari backend utama dan responsnya dibaca sebagai teks mentah.
 final Dio _geoDio = _createGeoDio();
 
 Dio _createGeoDio() {
@@ -36,6 +38,9 @@ String _sanitizeAddress(String value) {
       .trim();
 }
 
+/// Alamat dari koordinat (reverse geocoding, format respons ala Nominatim:
+/// field `display_name`). Mengembalikan `-` kalau `GEO_REVERSE` belum diisi
+/// atau request gagal; tidak pernah melempar.
 Future<String> getAddress(double lat, double lng) async {
   if (DemoMode.isActive) return DemoData.address();
 

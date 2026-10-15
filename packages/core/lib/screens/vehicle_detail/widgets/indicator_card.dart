@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/base/widgets/skeleton_box.dart';
 
+/// Data satu chip indikator (mis. mesin, bahan bakar, chiller): ikon SVG di
+/// `assets/icons/`, teks nilai, dan warnanya.
 class IndicatorItemData {
   final String icon;
   final String label;
@@ -28,6 +30,7 @@ class IndicatorItemData {
   });
 }
 
+/// Baris chip indikator di Vehicle Detail, dibagi rata selebar layar.
 class IndicatorCard extends StatelessWidget {
   final List<IndicatorItemData> items;
 
@@ -51,6 +54,7 @@ class IndicatorCard extends StatelessWidget {
   }
 }
 
+/// Satu chip: ikon di atas, nilai (atau skeleton saat loading) di bawah.
 class _IndicatorItem extends StatelessWidget {
   final IndicatorItemData data;
 

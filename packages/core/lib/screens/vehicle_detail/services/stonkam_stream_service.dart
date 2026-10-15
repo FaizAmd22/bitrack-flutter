@@ -2,6 +2,9 @@ import 'package:bitrack_core/base/localization/locale_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Pembentuk URL stream untuk dashcam merek Stonkam (server di
+/// `CAMERA_URL`). Saat ini TIDAK dipakai; semua dashcam yang aktif memakai
+/// jalur Mettaxiot.
 class StonkamStreamService {
   const StonkamStreamService();
 

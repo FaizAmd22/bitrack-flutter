@@ -8,6 +8,11 @@ import 'package:bitrack_core/screens/vehicle_detail/widgets/vehicle_information_
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/// Menu di Vehicle Detail: Informasi Kendaraan (sheet), Periodic Track, dan
+/// Dashcam (sheet).
+///
+/// Tombol Dashcam hanya aktif kalau kendaraan punya konfigurasi dashcam yang
+/// valid di data detail (lihat [DashcamConfig.fromVehicleDetail]).
 class ButtonCard extends StatelessWidget {
   const ButtonCard({
     super.key,
@@ -22,6 +27,8 @@ class ButtonCard extends StatelessWidget {
   final Map<String, dynamic>? vehicleData;
   final VoidCallback? onPeriodicTrack;
 
+  /// Tampilkan [sheet] sebagai bottom sheet transparan (sheet menggambar
+  /// latarnya sendiri).
   Future<void> _showSheet(BuildContext context, Widget sheet) {
     return showModalBottomSheet(
       context: context,
@@ -92,6 +99,7 @@ class ButtonCard extends StatelessWidget {
   }
 }
 
+/// Kartu menu berikon; abu-abu dan tidak bisa ditekan saat [enabled] false.
 class _MenuCard extends StatelessWidget {
   const _MenuCard({
     required this.icon,

@@ -1,3 +1,8 @@
+// Pembaca nilai map API yang aman: tidak pernah melempar, dan nilai kosong
+// / null / tipe salah diganti `fallback`. Dipakai di seluruh Vehicle Detail
+// karena field response sering kosong atau berganti tipe.
+
+/// Teks dari [key]; string kosong, "null", dan "undefined" dianggap kosong.
 String safeTextFrom(
   Map<String, dynamic>? data,
   String key, {
@@ -14,6 +19,7 @@ String safeTextFrom(
       : s;
 }
 
+/// Angka desimal dari [key] (boleh berupa string).
 double safeDoubleFrom(
   Map<String, dynamic>? data,
   String key, {
@@ -27,6 +33,7 @@ double safeDoubleFrom(
   return double.tryParse(s) ?? fallback;
 }
 
+/// Angka bulat dari [key] (boleh berupa string).
 int safeIntFrom(Map<String, dynamic>? data, String key, {int fallback = 0}) {
   if (data == null) return fallback;
   final v = data[key];
@@ -36,6 +43,8 @@ int safeIntFrom(Map<String, dynamic>? data, String key, {int fallback = 0}) {
   return int.tryParse(s) ?? fallback;
 }
 
+/// Boolean dari [key]: menerima bool, angka (0/bukan 0), atau string
+/// "true"/"false"/"1"/"0".
 bool safeBoolFrom(
   Map<String, dynamic>? data,
   String key, {

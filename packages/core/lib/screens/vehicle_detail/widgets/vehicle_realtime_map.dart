@@ -9,6 +9,12 @@ import 'package:latlong2/latlong.dart';
 import 'package:bitrack_core/base/constants/map_urls.dart';
 import 'package:bitrack_core/base/widgets/vehicle_marker_icon.dart';
 
+/// Peta di Vehicle Detail yang mengikuti satu kendaraan.
+///
+/// Setiap koordinat baru, marker digeser dan diputar HALUS (animasi 1,8
+/// detik) dari posisi lama ke posisi baru, bukan melompat. Kamera ikut
+/// menempel ke marker selama [followMarker] true. Di atas marker tampil
+/// tooltip kecepatan.
 class VehicleRealtimeMap extends StatefulWidget {
   const VehicleRealtimeMap({
     super.key,
@@ -39,6 +45,7 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
     with SingleTickerProviderStateMixin {
   final MapController _mapController = MapController();
 
+  // Posisi marker yang sedang digambar, serta titik awal dan tujuan animasi.
   LatLng? _renderPos;
   LatLng? _fromPos;
   LatLng? _toPos;
@@ -156,6 +163,8 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
     super.dispose();
   }
 
+  /// Geser kamera, hanya kalau peta sudah siap (memanggil MapController
+  /// sebelum peta tampil akan error).
   void _safeMove(LatLng pos) {
     if (!_mapReady) return;
     try {
@@ -232,6 +241,7 @@ class _VehicleRealtimeMapState extends State<VehicleRealtimeMap>
   }
 }
 
+/// Ikon kendaraan dengan tooltip kecepatan di atasnya.
 class _TruckMarkerWithTooltip extends StatelessWidget {
   const _TruckMarkerWithTooltip({
     required this.iconUrl,
@@ -284,6 +294,7 @@ class _TruckMarkerWithTooltip extends StatelessWidget {
   }
 }
 
+/// Gelembung kecil berisi kecepatan (km/jam).
 class _SpeedTooltip extends StatelessWidget {
   const _SpeedTooltip({required this.speed});
 

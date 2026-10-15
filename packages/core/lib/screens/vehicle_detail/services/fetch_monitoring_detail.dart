@@ -5,6 +5,11 @@ import 'package:bitrack_core/base/services/demo_data.dart';
 import 'package:bitrack_core/base/services/demo_mode.dart';
 import 'package:dio/dio.dart';
 
+/// Mengambil detail satu kendaraan dari `/monitoring/{id}`.
+///
+/// [getDetail] `tab`: `DASHBOARD` (posisi, kecepatan, sensor, BBM, dashcam)
+/// atau `INFORMATION` (odometer, baterai). Mengembalikan isi `data` mentah;
+/// ratakan dengan `flatten_monitoring_detail.dart` sebelum dipakai widget.
 class FetchMonitoringDetail {
   const FetchMonitoringDetail();
 

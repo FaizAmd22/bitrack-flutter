@@ -8,6 +8,10 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 
+/// Tampilan layar penuh (landscape) untuk video dashcam yang sedang diputar
+/// [FlvPlayer]. Memakai [player] dan [controller] yang sama, jadi stream tidak
+/// dimulai ulang. Ketuk layar untuk menampilkan/menyembunyikan tombol;
+/// tombol hilang sendiri setelah 3 detik.
 class FullscreenPlayer extends StatefulWidget {
   final VideoController controller;
   final Player player;
@@ -29,6 +33,8 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
   @override
   void initState() {
     super.initState();
+    // Paksa landscape dan sembunyikan status/navigation bar selama layar
+    // penuh; dikembalikan ke portrait di dispose.
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,

@@ -4,6 +4,8 @@ import 'package:bitrack_core/screens/vehicle_detail/services/fetch_monitoring_de
 import 'package:bitrack_core/screens/vehicle_detail/utils/flatten_monitoring_detail.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+/// Id kendaraan yang sedang dibuka di Vehicle Detail, dibaca sheet
+/// Informasi Kendaraan.
 final vehicleIdProvider = StateProvider<String?>((ref) => null);
 
 /// Data DASHBOARD yang sudah dipegang layar Vehicle Detail, sudah di-flatten.
@@ -17,6 +19,9 @@ final vehicleDashboardCacheProvider = StateProvider<Map<String, dynamic>?>(
   (ref) => null,
 );
 
+/// Data lengkap untuk sheet Informasi Kendaraan (tab Informasi, Status,
+/// Sensor): gabungan tab DASHBOARD dan INFORMATION dari `/monitoring/{id}`.
+/// Dibuang otomatis (autoDispose) saat sheet ditutup.
 final vehicleDetailByVehicleIdProvider = FutureProvider.autoDispose
     .family<Map<String, dynamic>, String>((ref, id) async {
       final detailId = id.trim();

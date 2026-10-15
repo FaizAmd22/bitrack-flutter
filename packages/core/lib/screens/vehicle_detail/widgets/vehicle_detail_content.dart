@@ -12,6 +12,12 @@ import 'package:bitrack_core/screens/vehicle_detail/widgets/button_card.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Isi panel bawah Vehicle Detail: plat, status, alamat, waktu, indikator
+/// (mesin, BBM, chiller), info kendaraan, dan menu ([ButtonCard]).
+///
+/// Membaca map datar hasil `flattenMonitoringDetail` (atau data awal dari
+/// `VehicleDetailArgs.toSeedData`). Hanya menampilkan; semua pengambilan
+/// data ada di `vehicle_detail.dart`.
 class VehicleDetailContent extends StatelessWidget {
   final Map<String, dynamic> detailData;
 

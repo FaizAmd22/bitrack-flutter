@@ -8,6 +8,7 @@ import 'package:bitrack_core/base/network/api_client.dart';
 import 'package:bitrack_core/base/network/api_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Hasil pengecekan dashcam sebuah kendaraan (dipakai [DashcamService]).
 class DashcamStatusResult {
   final bool hasDashcam;
   final bool isStreamAvailable;
@@ -26,6 +27,12 @@ class DashcamStatusResult {
   });
 }
 
+/// Jalur dashcam LAMA (cek dashcam lewat `/vehicle/{id}` + `/dashcam/token`
+/// backend, lalu `API_METTAXIOT_URL`).
+///
+/// Saat ini TIDAK dipakai di mana pun: sheet Dashcam memakai [MettaxiotApi]
+/// dengan konfigurasi dashcam dari data detail. Dipertahankan sebagai
+/// referensi; aman dihapus bersama `API_METTAXIOT_URL` setelah dipastikan.
 class DashcamService {
   DashcamService({Dio? dashcamDio}) : _dashcamDio = dashcamDio ?? Dio() {
     attachApiLogger(_dashcamDio);
@@ -47,6 +54,8 @@ class DashcamService {
     return <String, dynamic>{};
   }
 
+  /// Ambil objek kendaraan dari response yang bisa terbungkus `data` satu
+  /// atau dua tingkat.
   Map<String, dynamic> _unwrapVehicle(dynamic raw) {
     final m = _asMap(raw);
     if (m.isEmpty) return <String, dynamic>{};
@@ -64,6 +73,7 @@ class DashcamService {
     return innerMap.isNotEmpty ? innerMap : m;
   }
 
+  /// Id device dashcam dari beberapa kemungkinan nama field.
   String _getDeviceIdFromDashcam(dynamic dashcam) {
     final m = _asMap(dashcam);
     if (m.isEmpty) return '';

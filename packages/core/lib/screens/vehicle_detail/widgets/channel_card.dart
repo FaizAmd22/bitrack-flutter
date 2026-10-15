@@ -5,11 +5,15 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import '../state/channel_state.dart';
 import 'flv_player.dart';
 
+/// Kartu satu channel kamera di sheet Dashcam: judul, sisa waktu tayang,
+/// switch nyala/mati, dan area video ([FlvPlayer] saat aktif; pesan saat
+/// mati, memuat, atau error).
 class ChannelCard extends StatelessWidget {
   final int index;
   final int channelId;
   final ChannelState state;
   final VoidCallback onToggle;
+  /// Format sisa detik untuk ditampilkan (mis. `00:30`).
   final String Function(int) formatTimer;
 
   const ChannelCard({
