@@ -1,5 +1,7 @@
-// Padanan `pages/work-order/functions/format-label.js`.
+// Format teks label/status Work Order (porting
+// `pages/work-order/functions/format-label.js` dari app lama).
 
+// Singkatan yang selalu ditulis huruf besar.
 const _specialCases = {
   'imei': 'IMEI',
   'obd': 'OBD',
@@ -19,7 +21,9 @@ String formatStatus(String? status) {
       .join(' ');
 }
 
-/// "simcardNumber" -> "Simcard Number", dengan pengecualian IMEI/OBD/SIM/GPS.
+/// Nama field -> label, mis. `"simcardNumber"` -> `"Simcard Number"`, dengan
+/// singkatan IMEI/OBD/SIM/GPS huruf besar. Khusus tipe penggantian SIM card,
+/// hasilnya awalan `"New "` (dipakai pemanggil untuk label field baru).
 String formatLabel(String? key, String? type) {
   if (key == null || key.isEmpty) return '';
 
@@ -54,5 +58,7 @@ String formatPayloadKey(String? text) {
   return text.toUpperCase().replaceAll(RegExp(r'\s+'), '_');
 }
 
+/// Bentuk pembanding: huruf kecil tanpa `_` dan spasi, supaya
+/// `"SIMCARD_REPLACEMENT"` dan `"Simcard Replacement"` dianggap sama.
 String normalizeKey(String? value) =>
     (value ?? '').toLowerCase().replaceAll(RegExp(r'[_\s]'), '');

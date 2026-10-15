@@ -10,6 +10,7 @@ class WorkOrderListPage {
     required this.lastPage,
   });
 
+  /// Masih ada halaman berikutnya.
   bool get hasNext => currentPage < lastPage;
 
   factory WorkOrderListPage.fromResponse(

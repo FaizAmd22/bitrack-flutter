@@ -18,8 +18,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-order/pages/create-detail-wo/create-detail-wo.jsx`.
-/// Wizard 2–3 langkah untuk membuat atau memperbarui satu pekerjaan.
+/// Halaman buat/ubah task work order (route `/create-detail-wo`, argumen
+/// [CreateDetailWoArgs]): wizard 2-3 langkah (detail, informasi device,
+/// review). Pekerjaan dismantle (copot) tidak punya langkah informasi.
+/// (Porting `create-detail-wo.jsx`.)
 class CreateDetailWoScreen extends ConsumerStatefulWidget {
   final CreateDetailWoArgs args;
 
@@ -30,6 +32,8 @@ class CreateDetailWoScreen extends ConsumerStatefulWidget {
       _CreateDetailWoScreenState();
 }
 
+/// Langkah wizard: [details] (StepOneForm), [information] (StepTwoForm),
+/// [review] (ReviewForm).
 enum _StepKey { details, information, review }
 
 class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
@@ -75,6 +79,8 @@ class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
     super.dispose();
   }
 
+  /// Controller teks per nama field (dibuat sekali, dipakai ulang), supaya
+  /// isian tidak hilang saat berpindah langkah.
   TextEditingController _controllerFor(String key) {
     return _controllers.putIfAbsent(
       key,
@@ -171,6 +177,7 @@ class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
     }
   }
 
+  /// Muat pilihan dropdown langkah dua sesuai kategori pekerjaan.
   Future<void> _loadDetailOptions() async {
     try {
       final options = await ref
@@ -188,6 +195,8 @@ class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
     }
   }
 
+  /// Mode ubah: isi label pilihan dari nilai yang tersimpan, setelah daftar
+  /// pilihannya termuat.
   void _syncLabelsFromOptions() {
     if (!_args.isUpdate) return;
 
@@ -232,6 +241,7 @@ class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
     }
   }
 
+  /// Validasi langkah aktif lalu lanjut ke langkah berikutnya.
   Future<void> _next() async {
     final t = AppLocalizations.of(context);
     final step = _steps[_activeStep];
@@ -294,6 +304,7 @@ class _CreateDetailWoScreenState extends ConsumerState<CreateDetailWoScreen> {
     };
   }
 
+  /// Susun payload dari semua langkah lalu simpan task.
   Future<void> _submit() async {
     final t = AppLocalizations.of(context);
     setState(() => _isBusy = true);
@@ -538,6 +549,7 @@ class _StepHeader extends StatelessWidget {
   }
 }
 
+/// Lingkaran nomor langkah (atau centang bila sudah lewat).
 class _StepDot extends StatelessWidget {
   final int index;
   final String label;

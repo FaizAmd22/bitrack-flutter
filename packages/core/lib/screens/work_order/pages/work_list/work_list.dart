@@ -15,8 +15,9 @@ import 'package:bitrack_core/screens/work_order/widgets/card_options_sheet.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-order/pages/work-list/work-list.jsx`:
-/// daftar pekerjaan (detail) di dalam satu work order.
+/// Halaman daftar task (detail pekerjaan) di dalam satu work order (route
+/// `/work-list`, argumen [WorkListArgs]). Non-teknisi bisa menambah task
+/// (lewat [AssignWorkSheet]) dan menghapusnya. (Porting `work-list.jsx`.)
 class WorkListScreen extends ConsumerStatefulWidget {
   final WorkListArgs args;
 
@@ -71,6 +72,7 @@ class _WorkListScreenState extends ConsumerState<WorkListScreen> {
     return ref.read(workOrderOptionsProvider).technicianLabel(raw);
   }
 
+  /// Pilih kategori + tipe pekerjaan, lalu buka form buat task.
   Future<void> _openAssignSheet() async {
     final categories = ref.read(workOrderOptionsProvider).workCategory;
 
@@ -135,6 +137,7 @@ class _WorkListScreenState extends ConsumerState<WorkListScreen> {
     );
   }
 
+  /// Hapus task (setelah konfirmasi) lalu muat ulang daftar.
   Future<void> _deleteDetail(String id) async {
     final t = AppLocalizations.of(context);
     setState(() => _isBusy = true);

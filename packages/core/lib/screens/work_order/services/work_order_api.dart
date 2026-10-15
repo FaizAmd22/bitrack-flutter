@@ -8,8 +8,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bitrack_core/base/network/api_response.dart';
 
-/// Semua endpoint Work Order. Padanan folder `pages/work-order/hooks` di
-/// bitrack-mobile, dikumpulkan jadi satu kelas supaya gampang dilacak.
+/// Semua endpoint Work Order, dikumpulkan jadi satu kelas supaya gampang
+/// dilacak (porting folder `pages/work-order/hooks` dari app lama).
+///
+/// Istilah: **work order (WO / header)** = satu surat tugas untuk satu fleet
+/// group dan satu teknisi. **Detail (task)** = satu pekerjaan di dalam WO
+/// untuk satu kendaraan (mis. pasang GPS, ganti SIM card), lengkap dengan
+/// foto bukti before/after dan catatan.
 class WorkOrderApi {
   const WorkOrderApi();
 
@@ -23,6 +28,8 @@ class WorkOrderApi {
 
   // ---------------------------------------------------------------- header
 
+  /// `GET /work-order`: daftar header WO berhalaman, opsional difilter fleet
+  /// group dan tanggal.
   Future<WorkOrderListPage> fetchWorkOrder({
     required int page,
     int size = 10,
@@ -49,6 +56,8 @@ class WorkOrderApi {
     return WorkOrderListPage.fromResponse(data, requestedPage: page);
   }
 
+  /// `GET /work-order/options`: pilihan fleet group, teknisi, plat, dan
+  /// kategori pekerjaan.
   Future<WorkOrderOptions> fetchOptions() async {
     final res = await ApiClient.dio.get('/work-order/options');
 
@@ -59,6 +68,7 @@ class WorkOrderApi {
     return WorkOrderOptions.fromJson(payload);
   }
 
+  /// `POST /work-order`: buat header WO baru.
   Future<Map<String, dynamic>> createWorkOrderHeader({
     required String fleetGroupId,
     required String technician,
@@ -80,12 +90,14 @@ class WorkOrderApi {
     return Map<String, dynamic>.from(payload);
   }
 
+  /// `DELETE /work-order/WO/{id}`: hapus header WO.
   Future<void> deleteWorkOrder(String id) async {
     await ApiClient.dio.delete('/work-order/WO/$id');
   }
 
   // ---------------------------------------------------------------- detail
 
+  /// `GET /work-order/detail?id=`: daftar task milik satu WO (berhalaman).
   Future<List<Map<String, dynamic>>> fetchWorkOrderDetail(
     String id, {
     int page = 1,
@@ -108,6 +120,7 @@ class WorkOrderApi {
         .toList(growable: false);
   }
 
+  /// `GET /work-order/detail-single?id=`: satu task lengkap.
   Future<Map<String, dynamic>> fetchWorkOrderDetailById(String id) async {
     final res = await ApiClient.dio.get(
       '/work-order/detail-single',
@@ -121,15 +134,19 @@ class WorkOrderApi {
     return Map<String, dynamic>.from(payload);
   }
 
+  /// `POST /work-order/detail`: buat (atau ubah) task.
   Future<void> createWorkOrderDetail(Map<String, dynamic> payload) async {
     final res = await ApiClient.dio.post('/work-order/detail', data: payload);
     throwIfRejected(res.data);
   }
 
+  /// `DELETE /work-order/WO_DETAIL/{id}`: hapus task.
   Future<void> deleteWorkOrderDetail(String id) async {
     await ApiClient.dio.delete('/work-order/WO_DETAIL/$id');
   }
 
+  /// `GET /work-order/option-detail?category=`: pilihan untuk form task
+  /// langkah dua (merek/model device, dll.) sesuai kategori.
   Future<WorkOrderDetailOptions> fetchDetailOptions(String category) async {
     final normalized = category.toLowerCase().replaceAll(RegExp(r'\s+'), '_');
 
@@ -147,6 +164,8 @@ class WorkOrderApi {
 
   // -------------------------------------------------------------- evidence
 
+  /// `POST /work-order/evidence` (multipart): unggah foto bukti. [event]
+  /// menandai kelompok foto (before / after).
   Future<void> uploadEvidence({
     required List<File> files,
     required String workOrderDetailId,
@@ -180,6 +199,7 @@ class WorkOrderApi {
     throwIfRejected(res.data);
   }
 
+  /// `DELETE /work-order/evidence?file_url=`: hapus satu foto bukti.
   Future<void> deleteEvidence(String fileUrl) async {
     final res = await ApiClient.dio.delete(
       '/work-order/evidence',
@@ -188,6 +208,7 @@ class WorkOrderApi {
     throwIfRejected(res.data);
   }
 
+  /// `POST /work-order/notes`: simpan catatan task.
   Future<void> updateNotes({
     required String workOrderDetailId,
     required String notes,
@@ -217,11 +238,15 @@ class WorkOrderApi {
     return isTechnician;
   }
 
+  /// Status teknisi terakhir yang tersimpan (dipakai sebelum request
+  /// [fetchIsTechnician] selesai).
   Future<bool> cachedIsTechnician() async {
     final raw = await _storage.read(key: _isTechnicianKey);
     return raw == 'true';
   }
 
+  /// `GET /work-order/gps-signal?imei=`: apakah device GPS sudah mengirim
+  /// data (dipakai saat instalasi untuk memastikan device aktif).
   Future<bool> gpsSignal(String? imei) async {
     if (imei == null || imei.isEmpty) return false;
 
@@ -241,6 +266,8 @@ class WorkOrderApi {
     return true;
   }
 
+  /// `GET /work-order/vehicle-information?license_plate=`: data kendaraan
+  /// dan device-nya, untuk mengisi form task.
   Future<Map<String, dynamic>> vehicleInformation(String licensePlate) async {
     final res = await ApiClient.dio.get(
       '/work-order/vehicle-information',

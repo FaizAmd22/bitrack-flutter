@@ -4,7 +4,8 @@ import 'package:bitrack_core/screens/work_order/utils/work_order_validation.dart
 import 'package:bitrack_core/screens/work_order/widgets/card_section.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `pages/create-detail-wo/components/review-form.jsx`.
+/// Langkah terakhir form task: ringkasan isian langkah satu dan dua (hanya
+/// baca) sebelum disimpan. (Porting `review-form.jsx`.)
 class ReviewForm extends StatelessWidget {
   final String category;
   final String type;
@@ -21,6 +22,7 @@ class ReviewForm extends StatelessWidget {
     required this.stepTwo,
   });
 
+  /// Teks dari nilai apa pun; kosong = null (ditampilkan `-` oleh RowItem).
   String? _s(dynamic value) {
     final text = (value ?? '').toString().trim();
     return text.isEmpty ? null : text;

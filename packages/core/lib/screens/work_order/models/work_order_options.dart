@@ -1,5 +1,9 @@
-/// Padanan `workOrderOptionsSlice` di bitrack-mobile: kumpulan option yang
-/// dipakai lintas halaman Work Order (filter, create, dan form detail).
+// Pilihan (dropdown) yang dipakai lintas halaman Work Order: filter, buat
+// work order, dan form detail. Dimuat sekali dari `/work-order/options`.
+// (Porting `workOrderOptionsSlice` dari app lama.)
+
+/// Satu pilihan: [value] untuk API, [label] untuk tampilan. Menerima juga
+/// bentuk `id`/`name` dari server.
 class OptionItem {
   final String value;
   final String label;
@@ -21,6 +25,9 @@ class OptionItem {
   }
 }
 
+/// Kategori pekerjaan (mis. GPS, Dashcam, sensor) beserta jenis pekerjaan
+/// yang tersedia di kategori itu (installation, replacement, inspection,
+/// ...).
 class WorkCategoryOption {
   final String name;
   final List<OptionItem> workType;
@@ -35,6 +42,8 @@ class WorkCategoryOption {
   }
 }
 
+/// Semua pilihan Work Order sekaligus: fleet group, teknisi, plat kendaraan,
+/// dan kategori pekerjaan.
 class WorkOrderOptions {
   final List<OptionItem> fleetGroup;
   final List<OptionItem> technician;
@@ -71,6 +80,7 @@ class WorkOrderOptions {
     );
   }
 
+  /// Nama fleet group dari id; tidak ditemukan = `-`.
   String fleetGroupLabel(String? id) {
     if (id == null) return '-';
     for (final f in fleetGroup) {
@@ -79,6 +89,7 @@ class WorkOrderOptions {
     return '-';
   }
 
+  /// Nama teknisi dari id; tidak ditemukan = id itu sendiri.
   String technicianLabel(String? id) {
     if (id == null || id.isEmpty) return '-';
     for (final t in technician) {
@@ -101,6 +112,8 @@ class WorkOrderOptions {
   String categoryLabel(String? rawCategory) =>
       categoryOf(rawCategory)?.name ?? (rawCategory ?? '-');
 
+  /// Label jenis pekerjaan dari nilai mentah API; tidak ditemukan = nilai
+  /// mentah dalam Title Case.
   String workTypeLabel(String? rawCategory, String? rawType) {
     final category = categoryOf(rawCategory);
     if (category != null) {

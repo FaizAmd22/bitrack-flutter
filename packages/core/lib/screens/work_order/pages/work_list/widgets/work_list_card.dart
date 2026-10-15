@@ -12,7 +12,9 @@ import 'package:bitrack_core/screens/work_order/widgets/work_order_status_badge.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-list/components/work-list-card.jsx`.
+/// Kartu satu task di daftar task WO: kendaraan, jenis pekerjaan, status,
+/// dan indikator sinyal GPS device (diperbarui tiap 10 detik).
+/// (Porting `work-list-card.jsx`.)
 class WorkListCard extends ConsumerStatefulWidget {
   final Map<String, dynamic> data;
   final WorkOrderOptions options;
@@ -210,6 +212,7 @@ class _WorkListCardState extends ConsumerState<WorkListCard> {
   }
 }
 
+/// Teks peringatan kecil di kartu (mis. sinyal GPS belum aktif).
 class _AlertText extends StatelessWidget {
   final String text;
 

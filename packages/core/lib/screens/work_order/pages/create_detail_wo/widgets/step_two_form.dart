@@ -9,8 +9,9 @@ import 'package:bitrack_core/screens/work_order/utils/work_order_validation.dart
 import 'package:bitrack_core/screens/work_order/widgets/card_section.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `pages/create-detail-wo/components/step-two-form.jsx` beserta
-/// seluruh form turunannya (GPS, dashcam, sensor, SIM, inspeksi).
+/// Langkah dua form task: field yang tampil bergantung pada jenis pekerjaan
+/// ([WorkDetailFormKind]): GPS, dashcam, sensor, penggantian SIM, atau
+/// inspeksi. (Porting `step-two-form.jsx` beserta form turunannya.)
 class StepTwoForm extends StatelessWidget {
   final String category;
   final String type;
@@ -46,6 +47,7 @@ class StepTwoForm extends StatelessWidget {
     );
   }
 
+  /// Pilih kelompok field sesuai jenis form.
   List<Widget> _fields(BuildContext context, WorkDetailFormKind kind) {
     final t = AppLocalizations.of(context);
 
@@ -275,8 +277,9 @@ class StepTwoForm extends StatelessWidget {
   }
 }
 
-/// Padanan `current-device-information-card.jsx`: ringkasan perangkat yang
-/// saat ini terpasang, supaya teknisi bisa membandingkan sebelum mengganti.
+/// Ringkasan perangkat yang saat ini terpasang di kendaraan, supaya teknisi
+/// bisa membandingkan sebelum mengganti. (Porting
+/// `current-device-information-card.jsx`.)
 class _CurrentDeviceCard extends StatelessWidget {
   final Map<String, dynamic>? vehicleInfo;
 
@@ -312,6 +315,7 @@ class _CurrentDeviceCard extends StatelessWidget {
   }
 }
 
+/// Field hanya-baca bergaya input.
 class _ReadOnlyField extends StatelessWidget {
   final String label;
   final String value;
@@ -348,6 +352,7 @@ class _ReadOnlyField extends StatelessWidget {
   }
 }
 
+/// Input teks beberapa baris (mis. hasil inspeksi).
 class _Textarea extends StatelessWidget {
   final String label;
   final String hintText;

@@ -1,7 +1,11 @@
-// Padanan `functions/formatDate.js` untuk kebutuhan halaman Work Order.
+// Format tanggal untuk halaman Work Order (porting `functions/formatDate.js`
+// dari app Cordova lama). Catatan: hanya membedakan Indonesia vs Inggris;
+// bahasa lain memakai format Inggris.
 
 import 'package:intl/intl.dart';
 
+/// Baca tanggal dari server (`yyyy-MM-dd HH:mm:ss` atau ISO). Kosong/tidak
+/// valid = null.
 DateTime? parseDate(String? raw) {
   final value = (raw ?? '').trim();
   if (value.isEmpty) return null;

@@ -2,6 +2,7 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// Aksi yang dipilih dari [CardOptionsSheet].
 enum CardAction { details, delete }
 
 /// Padanan `components/card-modal.jsx`: sheet aksi yang muncul saat kartu

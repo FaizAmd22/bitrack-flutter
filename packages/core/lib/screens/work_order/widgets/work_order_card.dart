@@ -5,7 +5,8 @@ import 'package:bitrack_core/screens/work_order/utils/format_date.dart';
 import 'package:bitrack_core/screens/work_order/widgets/work_order_status_badge.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `components/work-order-card.jsx`.
+/// Kartu satu header work order di tab Work Order: nomor WO, status, fleet
+/// group, teknisi, dan tanggal. (Porting `components/work-order-card.jsx`.)
 class WorkOrderCard extends StatelessWidget {
   final Map<String, dynamic> item;
   final String fleetGroupName;
@@ -98,6 +99,7 @@ class WorkOrderCard extends StatelessWidget {
   }
 }
 
+/// Baris kecil ikon + teks di dalam kartu.
 class _IconLine extends StatelessWidget {
   final IconData icon;
   final String text;

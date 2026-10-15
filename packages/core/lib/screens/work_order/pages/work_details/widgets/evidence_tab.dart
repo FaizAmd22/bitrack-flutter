@@ -9,9 +9,13 @@ import 'package:bitrack_core/screens/work_order/pages/work_details/models/eviden
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Kelompok foto bukti: sebelum dan sesudah pekerjaan.
 enum EvidenceSection { before, after }
 
-/// Padanan `pages/work-details/components/evidence-tab.jsx`.
+/// Tab Bukti di detail task: 5 slot foto "before" dan 5 slot "after".
+/// Slot bisa diisi dari kamera/galeri, diganti, dilihat penuh, atau
+/// dikosongkan. Perubahan baru disimpan ke server saat user menekan simpan.
+/// (Porting `evidence-tab.jsx`.)
 class EvidenceTab extends StatelessWidget {
   final List<EvidenceSlot?> beforeImages;
   final List<EvidenceSlot?> afterImages;
@@ -37,6 +41,7 @@ class EvidenceTab extends StatelessWidget {
   List<EvidenceSlot?> _slotsOf(EvidenceSection section) =>
       section == EvidenceSection.before ? beforeImages : afterImages;
 
+  /// Ambil foto dari kamera atau galeri untuk satu slot.
   Future<void> _pickImage(
     BuildContext context,
     EvidenceSection section,
@@ -114,6 +119,7 @@ class EvidenceTab extends StatelessWidget {
     onSlotChanged(section, index, slot);
   }
 
+  /// Menu aksi untuk slot yang sudah berisi foto (lihat, ganti, hapus).
   Future<void> _openSlotActions(
     BuildContext context,
     EvidenceSection section,
@@ -202,6 +208,7 @@ class EvidenceTab extends StatelessWidget {
     );
   }
 
+  /// Gambar slot: dari file lokal (foto baru) atau URL server.
   Widget _slotImage(EvidenceSlot slot, {BoxFit fit = BoxFit.cover}) {
     if (slot.file != null) {
       return Image.file(slot.file!, fit: fit);
@@ -281,6 +288,7 @@ class EvidenceTab extends StatelessWidget {
   }
 }
 
+/// Kotak slot kosong bertanda + (ketuk untuk menambah foto).
 class _EmptySlot extends StatelessWidget {
   final bool readOnly;
 

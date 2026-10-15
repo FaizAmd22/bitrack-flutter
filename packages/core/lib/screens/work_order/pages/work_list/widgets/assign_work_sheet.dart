@@ -12,7 +12,9 @@ class AssignWorkSelection {
   const AssignWorkSelection({required this.category, required this.type});
 }
 
-/// Padanan `pages/work-list/components/work-list-popup.jsx`.
+/// Sheet "Assign Work": pilih kategori lalu tipe pekerjaan sebelum membuat
+/// task baru. Hasilnya [AssignWorkSelection], atau null bila dibatalkan.
+/// (Porting `work-list-popup.jsx`.)
 class AssignWorkSheet {
   static Future<AssignWorkSelection?> open(
     BuildContext context, {
@@ -67,6 +69,7 @@ class _AssignWorkBodyState extends State<_AssignWorkBody> {
     });
   }
 
+  /// Pilih tipe pekerjaan; daftarnya bergantung pada kategori terpilih.
   Future<void> _pickType() async {
     final category = _category;
     if (category == null) return;
@@ -209,6 +212,7 @@ class _AssignWorkBodyState extends State<_AssignWorkBody> {
   }
 }
 
+/// Baris pilihan berbingkai di dalam sheet.
 class _SheetField extends StatelessWidget {
   final String label;
   final String? value;

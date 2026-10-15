@@ -4,6 +4,11 @@ import 'package:bitrack_core/screens/work_order/services/work_order_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+// State Riverpod untuk semua halaman Work Order (porting slice Redux app
+// lama): pilihan dropdown, status teknisi, WO terpilih, daftar header WO,
+// dan daftar task per WO.
+
+/// API Work Order (bisa diganti versi palsu di tes).
 final workOrderApiProvider = Provider<WorkOrderApi>(
   (_) => const WorkOrderApi(),
 );
@@ -84,6 +89,7 @@ class SelectedWorkOrderNotifier extends StateNotifier<Map<String, dynamic>?> {
 
 // -------------------------------------------------------------- list header
 
+/// Filter daftar header WO: tanggal dibuat, fleet group, teknisi.
 class WorkOrderFilter {
   final String? createdAt;
   final String? fleetGroupId;
@@ -109,6 +115,8 @@ class WorkOrderFilter {
   }
 }
 
+/// Daftar header WO yang sudah dimuat; [page] = halaman berikutnya yang akan
+/// diminta.
 class WorkOrderListState {
   final List<Map<String, dynamic>> items;
   final int page;
@@ -149,6 +157,8 @@ class WorkOrderListState {
   }
 }
 
+/// Daftar header WO dengan infinite scroll: [refresh] (dengan filter) dan
+/// [loadMore].
 class WorkOrderListNotifier
     extends StateNotifier<AsyncValue<WorkOrderListState>> {
   WorkOrderListNotifier(this._api)
@@ -224,6 +234,7 @@ class WorkOrderListNotifier
   }
 }
 
+/// State daftar header WO di tab Work Order.
 final workOrderListProvider =
     StateNotifierProvider<
       WorkOrderListNotifier,
@@ -232,6 +243,7 @@ final workOrderListProvider =
 
 // -------------------------------------------------------------- list detail
 
+/// Daftar task milik satu WO yang sudah dimuat.
 class WorkOrderDetailListState {
   final List<Map<String, dynamic>> items;
   final int page;
@@ -260,6 +272,8 @@ class WorkOrderDetailListState {
   }
 }
 
+/// Daftar task satu WO dengan infinite scroll; langsung memuat halaman
+/// pertama saat dibuat.
 class WorkOrderDetailListNotifier
     extends StateNotifier<AsyncValue<WorkOrderDetailListState>> {
   WorkOrderDetailListNotifier(this._api, this._workOrderId)
@@ -329,6 +343,7 @@ class WorkOrderDetailListNotifier
   }
 }
 
+/// State daftar task per WO, di-key oleh id WO.
 final workOrderDetailListProvider =
     StateNotifierProvider.family<
       WorkOrderDetailListNotifier,

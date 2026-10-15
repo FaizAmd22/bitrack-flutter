@@ -6,8 +6,9 @@ import 'package:bitrack_core/screens/work_order/providers/work_order_providers.d
 import 'package:bitrack_core/screens/work_order/utils/format_date.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `components/filter-work-order-popup.jsx`.
-/// Mengembalikan filter baru, atau [WorkOrderFilter.empty] saat di-clear.
+/// Sheet filter daftar work order: tanggal dibuat, fleet group, teknisi.
+/// Mengembalikan filter baru, [WorkOrderFilter.empty] saat di-clear, atau
+/// null bila ditutup. (Porting `filter-work-order-popup.jsx`.)
 class FilterWorkOrderSheet {
   static Future<WorkOrderFilter?> open(
     BuildContext context, {
@@ -69,6 +70,7 @@ class _FilterBodyState extends State<_FilterBody> {
     );
   }
 
+  /// Cari pilihan berdasarkan value (untuk menampilkan filter yang aktif).
   OptionItem? _findOption(List<OptionItem> source, String? value) {
     if (value == null) return null;
     for (final o in source) {
@@ -259,6 +261,7 @@ class _FilterBodyState extends State<_FilterBody> {
   }
 }
 
+/// Baris pilihan berbingkai di sheet filter.
 class _FilterField extends StatelessWidget {
   final String label;
   final String? value;

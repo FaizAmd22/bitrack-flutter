@@ -3,10 +3,12 @@ import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:bitrack_core/screens/work_order/utils/format_label.dart';
 import 'package:flutter/material.dart';
 
+/// Aksi simpan di detail task: simpan sebagai draft, atau tandai selesai.
 enum WorkAction { saveDraft, markComplete }
 
-/// Padanan `pages/work-details/components/work-action-popup.jsx`.
-/// "Mark as complete" hanya tersedia untuk non-teknisi.
+/// Sheet pilihan simpan saat menekan tombol simpan di detail task: "Save as
+/// draft" atau "Mark as complete" (yang terakhir hanya untuk non-teknisi).
+/// (Porting `pages/work-details/components/work-action-popup.jsx`.)
 class WorkActionSheet {
   static Future<WorkAction?> open(
     BuildContext context, {

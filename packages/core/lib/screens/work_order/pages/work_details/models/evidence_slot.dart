@@ -9,16 +9,21 @@ class EvidenceSlot {
 
   const EvidenceSlot({this.file, this.remoteUrl});
 
+  /// Foto lama dari server (belum diganti).
   bool get isFromServer => file == null && remoteUrl != null;
 
+  /// Foto baru dari kamera/galeri yang belum diunggah.
   bool get isNew => file != null;
 }
 
+/// Jumlah slot foto per kelompok (before / after).
 const evidenceSlotCount = 5;
 
+/// Lima slot kosong.
 List<EvidenceSlot?> emptyEvidenceSlots() =>
     List<EvidenceSlot?>.filled(evidenceSlotCount, null, growable: false);
 
+/// Isi slot dari daftar URL foto di server (maksimal 5; sisanya kosong).
 List<EvidenceSlot?> evidenceSlotsFromUrls(dynamic raw) {
   final slots = List<EvidenceSlot?>.filled(
     evidenceSlotCount,

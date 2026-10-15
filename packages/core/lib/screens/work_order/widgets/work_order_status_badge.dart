@@ -2,6 +2,8 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/screens/work_order/utils/format_label.dart';
 import 'package:flutter/material.dart';
 
+/// Badge status work order: kuning untuk `on_process`, hijau untuk
+/// `completed`, abu-abu untuk status lain. Status kosong = tidak tampil.
 class WorkOrderStatusBadge extends StatelessWidget {
   final String? status;
 

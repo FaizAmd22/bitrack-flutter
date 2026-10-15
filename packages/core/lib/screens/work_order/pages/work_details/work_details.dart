@@ -20,7 +20,13 @@ import 'package:bitrack_core/screens/work_order/utils/work_order_validation.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-order/pages/work-details/work-details.jsx`.
+/// Halaman detail satu task work order (route `/work-details`, argumen
+/// [WorkDetailsArgs]) dengan tab Detail, Bukti (foto before/after), dan
+/// Catatan.
+///
+/// Perubahan foto dan catatan dikumpulkan dulu, lalu dikirim saat user
+/// memilih "Save as draft" atau "Mark as complete" (yang kedua mewajibkan
+/// foto before, after, dan catatan). (Porting `work-details.jsx`.)
 class WorkDetailsScreen extends ConsumerStatefulWidget {
   final WorkDetailsArgs args;
 
@@ -72,6 +78,7 @@ class _WorkDetailsScreenState extends ConsumerState<WorkDetailsScreen> {
         .technicianLabel(workOrder?['technician']?.toString());
   }
 
+  /// Muat task lengkap dari server dan isi tab-tabnya.
   Future<void> _fetchData() async {
     setState(() => _isLoading = true);
 
@@ -122,6 +129,7 @@ class _WorkDetailsScreenState extends ConsumerState<WorkDetailsScreen> {
         _pendingDeleteUrls.isNotEmpty;
   }
 
+  /// Satu slot foto berubah; tandai ada perubahan yang belum disimpan.
   void _onSlotChanged(EvidenceSection section, int index, EvidenceSlot? slot) {
     setState(() {
       final target = section == EvidenceSection.before
@@ -215,6 +223,9 @@ class _WorkDetailsScreenState extends ConsumerState<WorkDetailsScreen> {
     };
   }
 
+  /// Kirim semua perubahan sekaligus (paralel): unggah foto baru BEFORE dan
+  /// AFTER, simpan catatan, simpan status task (selesai bila [isComplete],
+  /// selain itu draft), dan hapus foto server yang dihapus user.
   Future<void> _persist({required bool isComplete}) async {
     final api = ref.read(workOrderApiProvider);
     final detailId = (_detail!['id'] ?? '').toString();
@@ -326,6 +337,7 @@ class _WorkDetailsScreenState extends ConsumerState<WorkDetailsScreen> {
     }
   }
 
+  /// Buka form ubah task (data langkah satu dan dua).
   Future<void> _openEdit() async {
     if (!await _confirmLeave() || !mounted) return;
 

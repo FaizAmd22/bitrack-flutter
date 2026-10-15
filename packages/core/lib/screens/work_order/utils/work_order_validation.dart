@@ -1,8 +1,10 @@
-// Padanan `schemas/workOrderStepTwoSchema.js` + `utils/workOrderValidation.js`.
+// Validasi form detail work order (porting `schemas/workOrderStepTwoSchema.js`
+// + `utils/workOrderValidation.js` dari app lama).
 // Di Flutter validasi dijalankan lewat Form/TextFormField, jadi yang dibutuhkan
 // hanya potongan validator-nya. Pesan error dikirim dari pemanggil supaya bisa
 // ikut bahasa aktif.
 
+/// Kumpulan validator kecil untuk `TextFormField.validator`.
 class WoValidators {
   WoValidators._();
 
@@ -12,11 +14,14 @@ class WoValidators {
     return (value == null || value.trim().isEmpty) ? message : null;
   }
 
+  /// Hanya angka. Kosong dianggap valid (gabungkan dengan [requiredField]
+  /// lewat [chain] bila wajib).
   static String? numeric(String? value, String message) {
     if (value == null || value.trim().isEmpty) return null;
     return _digitsOnly.hasMatch(value.trim()) ? null : message;
   }
 
+  /// Panjang maksimal [max] karakter. Kosong dianggap valid.
   static String? maxLength(String? value, int max, String message) {
     if (value == null || value.trim().isEmpty) return null;
     return value.trim().length > max ? message : null;
@@ -48,6 +53,9 @@ enum WorkDetailFormKind {
   none,
 }
 
+/// Tentukan jenis form langkah dua dari kategori (GPS / Dashcam / sensor) dan
+/// tipe pekerjaan (installation, replacement, inspection, ...). Urutan
+/// pengecekan penting: kasus yang lebih spesifik dicek lebih dulu.
 WorkDetailFormKind resolveFormKind(String? category, String? type) {
   final t = (type ?? '').toLowerCase().replaceAll('_', ' ');
   final c = (category ?? '').toLowerCase();

@@ -3,7 +3,9 @@
 import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `components/cardSection.jsx` + `components/rowItem.jsx`.
+/// Kartu putih berjudul yang berisi baris-baris [RowItem] (label : nilai).
+/// Dipakai di detail work order dan form review.
+/// (Porting `components/cardSection.jsx` + `components/rowItem.jsx`.)
 class CardSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -42,6 +44,7 @@ class CardSection extends StatelessWidget {
   }
 }
 
+/// Satu baris label (abu-abu, kiri) : nilai (kanan). Nilai kosong = `-`.
 class RowItem extends StatelessWidget {
   final String label;
   final String? value;

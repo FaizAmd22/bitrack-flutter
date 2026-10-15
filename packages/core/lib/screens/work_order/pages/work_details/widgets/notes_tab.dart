@@ -2,7 +2,9 @@ import 'package:bitrack_core/base/res/styles/app_styles.dart';
 import 'package:bitrack_core/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `pages/work-details/components/notes-tab.jsx`.
+/// Tab Catatan di detail task work order: satu kolom teks bebas. Hanya bisa
+/// diubah saat task belum selesai ([readOnly] false).
+/// (Porting `pages/work-details/components/notes-tab.jsx` dari app lama.)
 class NotesTab extends StatelessWidget {
   final TextEditingController controller;
   final bool readOnly;

@@ -9,7 +9,8 @@ import 'package:bitrack_core/screens/work_order/utils/work_order_validation.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Padanan `pages/create-detail-wo/components/step-one-form.jsx`.
+/// Langkah satu form task: kategori, tipe, dan teknisi (sudah ditentukan,
+/// hanya baca), plus plat kendaraan. (Porting `step-one-form.jsx`.)
 class StepOneForm extends StatefulWidget {
   final String category;
   final String type;
@@ -192,6 +193,7 @@ class _DisabledField extends StatelessWidget {
   }
 }
 
+/// Mengubah semua huruf yang diketik menjadi huruf besar.
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

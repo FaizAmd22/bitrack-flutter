@@ -1,6 +1,7 @@
-// Argumen navigasi antar halaman Work Order. Di bitrack-mobile ini dikirim
-// lewat parameter route Framework7 + `props`.
+// Argumen route antar halaman Work Order. Karena halaman-halaman ini butuh
+// argumen, mereka didaftarkan lewat `onGenerateRoute` di `main.dart`.
 
+/// Argumen halaman daftar detail (task) milik satu work order.
 class WorkListArgs {
   final String workOrderId;
   final String workOrderNo;
@@ -8,12 +9,14 @@ class WorkListArgs {
   const WorkListArgs({required this.workOrderId, required this.workOrderNo});
 }
 
+/// Argumen halaman detail satu task work order.
 class WorkDetailsArgs {
   final String detailId;
 
   const WorkDetailsArgs({required this.detailId});
 }
 
+/// Argumen halaman buat/ubah detail (task) work order.
 class CreateDetailWoArgs {
   /// Nilai mentah yang dikirim ke API, mis. "GPS" / "INSTALLATION".
   final String category;
@@ -39,5 +42,6 @@ class CreateDetailWoArgs {
     this.detail,
   });
 
+  /// True = mengubah detail yang sudah ada.
   bool get isUpdate => detail != null;
 }

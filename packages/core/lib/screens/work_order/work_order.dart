@@ -17,7 +17,12 @@ import 'package:bitrack_core/screens/work_order/widgets/work_order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-order/work-order.jsx`.
+/// Tab Work Order (khusus build Teknisi): daftar header work order dengan
+/// pencarian, filter, pull-to-refresh, dan infinite scroll.
+///
+/// Mengetuk kartu membuka menu (lihat detail / hapus). Tombol buat WO dan
+/// opsi hapus hanya untuk non-teknisi (lihat `isTechnicianProvider`).
+/// (Porting `work-order.jsx`.)
 class WorkOrderScreen extends ConsumerStatefulWidget {
   const WorkOrderScreen({super.key});
 
@@ -48,6 +53,7 @@ class _WorkOrderScreenState extends ConsumerState<WorkOrderScreen> {
     super.dispose();
   }
 
+  /// Muat daftar pertama, peran user, dan pilihan filter.
   Future<void> _bootstrap() async {
     await ref.read(workOrderListProvider.notifier).refresh();
     if (!mounted) return;
@@ -149,6 +155,7 @@ class _WorkOrderScreenState extends ConsumerState<WorkOrderScreen> {
     );
   }
 
+  /// Hapus WO (setelah konfirmasi) lalu muat ulang daftar.
   Future<void> _deleteWorkOrder(String id) async {
     final t = AppLocalizations.of(context);
     setState(() => _isDeleting = true);
@@ -345,6 +352,7 @@ class _WorkOrderScreenState extends ConsumerState<WorkOrderScreen> {
   }
 }
 
+/// Tampilan error penuh dengan tombol coba lagi.
 class _ErrorState extends StatelessWidget {
   final String message;
   final Future<void> Function() onRetry;

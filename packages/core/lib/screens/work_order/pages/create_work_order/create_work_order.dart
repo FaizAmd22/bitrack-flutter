@@ -13,7 +13,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Padanan `pages/work-order/pages/create-work-order/create-work-order.jsx`.
+/// Halaman buat work order baru (route `/create-work-order`): pilih fleet
+/// group dan teknisi, lalu simpan. Setelah berhasil, halaman ini diganti
+/// halaman daftar task WO yang baru dibuat. Hanya untuk non-teknisi.
+/// (Porting `create-work-order.jsx`.)
 class CreateWorkOrderScreen extends ConsumerStatefulWidget {
   const CreateWorkOrderScreen({super.key});
 
@@ -39,6 +42,7 @@ class _CreateWorkOrderScreenState extends ConsumerState<CreateWorkOrderScreen> {
     });
   }
 
+  /// Validasi form lalu buat header WO.
   Future<void> _submit() async {
     if (!_canSubmit || _isSubmitting) return;
 

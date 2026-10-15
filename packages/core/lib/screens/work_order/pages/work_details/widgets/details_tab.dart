@@ -4,7 +4,8 @@ import 'package:bitrack_core/screens/work_order/utils/work_order_validation.dart
 import 'package:bitrack_core/screens/work_order/widgets/card_section.dart';
 import 'package:flutter/material.dart';
 
-/// Padanan `pages/work-details/components/details-tab.jsx`.
+/// Tab Detail di halaman detail task: informasi task, kendaraan, dan device
+/// sesuai jenis pekerjaannya (hanya baca). (Porting `details-tab.jsx`.)
 class DetailsTab extends StatelessWidget {
   final String categoryLabel;
   final String typeLabel;
@@ -25,11 +26,14 @@ class DetailsTab extends StatelessWidget {
     required this.activity,
   });
 
+  /// Teks dari nilai apa pun; kosong = null.
   String? _s(dynamic value) {
     final text = (value ?? '').toString().trim();
     return text.isEmpty ? null : text;
   }
 
+  /// Baris informasi yang ditampilkan bergantung pada jenis form task (lihat
+  /// `resolveFormKind`).
   List<Widget> _informationRows(AppLocalizations t) {
     switch (resolveFormKind(rawCategory, rawType)) {
       case WorkDetailFormKind.gpsInspection:
